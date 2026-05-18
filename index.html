@@ -15,27 +15,33 @@
   <div id="cur"></div>
   <div id="cur-ring"></div>
 
-  <section class="hero" id="hero">
-
-    
-    <div class="hero-bg" id="hbg" style="background-image:url('https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/4a646a4e-496e-4390-b9ac-b4b3062560f9_rwc_242x0x1439x1080x1439.jpg?h=d1e5f7df4bf1ad8f90c908fce16a442a')"></div>
-    <div class="hero-grad"></div>
-
-    <!-- text content — fades in then fades out -->
-    <div class="hero-content" id="heroContent">
-      <p class="h-eyebrow">Filmmaker &amp; Fotógrafo — Chile</p>
-      <h1 class="h-title">MATÍAS<br/><span class="out">BRIEBA</span></h1>
-      <div class="h-sub">
-        <div class="h-sub-line"></div>
-        <span>Historias visuales que perduran</span>
-      </div>
+  <!-- ════════════════════════════════════════
+       CINEMATIC VIDEO HERO
+       Pure immersive visual experience
+  ════════════════════════════════════════ -->
+  <section class="cinematic-hero" id="cinematicHero">
+    <div class="hero-video-wrap" id="heroVideoWrap">
+      <video
+        id="heroVideo"
+        class="hero-video"
+        src="videobanner.mp4"
+        preload="auto"
+        playsinline
+        muted
+        loop="false"
+        disablePictureInPicture
+        disableRemotePlayback
+      ></video>
+      <div class="hero-video-overlay"></div>
     </div>
-
+    <div class="hero-scroll-indicator" id="scrollIndicator">
+      <div class="scroll-line"></div>
+    </div>
   </section>
 
-  <!-- ══════════════════════════════════════
-       REST OF PAGE — sits below the pin zone
-  ═══════════════════════════════════════ -->
+  <!-- ════════════════════════════════════════
+       PAGE CONTENT — seamlessly blends from hero
+  ════════════════════════════════════════ -->
   <div class="page-body" id="pageBody">
 
     <!-- ── MARQUEE ── -->

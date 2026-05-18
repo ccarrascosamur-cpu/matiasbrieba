@@ -26,10 +26,20 @@
       text-transform:uppercase;color:var(--gray);
     }
     .port-filters{
-      display:flex;gap:12px;flex-wrap:wrap;
-      padding:40px 48px;
+      display:flex;gap:6px;flex-wrap:wrap;align-items:center;
+      padding:32px 48px;
       border-bottom:1px solid rgba(250,250,250,.06);
     }
+    .pf-btn{
+      font-family:'JetBrains Mono',monospace;
+      font-size:9px;letter-spacing:.28em;text-transform:uppercase;
+      color:rgba(250,250,250,.35);background:none;
+      border:1px solid transparent;
+      padding:9px 18px;cursor:pointer;
+      transition:color .22s,border-color .22s,background .22s;
+    }
+    .pf-btn:hover{color:rgba(250,250,250,.75);border-color:rgba(250,250,250,.15);}
+    .pf-btn.on{color:#f0eeeb;border-color:rgba(250,250,250,.25);background:rgba(250,250,250,.05);}
     .port-grid{
       display:grid;
       grid-template-columns:repeat(3,1fr);
@@ -69,18 +79,20 @@
   <div id="cur-ring"></div>
 
   <nav id="nav" style="position:fixed;">
+    <div></div>
     <a href="index.html" class="n-logo">
-      <img src="https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/0c3864eb-30af-45f4-9fbc-2a8c27377bd4_rwc_0x0x1542x1542x4096.png?h=1d173751776d0296528023ed82d96617" alt="MB" class="n-logo-img"/>
-      <span class="n-name">Matías Brieba</span>
+      <img src="logomb.png" alt="MB" class="n-logo-img"/>
     </a>
-    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
-    <ul class="n-links" id="nlinks">
-      <li><a href="index.html#work" class="nav-link">Work</a></li>
-      <li><a href="index.html#about" class="nav-link">About</a></li>
-      <li><a href="index.html#services" class="nav-link">Servicios</a></li>
-      <li><a href="portfolio.html" class="nav-link nav-cta">Portfolio ↗</a></li>
-      <li><a href="index.html#contact" class="nav-link">Contacto</a></li>
-    </ul>
+    <div class="nav-right">
+      <ul class="n-links" id="nlinks">
+        <li><a href="index.html#work" class="nav-link">Work</a></li>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+        <li><a href="index.html#services" class="nav-link">Servicios</a></li>
+        <li><a href="portfolio.html" class="nav-link nav-cta">Portfolio ↗</a></li>
+        <li><a href="index.html#contact" class="nav-link">Contacto</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
   </nav>
 
   <div class="port-hero rv">
@@ -89,17 +101,17 @@
   </div>
 
   <div class="port-filters">
-    <button class="fb on" data-filter="all">Todos</button>
-    <button class="fb" data-filter="film">Film</button>
-    <button class="fb" data-filter="foto">Foto</button>
-    <button class="fb" data-filter="corp">Corporativo</button>
-    <button class="fb" data-filter="deporte">Deportes</button>
+    <button class="pf-btn on" data-filter="all">Todos</button>
+    <button class="pf-btn" data-filter="film">Film</button>
+    <button class="pf-btn" data-filter="foto">Foto</button>
+    <button class="pf-btn" data-filter="corp">Corporativo</button>
+    <button class="pf-btn" data-filter="deporte">Deportes</button>
   </div>
 
   <div class="port-grid" id="portGrid"></div>
 
   <footer>
-    <div class="ft-logo">MB © 2024</div>
+    <div class="ft-logo">MB © 2026</div>
     <div class="ft-copy">Matías Brieba — Filmmaker &amp; Fotógrafo</div>
     <div class="ft-soc">
       <a href="index.html">Home</a>

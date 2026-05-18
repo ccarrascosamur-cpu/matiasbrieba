@@ -3,9 +3,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   renderPortfolio('all');
 
-  document.querySelectorAll('.fb').forEach(b=>{
+  document.querySelectorAll('.pf-btn').forEach(b=>{
     b.addEventListener('click',()=>{
-      document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));
+      document.querySelectorAll('.pf-btn').forEach(x=>x.classList.remove('on'));
       b.classList.add('on');
       renderPortfolio(b.dataset.filter||'all');
     });
@@ -26,9 +26,8 @@ function renderPortfolio(filter){
     return `
       <a class="pg-item rv" href="${href}" target="_blank"
          style="text-decoration:none;">
-        <img src="${p.img}" alt="${p.name}" loading="${i<6?'eager':'lazy'}"
-             onerror="this.style.display='none';this.parentNode.style.background='#1a1a1a'"/>
-        <div class="pg-over">
+        ${p.img?`<img src="${p.img}" alt="${p.name}" loading="${i<6?'eager':'lazy'}" onerror="this.style.display='none'"/>`:''}
+        <div class="pg-over" style="${!p.img?'opacity:1;background:linear-gradient(to top,rgba(8,8,8,.85) 0%,rgba(8,8,8,.2) 100%);':''}">
           <p class="pg-cat">${catLabel(p.cat)}</p>
           <p class="pg-name">${p.name}</p>
           <p class="pg-yr">${p.year}${p.client&&p.client!==p.name?' · '+p.client:''}</p>

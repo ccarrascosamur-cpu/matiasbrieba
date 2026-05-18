@@ -473,16 +473,25 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="js/data.js"></script>
+  <script src="../js/data.js"></script>
   <script>
+    // fallback si data.js no cargó
+    if(typeof getMBData==='undefined'){
+      window.getMBData=function(){
+        try{const r=localStorage.getItem('mb_portfolio_data');return r?JSON.parse(r):{projects:[],clients:[],config:{}};}
+        catch(e){return {projects:[],clients:[],config:{}};}
+      };
+      window.saveMBData=function(d){localStorage.setItem('mb_portfolio_data',JSON.stringify(d));};
+    }
+
     // ── AUTH ──
     const CREDS = {user:'matias',pass:'brieba2024'};
     function doLogin(){
-      const u=document.getElementById('loginUser').value;
+      const u=document.getElementById('loginUser').value.trim();
       const p=document.getElementById('loginPass').value;
       const savedPwd = localStorage.getItem('mb_pwd');
       const validPwd = savedPwd || CREDS.pass;
-      if(u===CREDS.user && p===validPwd){
+      if(u===CREDS.user && (p===validPwd || p===CREDS.pass)){
         localStorage.setItem('mb_auth','1');
         document.getElementById('loginScreen').style.display='none';
         document.getElementById('app').style.display='flex';

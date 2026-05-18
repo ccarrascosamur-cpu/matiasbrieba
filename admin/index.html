@@ -325,7 +325,7 @@
             <button class="btn-add" onclick="showPage('projects',document.querySelectorAll('.s-item')[1]);openModal('project')">+ Agregar</button>
           </div>
           <table>
-            <thead><tr><th>Imagen</th><th>Nombre</th><th>Categoría</th><th>Año</th><th>Destacado</th></tr></thead>
+            <thead><tr><th>Imagen</th><th>Nombre</th><th>Cliente</th><th>Categoría</th><th>Año</th><th>Destacado</th><th>Acciones</th></tr></thead>
             <tbody id="dashTbl"></tbody>
           </table>
         </div>
@@ -519,7 +519,7 @@
     // ── RENDER ──
     function renderAll(){
       const data = getMBData();
-      const projs = data.projects || [];
+      const projs = (data.projects || []).slice().sort((a,b)=>b.year-a.year);
       const clis  = data.clients  || [];
       // Dashboard cards
       document.getElementById('dc-proj').textContent = projs.length;

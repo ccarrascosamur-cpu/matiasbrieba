@@ -341,8 +341,15 @@ const LY=['b-hero','b-tall','b-sq','b-sq','b-sq','b-sq','b-wide','b-wide'];
 
 function rb(f){
   const b=document.getElementById('bento');
-  let it=f==='all'?P:P.filter(p=>p.cat===f);
-  if(!it.length)it=P;
+  const sorted=[...P].sort((a,bb)=>bb.year-a.year);
+  let it;
+  if(f==='all'){
+    const feat=sorted.filter(p=>p.featured);
+    it=feat.length?feat:sorted;
+  } else {
+    it=sorted.filter(p=>p.cat===f);
+    if(!it.length)it=sorted;
+  }
   b.innerHTML=it.slice(0,8).map((p,i)=>`
     <a class="gi ${LY[i]||'b-sq'}${p.img?'':' no-img'} rv" href="#proj-${p.id}" onclick="openProj(event,${p.id||'p.id'})" style="text-decoration:none;cursor:pointer;">
       ${p.img?`<img src="${p.img}" alt="${p.name}" loading="${i<3?'eager':'lazy'}" onerror="this.style.display='none'"/>`:''}

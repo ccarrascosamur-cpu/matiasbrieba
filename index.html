@@ -19,8 +19,8 @@
 }
 html{scroll-behavior:smooth;}
 body{background:var(--bk);color:var(--wh);font-family:var(--B);overflow-x:hidden;}
-nav{position:fixed;top:0;left:0;right:0;z-index:200;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:22px 48px;transition:background .4s,padding .3s;}
-nav.scrolled{background:rgba(8,8,8,.93);backdrop-filter:blur(14px);padding-top:14px;padding-bottom:14px;border-bottom:1px solid var(--br);}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:22px 48px;transition:background .4s,padding .3s;background:rgba(8,8,8,.72);backdrop-filter:blur(12px);border-bottom:1px solid rgba(250,250,250,.05);}
+nav.scrolled{background:rgba(8,8,8,.95);backdrop-filter:blur(16px);padding-top:14px;padding-bottom:14px;border-bottom:1px solid var(--br);}
 .n-logo{display:flex;align-items:center;justify-content:center;text-decoration:none;}
 .n-logo-img{width:52px;height:52px;object-fit:contain;filter:brightness(0) invert(1);flex-shrink:0;transition:opacity .25s;}
 .n-logo-img:hover{opacity:.7;}
@@ -178,8 +178,11 @@ footer{background:var(--obk);padding:26px 48px;display:flex;align-items:center;j
 .hero{position:relative;width:100%;height:100vh;display:flex;align-items:flex-end;overflow:hidden;}
 .hbg{position:absolute;inset:-18%;background-size:cover;background-position:center;will-change:transform;filter:grayscale(1) brightness(.5) contrast(1.15);}
 .hvideo{position:absolute;inset:0;z-index:0;overflow:hidden;background:var(--bk);}
-.hvideo video{position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;transform:translate(-50%,-50%);object-fit:cover;filter:grayscale(1) brightness(.5) contrast(1.15);}
-.hvideo iframe{position:absolute;top:50%;left:50%;width:max(100%,177.78vh);height:max(100%,56.25vw);transform:translate(-50%,-50%);border:none;pointer-events:none;filter:grayscale(1) brightness(.5) contrast(1.15);}
+.hvideo video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.5) contrast(1.15);pointer-events:none;}
+/* iframe (YouTube/Vimeo): oversized to hide control bars; pointer-events off so user can't interact */
+.hvideo iframe{position:absolute;top:50%;left:50%;width:max(100%,177.78vh);height:calc(max(100%,56.25vw) + 120px);transform:translate(-50%,calc(-50% - 60px));border:none;pointer-events:none;filter:grayscale(1) brightness(.5) contrast(1.15);}
+/* invisible shield to block any residual iframe controls */
+.hvideo::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:all;}
 .hero-noise{position:absolute;inset:0;z-index:1;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px;}
 
 /* PROJECT MODAL */
@@ -353,10 +356,14 @@ function fixImgUrl(url){
   const vurl=MB_CONFIG.heroVideo||'';
   if(!vurl) return;
   let src,type;
+  // YouTube — mute=1 + controls=0 + loop nativo
   const yt=vurl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
-  if(yt){type='iframe';src=`https://www.youtube.com/embed/${yt[1]}?autoplay=1&mute=1&loop=1&playlist=${yt[1]}&controls=0&playsinline=1&rel=0&modestbranding=1`;}
-  if(!src){const vm=vurl.match(/vimeo\.com\/(\d+)/);if(vm){type='iframe';src=`https://player.vimeo.com/video/${vm[1]}?autoplay=1&loop=1&background=1&muted=1`;}}
-  if(!src){const gd=vurl.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([A-Za-z0-9_-]+)/);if(gd){type='iframe';src=`https://drive.google.com/file/d/${gd[1]}/preview`;}}
+  if(yt){type='iframe';src=`https://www.youtube.com/embed/${yt[1]}?autoplay=1&mute=1&loop=1&playlist=${yt[1]}&controls=0&disablekb=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3`;}
+  // Vimeo — background=1 oculta controles y mutea
+  if(!src){const vm=vurl.match(/vimeo\.com\/(\d+)/);if(vm){type='iframe';src=`https://player.vimeo.com/video/${vm[1]}?autoplay=1&loop=1&background=1&muted=1&controls=0`;}}
+  // Google Drive — usar <video> directo para tener control total (sin controles, muted)
+  if(!src){const gd=vurl.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([A-Za-z0-9_-]+)/);if(gd){type='video';src=`https://drive.google.com/uc?export=view&id=${gd[1]}`;}}
+  // URL directa (.mp4 u otro)
   if(!src){type='video';src=vurl;}
   document.addEventListener('DOMContentLoaded',function(){
     const hbg=document.getElementById('hbg');
@@ -366,9 +373,9 @@ function fixImgUrl(url){
     const wrap=document.createElement('div');
     wrap.className='hvideo';
     if(type==='video'){
-      wrap.innerHTML=`<video autoplay muted loop playsinline src="${src}"></video>`;
+      wrap.innerHTML=`<video autoplay muted loop playsinline disablepictureinpicture src="${src}"></video>`;
     } else {
-      wrap.innerHTML=`<iframe src="${src}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+      wrap.innerHTML=`<iframe src="${src}" allow="autoplay" frameborder="0"></iframe>`;
     }
     hero.insertBefore(wrap, hero.firstChild);
   });

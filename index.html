@@ -1,169 +1,486 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Matías Brieba — Filmmaker & Fotógrafo</title>
-  <meta name="description" content="Filmmaker y fotógrafo chileno. Más de 15 años capturando historias visuales extraordinarias."/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/style.css"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Matías Brieba — Filmmaker &amp; Fotógrafo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bk:#080808;--obk:#111;--dk:#1a1a1a;--gy:#777;--lgy:#b0b0b0;--ow:#f0eeeb;--wh:#fafafa;
+  --br:rgba(250,250,250,.07);
+  --D:'Clash Display','Helvetica Neue',Arial,sans-serif;
+  --B:'Familjen Grotesk','Helvetica Neue',sans-serif;
+  --M:'JetBrains Mono','Courier New',monospace;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bk);color:var(--wh);font-family:var(--B);overflow-x:hidden;cursor:none;}
+@media(pointer:coarse){body{cursor:auto;}}
+#cur{position:fixed;top:0;left:0;width:6px;height:6px;background:var(--wh);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+#cur-ring{position:fixed;top:0;left:0;width:30px;height:30px;border:1px solid rgba(250,250,250,.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .35s,height .35s;}
+#cur-ring.big{width:52px;height:52px;opacity:.5;}
+@media(pointer:coarse){#cur,#cur-ring{display:none;}}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:22px 48px;transition:background .4s,padding .3s;}
+nav.scrolled{background:rgba(8,8,8,.93);backdrop-filter:blur(14px);padding-top:14px;padding-bottom:14px;border-bottom:1px solid var(--br);}
+.n-logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.n-logo-img{width:32px;height:32px;object-fit:contain;filter:brightness(0) invert(1);flex-shrink:0;}
+.n-name{font-family:var(--D);font-size:13px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--wh);}
+.n-links{display:flex;align-items:center;gap:32px;list-style:none;}
+.n-links a{font-family:var(--M);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(250,250,250,.45);text-decoration:none;transition:color .25s;}
+.n-links a:hover{color:var(--wh);}
+.nav-cta{color:var(--wh)!important;border:1px solid rgba(250,250,250,.22)!important;padding:7px 16px;}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;z-index:210;}
+.hamburger span{display:block;width:22px;height:1px;background:var(--bk);transition:transform .3s,opacity .3s,background .3s;}
+.hamburger.open span{background:var(--wh);}
+.hamburger.open span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+@media(max-width:900px){
+  nav{padding:18px 20px;}
+  .hamburger{display:flex;}
+  .n-links{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(8,8,8,.97);backdrop-filter:blur(16px);flex-direction:column;align-items:center;justify-content:center;gap:28px;transform:translateX(100%);transition:transform .45s cubic-bezier(.16,1,.3,1);z-index:190;}
+  .n-links.open{transform:translateX(0);}
+  .n-links a{font-size:15px;}
+}
+
+.hgrad{position:absolute;inset:0;z-index:2;background:linear-gradient(to bottom,transparent 0%,rgba(8,8,8,.06) 45%,rgba(8,8,8,.97) 100%);}
+.hcont{position:relative;z-index:3;padding:0 48px 68px;width:100%;}
+.heyebrow{font-family:var(--M);font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:#0a0a0a;background:rgba(250,250,250,.82);padding:5px 12px;display:inline-block;margin-bottom:16px;opacity:0;transform:translateY(14px);animation:fu .8s ease .5s forwards;}
+.htitle{font-family:var(--D);font-size:clamp(68px,11vw,160px);font-weight:700;line-height:.88;letter-spacing:-.025em;color:var(--wh);opacity:0;transform:translateY(24px);animation:fu 1s ease .7s forwards;}
+.out{-webkit-text-stroke:1px rgba(250,250,250,.5);color:transparent;}
+.hsub{margin-top:28px;display:flex;align-items:center;gap:18px;opacity:0;animation:fu .8s ease 1.1s forwards;}
+.hline{width:36px;height:1px;background:var(--gy);flex-shrink:0;}
+.hsub span{font-family:var(--M);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gy);}
+@keyframes fu{to{opacity:1;transform:translateY(0);}}
+@keyframes sp{0%,100%{opacity:.3;transform:scaleY(.7);}50%{opacity:.9;transform:scaleY(1);}}
+@media(max-width:900px){.hcont{padding:0 20px 52px;}}
+.mwrap{background:var(--wh);overflow:hidden;padding:10px 0;white-space:nowrap;}
+.minner{display:inline-flex;animation:mq 26s linear infinite;}
+.mi{font-family:var(--D);font-size:11px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--bk);padding:0 28px;}
+.mi b{color:#888;font-weight:400;}
+@keyframes mq{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.sec{padding:112px 48px;}
+.seclabel{font-family:var(--M);font-size:9px;letter-spacing:.38em;text-transform:uppercase;color:var(--gy);margin-bottom:48px;display:flex;align-items:center;gap:14px;}
+.seclabel::before{content:'';width:20px;height:1px;background:var(--gy);}
+.workhead{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;}
+.wtitle{font-family:var(--D);font-size:clamp(44px,7vw,96px);font-weight:700;line-height:.9;letter-spacing:-.025em;color:var(--wh);}
+.filters{display:flex;gap:8px;flex-wrap:wrap;}
+.fb{font-family:var(--M);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--gy);background:none;border:1px solid transparent;padding:7px 14px;cursor:pointer;transition:all .22s;}
+.fb.on,.fb:hover{color:var(--wh);border-color:rgba(250,250,250,.2);}
+.bento{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:200px;gap:3px;}
+.b-hero{grid-column:span 8;grid-row:span 2;}
+.b-tall{grid-column:span 4;grid-row:span 2;}
+.b-sq{grid-column:span 3;grid-row:span 1;}
+.b-wide{grid-column:span 6;grid-row:span 1;}
+.gi{position:relative;overflow:hidden;background:var(--dk);display:block;}
+.gi img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.35) brightness(.9);transition:transform .8s cubic-bezier(.16,1,.3,1),filter .5s;}
+.gi:hover img{transform:scale(1.07);filter:grayscale(0) brightness(1.02);}
+.giov{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,8,.94) 0%,transparent 55%);opacity:0;transition:opacity .35s;display:flex;flex-direction:column;justify-content:flex-end;padding:20px;}
+.gi:hover .giov{opacity:1;}
+.gcat{font-family:var(--M);font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:var(--lgy);margin-bottom:5px;}
+.gname{font-family:var(--D);font-size:clamp(14px,1.8vw,22px);font-weight:600;color:var(--wh);line-height:1.05;}
+.gyr{font-family:var(--M);font-size:9px;color:var(--gy);margin-top:5px;}
+.gbadge{position:absolute;top:14px;right:14px;width:30px;height:30px;border:1px solid rgba(250,250,250,.18);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.8);transition:opacity .3s,transform .35s;}
+.gi:hover .gbadge{opacity:1;transform:scale(1);}
+.gbadge svg{width:11px;height:11px;stroke:var(--wh);stroke-width:1.5;fill:none;}
+.gnum{position:absolute;bottom:14px;right:18px;font-family:var(--M);font-size:9px;color:rgba(250,250,250,.14);pointer-events:none;}
+.wmore{text-align:center;margin-top:48px;}
+.btnout{display:inline-block;font-family:var(--M);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--wh);text-decoration:none;border:1px solid rgba(250,250,250,.2);padding:14px 32px;transition:background .25s,color .25s;}
+.btnout:hover{background:var(--wh);color:var(--bk);}
+@media(max-width:900px){
+  .bento{grid-template-columns:1fr 1fr;grid-auto-rows:160px;}
+  .b-hero{grid-column:span 2;grid-row:span 1;}
+  .b-tall{grid-column:span 1;grid-row:span 2;}
+  .b-sq{grid-column:span 1;grid-row:span 1;}
+  .b-wide{grid-column:span 2;grid-row:span 1;}
+  .workhead{flex-direction:column;align-items:flex-start;gap:24px;}
+  .sec{padding:72px 20px;}
+}
+@media(max-width:480px){
+  .bento{grid-template-columns:1fr;grid-auto-rows:200px;}
+  .b-hero,.b-tall,.b-sq,.b-wide{grid-column:span 1;grid-row:span 1;}
+}
+.clibar{padding:52px 48px;background:var(--obk);border-top:1px solid var(--br);border-bottom:1px solid var(--br);}
+.clilabel{font-family:var(--M);font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:rgba(250,250,250,.25);text-align:center;margin-bottom:36px;}
+.clirow{display:flex;flex-wrap:wrap;justify-content:center;}
+.cliitem{font-family:var(--D);font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(250,250,250,.2);padding:12px 24px;border-right:1px solid var(--br);transition:color .3s;}
+.cliitem:hover{color:var(--ow);}
+@media(max-width:900px){.clibar{padding:40px 20px;}.cliitem{padding:10px 14px;font-size:10px;}}
+.statsrow{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--br);}
+.st{padding:48px;border-right:1px solid var(--br);}
+.st:last-child{border-right:none;}
+.stn{font-family:var(--D);font-size:clamp(44px,5vw,72px);font-weight:700;color:var(--wh);line-height:1;margin-bottom:8px;}
+.stn sub{font-size:.5em;color:var(--gy);vertical-align:super;font-weight:400;}
+.stl{font-family:var(--M);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--gy);}
+@media(max-width:900px){
+  .statsrow{grid-template-columns:1fr 1fr;}
+  .st{padding:32px 20px;}
+  .st:nth-child(2){border-right:none;}
+  .st:nth-child(3){border-top:1px solid var(--br);border-right:1px solid var(--br);}
+  .st:nth-child(4){border-top:1px solid var(--br);}
+}
+.about{background:var(--bk);}
+.abinner{display:grid;grid-template-columns:5fr 7fr;gap:80px;align-items:start;}
+.abimgw{position:relative;}
+.abimg{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;filter:grayscale(1) contrast(1.05);}
+.abcap{position:absolute;bottom:0;left:0;right:0;padding:20px;background:linear-gradient(to top,rgba(8,8,8,.9),transparent);font-family:var(--M);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gy);}
+.abnum{position:absolute;top:20px;right:16px;font-family:var(--D);font-size:72px;font-weight:700;color:rgba(250,250,250,.07);line-height:1;pointer-events:none;}
+.abh{font-family:var(--D);font-size:clamp(36px,4.5vw,66px);font-weight:700;line-height:.92;letter-spacing:-.02em;color:var(--wh);margin-bottom:28px;}
+.abb{font-size:15px;line-height:1.85;color:var(--gy);margin-bottom:32px;}
+.abtags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:36px;}
+.abtag{font-family:var(--M);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--lgy);border:1px solid rgba(250,250,250,.1);padding:6px 12px;}
+.abcta{display:inline-flex;align-items:center;gap:12px;font-family:var(--M);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--wh);text-decoration:none;position:relative;}
+.abcta::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--wh);transform:scaleX(.3);transform-origin:left;transition:transform .4s;}
+.abcta:hover::after{transform:scaleX(1);}
+.abcta svg{width:14px;stroke:currentColor;fill:none;stroke-width:1.5;transition:transform .3s;}
+.abcta:hover svg{transform:translateX(5px);}
+@media(max-width:900px){.abinner{grid-template-columns:1fr;gap:40px;}}
+.services{background:var(--obk);}
+.srvh{font-family:var(--D);font-size:clamp(38px,5.5vw,80px);font-weight:700;line-height:.9;letter-spacing:-.025em;color:var(--wh);margin-bottom:60px;}
+.srvlist{border-top:1px solid var(--br);}
+.srvrow{display:grid;grid-template-columns:44px 1fr auto;gap:28px;align-items:center;padding:24px 0;border-bottom:1px solid var(--br);transition:padding-left .3s;}
+.srvrow:hover{padding-left:10px;}
+.srvi{font-family:var(--M);font-size:10px;color:rgba(250,250,250,.22);letter-spacing:.1em;}
+.srvn{font-family:var(--D);font-size:clamp(20px,3vw,40px);font-weight:600;color:var(--wh);transition:color .25s;}
+.srvrow:hover .srvn{color:var(--ow);}
+.srvd{font-family:var(--M);font-size:9px;color:var(--gy);letter-spacing:.08em;text-align:right;line-height:1.7;}
+@media(max-width:700px){.srvd{display:none;}.srvrow{grid-template-columns:36px 1fr;}}
+.contact{background:var(--bk);padding:130px 48px;text-align:center;position:relative;overflow:hidden;}
+.contact::before{content:'MB';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--D);font-size:clamp(160px,26vw,360px);font-weight:700;letter-spacing:-.04em;color:rgba(250,250,250,.022);pointer-events:none;}
+.ctpre{font-family:var(--M);font-size:9px;letter-spacing:.38em;text-transform:uppercase;color:var(--gy);margin-bottom:24px;display:flex;align-items:center;justify-content:center;gap:14px;}
+.ctpre::before,.ctpre::after{content:'';width:20px;height:1px;background:var(--gy);}
+.cth{font-family:var(--D);font-size:clamp(52px,9vw,130px);font-weight:700;line-height:.88;letter-spacing:-.03em;color:var(--wh);margin-bottom:44px;position:relative;}
+.ctemail{font-family:var(--B);font-size:clamp(13px,1.8vw,18px);letter-spacing:.06em;color:var(--wh);text-decoration:none;border-bottom:1px solid rgba(250,250,250,.18);padding-bottom:4px;display:inline-block;transition:border-color .3s;}
+.ctemail:hover{border-color:var(--wh);}
+.ctloc{margin-top:18px;font-family:var(--M);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(250,250,250,.22);}
+@media(max-width:900px){.contact{padding:90px 20px;}}
+footer{background:var(--obk);padding:26px 48px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--br);}
+.ftlogo{font-family:var(--D);font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(250,250,250,.22);}
+.ftcopy{font-family:var(--M);font-size:9px;letter-spacing:.1em;color:rgba(250,250,250,.18);}
+.ftsoc{display:flex;gap:22px;}
+.ftsoc a{font-family:var(--M);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(250,250,250,.22);text-decoration:none;transition:color .25s;}
+.ftsoc a:hover{color:var(--ow);}
+.ftdev{font-family:var(--M);font-size:9px;letter-spacing:.1em;color:rgba(250,250,250,.18);}
+.ftdev a{color:rgba(250,250,250,.3);text-decoration:none;transition:color .25s;}
+.ftdev a:hover{color:var(--ow);}
+@media(max-width:700px){footer{flex-direction:column;gap:14px;text-align:center;padding:22px;}}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .85s ease,transform .85s ease;}
+.rv.vis{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.09s;}.d2{transition-delay:.18s;}.d3{transition-delay:.27s;}
+
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:500;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.4);text-decoration:none;transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s;}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 8px 28px rgba(37,211,102,.35);}
+.wa-float svg{width:28px;height:28px;fill:#fff;}
+
+.hero{position:relative;width:100%;height:100vh;display:flex;align-items:flex-end;overflow:hidden;}
+.hero{position:relative;width:100%;height:100vh;display:flex;align-items:flex-end;overflow:hidden;}
+.hbg{position:absolute;inset:-18%;background-size:cover;background-position:center;will-change:transform;filter:grayscale(1) brightness(.5) contrast(1.15);}
+.hero-noise{position:absolute;inset:0;z-index:1;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px;}
+
+/* PROJECT MODAL */
+.pm-overlay{position:fixed;inset:0;background:var(--bk);z-index:800;overflow-y:auto;transform:translateY(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.pm-overlay.open{transform:translateY(0);}
+.pm-close{position:fixed;top:24px;right:24px;z-index:850;font-family:var(--M);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(250,250,250,.5);background:none;border:1px solid rgba(250,250,250,.15);padding:8px 16px;cursor:pointer;transition:all .2s;}
+.pm-close:hover{color:var(--wh);border-color:rgba(250,250,250,.4);}
+.pm-hero{position:relative;width:100%;height:70vh;overflow:hidden;display:flex;align-items:flex-end;}
+.pm-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:grayscale(.2) brightness(.55);}
+.pm-grad{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(8,8,8,.97) 100%);}
+.pm-hcont{position:relative;z-index:2;padding:0 40px 56px;width:100%;}
+.pm-bread{font-family:var(--M);font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(250,250,250,.4);margin-bottom:16px;}
+.pm-title{font-family:var(--D);font-size:clamp(44px,7vw,100px);font-weight:700;line-height:.9;letter-spacing:-.025em;color:var(--wh);margin-bottom:24px;}
+.pm-meta{display:flex;gap:28px;flex-wrap:wrap;}
+.pm-mi{display:flex;flex-direction:column;gap:4px;}
+.pm-ml{font-family:var(--M);font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:rgba(250,250,250,.35);}
+.pm-mv{font-family:var(--D);font-size:13px;font-weight:600;color:var(--wh);}
+.pm-sep{width:1px;height:28px;background:rgba(250,250,250,.12);}
+.pm-body{padding:60px 40px;max-width:1100px;margin:0 auto;}
+.pm-desc{display:grid;grid-template-columns:1fr 2fr;gap:60px;margin-bottom:60px;padding-bottom:60px;border-bottom:1px solid var(--br);}
+.pm-dlabel{font-family:var(--M);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gy);padding-top:4px;}
+.pm-dtext{font-size:17px;line-height:1.8;color:rgba(250,250,250,.7);}
+.pm-vwrap{position:relative;width:100%;aspect-ratio:16/9;background:var(--dk);margin-bottom:4px;overflow:hidden;}
+.pm-vwrap video,.pm-vwrap iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:none;}
+.pm-vlabel{font-family:var(--M);font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:var(--gy);margin-bottom:48px;margin-top:8px;}
+.pm-galtitle{font-family:var(--M);font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--gy);margin-bottom:16px;display:flex;align-items:center;gap:12px;}
+.pm-galtitle::before{content:'';width:16px;height:1px;background:var(--gy);}
+.pm-galgrid{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-bottom:60px;}
+.pm-galimg{overflow:hidden;background:var(--dk);cursor:pointer;}
+.pm-galimg img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.2) brightness(.9);transition:transform .6s cubic-bezier(.16,1,.3,1),filter .4s;}
+.pm-galimg:hover img{transform:scale(1.05);filter:grayscale(0) brightness(1);}
+.pm-galimg:nth-child(6n+1){grid-column:span 8;aspect-ratio:16/10;}
+.pm-galimg:nth-child(6n+2){grid-column:span 4;aspect-ratio:4/5;}
+.pm-galimg:nth-child(6n+3){grid-column:span 4;aspect-ratio:4/5;}
+.pm-galimg:nth-child(6n+4){grid-column:span 8;aspect-ratio:16/10;}
+.pm-galimg:nth-child(6n+5){grid-column:span 6;aspect-ratio:4/3;}
+.pm-galimg:nth-child(6n+6){grid-column:span 6;aspect-ratio:4/3;}
+/* lightbox */
+.pm-lb{position:fixed;inset:0;background:rgba(8,8,8,.96);z-index:900;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.pm-lb.open{display:flex;}
+.pm-lb img{max-width:92vw;max-height:90vh;object-fit:contain;}
+.pm-lb-close{position:absolute;top:20px;right:24px;font-family:var(--M);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(250,250,250,.5);background:none;border:none;cursor:pointer;}
+.pm-lb-close:hover{color:var(--wh);}
+.pm-lb-prev,.pm-lb-next{position:absolute;top:50%;transform:translateY(-50%);background:none;border:1px solid rgba(250,250,250,.15);color:var(--wh);width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.pm-lb-prev{left:20px;}.pm-lb-next{right:20px;}
+.pm-lb-prev svg,.pm-lb-next svg{width:14px;height:14px;stroke:var(--wh);fill:none;stroke-width:1.5;}
+@media(max-width:700px){
+  .pm-desc{grid-template-columns:1fr;gap:20px;}
+  .pm-galgrid{grid-template-columns:1fr 1fr;gap:2px;}
+  .pm-galimg{grid-column:span 1!important;aspect-ratio:4/3!important;}
+  .pm-body{padding:40px 20px;}
+  .pm-hcont{padding:0 20px 48px;}
+}
+</style>
 </head>
 <body>
-
-  <div id="cur"></div>
-  <div id="cur-ring"></div>
-
-  <section class="hero" id="hero">
-
-    
-    <div class="hero-bg" id="hbg" style="background-image:url('https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/4a646a4e-496e-4390-b9ac-b4b3062560f9_rwc_242x0x1439x1080x1439.jpg?h=d1e5f7df4bf1ad8f90c908fce16a442a')"></div>
-    <div class="hero-grad"></div>
-
-    <!-- text content — fades in then fades out -->
-    <div class="hero-content" id="heroContent">
-      <p class="h-eyebrow">Filmmaker &amp; Fotógrafo — Chile</p>
-      <h1 class="h-title">MATÍAS<br/><span class="out">BRIEBA</span></h1>
-      <div class="h-sub">
-        <div class="h-sub-line"></div>
-        <span>Historias visuales que perduran</span>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- ══════════════════════════════════════
-       REST OF PAGE — sits below the pin zone
-  ═══════════════════════════════════════ -->
-  <div class="page-body" id="pageBody">
-
-    <!-- ── MARQUEE ── -->
-    <div class="marquee-wrap">
-      <div class="marquee-inner">
-        <span class="mi">Fotografía <b>·</b></span>
-        <span class="mi">Filmmaking <b>·</b></span>
-        <span class="mi">Contenido Corporativo <b>·</b></span>
-        <span class="mi">Eventos <b>·</b></span>
-        <span class="mi">Deportes <b>·</b></span>
-        <span class="mi">Productos <b>·</b></span>
-        <span class="mi">Fotografía <b>·</b></span>
-        <span class="mi">Filmmaking <b>·</b></span>
-        <span class="mi">Contenido Corporativo <b>·</b></span>
-        <span class="mi">Eventos <b>·</b></span>
-        <span class="mi">Deportes <b>·</b></span>
-        <span class="mi">Productos <b>·</b></span>
-      </div>
-    </div>
-
-    <!-- ── WORK ── -->
-    <section class="sec work" id="work">
-      <div class="work-head rv">
-        <div>
-          <div class="sec-label">Portafolio selecto</div>
-          <h2 class="work-title">WORK<br/><span class="out">2024</span></h2>
-        </div>
-        <div class="filters">
-          <button class="fb on" data-filter="all">Todos</button>
-          <button class="fb" data-filter="film">Film</button>
-          <button class="fb" data-filter="foto">Foto</button>
-          <button class="fb" data-filter="corp">Corporativo</button>
-        </div>
-      </div>
-      <div class="bento" id="bento"></div>
-      <div class="work-more rv">
-        <a href="portfolio.html" target="_blank" class="btn-outline">Ver Portfolio Completo ↗</a>
-      </div>
-    </section>
-
-    <!-- ── CLIENTS ── -->
-    <div class="clients-bar">
-      <p class="cb-label rv">Marcas &amp; Clientes</p>
-      <div class="cb-row rv" id="clientsRow"></div>
-    </div>
-
-    <!-- ── STATS ── -->
-    <div class="stats-row">
-      <div class="st rv"><div class="st-n">15<sub>+</sub></div><div class="st-l">Años de experiencia</div></div>
-      <div class="st rv d1"><div class="st-n" id="statProjects">0<sub>+</sub></div><div class="st-l">Proyectos completados</div></div>
-      <div class="st rv d2"><div class="st-n" id="statClients">0<sub>+</sub></div><div class="st-l">Marcas trabajadas</div></div>
-      <div class="st rv d3"><div class="st-n">2</div><div class="st-l">Especialidades</div></div>
-    </div>
-
-    <!-- ── ABOUT ── -->
-    <section class="sec about" id="about">
-      <div class="ab-inner">
-        <div class="ab-img-wrap rv">
-          <img class="ab-img"
-            src="https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/1029c1dd-c9da-45ad-aa61-bf9c0ca24f51_rw_600.png?h=6b198400613aefd30fd12ef0782a6d01"
-            alt="Matías Brieba"/>
-          <div class="ab-img-caption">Chile</div>
-          <div class="ab-num">15</div>
-        </div>
-        <div class="ab-text rv d1">
-          <div class="sec-label">Sobre Matías</div>
-          <h2 class="ab-heading">CHILENO<br/><span class="out">VISUAL</span><br/>AUTÉNTICO</h2>
-          <p class="ab-body">
-            Filmmaker y fotógrafo chileno. Más de 15 años capturando historias que importan — desde campañas de marcas líderes hasta contenido corporativo, eventos deportivos y producción audiovisual de alto impacto.
-          </p>
-          <div class="ab-tags">
-            <span class="ab-tag">Fotografía Comercial</span>
-            <span class="ab-tag">Filmmaking</span>
-            <span class="ab-tag">Corporativo</span>
-            <span class="ab-tag">Eventos</span>
-            <span class="ab-tag">Deportes</span>
-            <span class="ab-tag">Productos</span>
-          </div>
-          <a href="#contact" class="ab-cta">Trabajemos juntos
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <line x1="5" y1="12" x2="19" y2="12"/>
-              <polyline points="12 5 19 12 12 19"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── SERVICES ── -->
-    <section class="sec services" id="services">
-      <div class="rv">
-        <div class="sec-label">Especialidades</div>
-        <h2 class="srv-head">LO QUE<br/><span class="out">OFREZCO</span></h2>
-      </div>
-      <div class="srv-list">
-        <div class="srv-row rv"><span class="srv-i">01</span><span class="srv-n">Fotografía Comercial</span><span class="srv-d">Productos, marcas<br/>y campañas</span></div>
-        <div class="srv-row rv d1"><span class="srv-i">02</span><span class="srv-n">Filmmaking &amp; Video</span><span class="srv-d">Cortometrajes,<br/>branded content</span></div>
-        <div class="srv-row rv d2"><span class="srv-i">03</span><span class="srv-n">Contenido Corporativo</span><span class="srv-d">Eventos, industria<br/>y comunicación</span></div>
-        <div class="srv-row rv d3"><span class="srv-i">04</span><span class="srv-n">Fotografía Deportiva</span><span class="srv-d">Acción, equipos<br/>y competencias</span></div>
-      </div>
-    </section>
-
-    <!-- ── CONTACT ── -->
-    <section class="contact" id="contact">
-      <p class="ct-pre rv">Nuevos proyectos</p>
-      <h2 class="ct-heading rv">HABLE<br/><span class="out">MOS</span></h2>
-      <a href="mailto:matiasbrieba@gmail.com" class="ct-email rv">matiasbrieba@gmail.com</a>
-      <p class="ct-loc rv">Chile · Proyectos nacionales</p>
-    </section>
-
-    <!-- ── FOOTER ── -->
-    <footer>
-      <div class="ft-logo">MB © 2024</div>
-      <div class="ft-copy">Matías Brieba — Filmmaker &amp; Fotógrafo</div>
-      <div class="ft-soc">
-        <a href="portfolio.html" target="_blank">Portfolio</a>
-        <a href="https://www.instagram.com" target="_blank">Instagram</a>
-      </div>
-    </footer>
-
-  </div><!-- /page-body -->
-
-  <!-- WhatsApp flotante -->
-  <a href="https://wa.me/56991344540" target="_blank" class="wa-float" aria-label="WhatsApp">
-    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+<div id="cur"></div><div id="cur-ring"></div>
+<nav id="nav">
+  <a href="#" class="n-logo">
+    <img class="n-logo-img" src="https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/0c3864eb-30af-45f4-9fbc-2a8c27377bd4_rwc_0x0x1542x1542x4096.png?h=1d173751776d0296528023ed82d96617" alt="MB"/>
+    <span class="n-name">Matías Brieba</span>
   </a>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  <ul class="n-links" id="nlinks">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Servicios</a></li>
+    <li><a href="portfolio.html" target="_blank" class="nav-cta">Portfolio ↗</a></li>
+    <li><a href="#contact">Contacto</a></li>
+  </ul>
+</nav>
+<section class="hero">
+  <div class="hbg" id="hbg" style="background-image:url('https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/4a646a4e-496e-4390-b9ac-b4b3062560f9_rwc_242x0x1439x1080x1439.jpg?h=d1e5f7df4bf1ad8f90c908fce16a442a')"></div>
+  <div class="hgrad"></div>
+  <div class="hcont">
+    <p class="heyebrow">Filmmaker &amp; Fotógrafo — Chile</p>
+    <h1 class="htitle">MATÍAS<br/><span class="out">BRIEBA</span></h1>
+    <div class="hsub"><div class="hline"></div><span>Historias visuales que perduran</span></div>
+  </div>
+</section>
+<div class="mwrap"><div class="minner"><span class="mi">Fotografía <b>·</b></span><span class="mi">Filmmaking <b>·</b></span><span class="mi">Contenido Corporativo <b>·</b></span><span class="mi">Eventos <b>·</b></span><span class="mi">Deportes <b>·</b></span><span class="mi">Productos <b>·</b></span><span class="mi">Fotografía <b>·</b></span><span class="mi">Filmmaking <b>·</b></span><span class="mi">Contenido Corporativo <b>·</b></span><span class="mi">Eventos <b>·</b></span><span class="mi">Deportes <b>·</b></span><span class="mi">Productos <b>·</b></span></div></div>
+<section class="sec" id="work" style="background:var(--bk);">
+  <div class="workhead rv"><div><div class="seclabel">Portafolio selecto</div><h2 class="wtitle">WORK<br/><span class="out">2024</span></h2></div><div class="filters"><button class="fb on" data-f="all">Todos</button><button class="fb" data-f="film">Film</button><button class="fb" data-f="foto">Foto</button><button class="fb" data-f="corp">Corporativo</button></div></div>
+  <div class="bento" id="bento"></div>
+  <div class="wmore rv"><a href="#" class="btnout">Ver Portfolio Completo ↗</a></div>
+</section>
+<div class="clibar"><p class="clilabel rv">Marcas &amp; Clientes</p><div class="clirow rv" id="clirow"></div></div>
+<div class="statsrow">
+  <div class="st rv"><div class="stn">15<sub>+</sub></div><div class="stl">Años de experiencia</div></div>
+  <div class="st rv d1"><div class="stn">80<sub>+</sub></div><div class="stl">Proyectos completados</div></div>
+  <div class="st rv d2"><div class="stn">40<sub>+</sub></div><div class="stl">Marcas trabajadas</div></div>
+  <div class="st rv d3"><div class="stn">2</div><div class="stl">Especialidades</div></div>
+</div>
+<section class="sec about" id="about">
+  <div class="abinner">
+    <div class="abimgw rv">
+      <img class="abimg" src="https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/1029c1dd-c9da-45ad-aa61-bf9c0ca24f51_rw_600.png?h=6b198400613aefd30fd12ef0782a6d01" alt="Matías Brieba"/>
+      <div class="abcap">Chile</div><div class="abnum">15</div>
+    </div>
+    <div class="rv d1">
+      <div class="seclabel">Sobre Matías</div>
+      <h2 class="abh">CHILENO<br/><span class="out">VISUAL</span><br/>AUTÉNTICO</h2>
+      <p class="abb">Filmmaker y fotógrafo Más de 15 años capturando historias que importan — desde campañas de marcas líderes hasta contenido corporativo, eventos deportivos y producción audiovisual de alto impacto.</p>
+      <div class="abtags"><span class="abtag">Fotografía Comercial</span><span class="abtag">Filmmaking</span><span class="abtag">Corporativo</span><span class="abtag">Eventos</span><span class="abtag">Deportes</span><span class="abtag">Productos</span></div>
+      <a href="#contact" class="abcta">Trabajemos juntos <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+  </div>
+</section>
+<section class="sec services" id="services">
+  <div class="rv"><div class="seclabel">Especialidades</div><h2 class="srvh">LO QUE<br/><span class="out">OFREZCO</span></h2></div>
+  <div class="srvlist">
+    <div class="srvrow rv"><span class="srvi">01</span><span class="srvn">Fotografía Comercial</span><span class="srvd">Productos, marcas<br/>y campañas</span></div>
+    <div class="srvrow rv d1"><span class="srvi">02</span><span class="srvn">Filmmaking &amp; Video</span><span class="srvd">Cortometrajes,<br/>branded content</span></div>
+    <div class="srvrow rv d2"><span class="srvi">03</span><span class="srvn">Contenido Corporativo</span><span class="srvd">Eventos, industria<br/>y comunicación</span></div>
+    <div class="srvrow rv d3"><span class="srvi">04</span><span class="srvn">Fotografía Deportiva</span><span class="srvd">Acción, equipos<br/>y competencias</span></div>
+  </div>
+</section>
+<section class="contact" id="contact">
+  <p class="ctpre rv">Nuevos proyectos</p>
+  <h2 class="cth rv">HABLE<br/><span class="out">MOS</span></h2>
+  <a href="mailto:matiasbrieba@gmail.com" class="ctemail rv">matiasbrieba@gmail.com</a>
+  <p class="ctloc rv">Chile · Proyectos nacionales</p>
+</section>
+<footer>
+  <div class="ftlogo">MB © 2024</div>
+  <div class="ftcopy">Matías Brieba — Filmmaker &amp; Fotógrafo</div>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+    <div class="ftsoc"><a href="portfolio.html" target="_blank">Portfolio</a><a href="https://www.instagram.com" target="_blank">Instagram</a></div>
+    <div class="ftdev">Desarrollado por <a href="https://www.emmagination.cl" target="_blank">Emmagination</a></div>
+  </div>
+</footer>
+<script>
+const P=[
+  {id:1,name:'Barra Central',client:'Barra Central',cat:'film',year:2024,img:'https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/4a646a4e-496e-4390-b9ac-b4b3062560f9_rwc_242x0x1439x1080x1439.jpg?h=d1e5f7df4bf1ad8f90c908fce16a442a',url:'https://matiasbriebaf.myportfolio.com/barra-central',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Barra Central.'},
+  {id:2,name:'Monster Energy Chile',client:'Monster Energy',cat:'foto',year:2024,img:'https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/1029c1dd-c9da-45ad-aa61-bf9c0ca24f51_rw_600.png?h=6b198400613aefd30fd12ef0782a6d01',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Monster Energy Chile.'},
+  {id:3,name:'Juan Valdez Café',client:'Juan Valdez',cat:'corp',year:2024,img:'https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/4a646a4e-496e-4390-b9ac-b4b3062560f9_rwc_242x0x1439x1080x1439.jpg?h=d1e5f7df4bf1ad8f90c908fce16a442a',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Juan Valdez Café.'},
+  {id:4,name:'Xclusive Chile',client:'Xclusive',cat:'foto',year:2024,img:'https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/1029c1dd-c9da-45ad-aa61-bf9c0ca24f51_rw_600.png?h=6b198400613aefd30fd12ef0782a6d01',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Xclusive Chile.'},
+  {id:5,name:'Nevados de Chillán',client:'Nevados',cat:'deporte',year:2024,img:'https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/4a646a4e-496e-4390-b9ac-b4b3062560f9_rwc_242x0x1439x1080x1439.jpg?h=d1e5f7df4bf1ad8f90c908fce16a442a',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Nevados de Chillán.'},
+  {id:6,name:'Chile Suplementos',client:'Chile Suplementos',cat:'corp',year:2024,img:'https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/1029c1dd-c9da-45ad-aa61-bf9c0ca24f51_rw_600.png?h=6b198400613aefd30fd12ef0782a6d01',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Chile Suplementos.'},
+  {id:7,name:'Cruzados',client:'Cruzados',cat:'deporte',year:2024,img:'https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/4a646a4e-496e-4390-b9ac-b4b3062560f9_rwc_242x0x1439x1080x1439.jpg?h=d1e5f7df4bf1ad8f90c908fce16a442a',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Cruzados.'},
+  {id:8,name:'Tamango Brebajes',client:'Tamango',cat:'film',year:2024,img:'https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/1029c1dd-c9da-45ad-aa61-bf9c0ca24f51_rw_600.png?h=6b198400613aefd30fd12ef0782a6d01',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Tamango Brebajes.'},
+];
+const CL=['Monster Energy','Juan Valdez','Cruzados','Nevados de Chillán','Xclusive Chile','Chile Suplementos','Barra Central','Tamango'];
+const CL2={film:'Film',foto:'Fotografía',corp:'Corporativo',deporte:'Deportes'};
+const LY=['b-hero','b-tall','b-sq','b-sq','b-sq','b-sq','b-wide','b-wide'];
 
-  <script src="js/data.js"></script>
-  <script src="js/main.js"></script>
+function rb(f){
+  const b=document.getElementById('bento');
+  let it=f==='all'?P:P.filter(p=>p.cat===f);
+  if(!it.length)it=P;
+  b.innerHTML=it.slice(0,8).map((p,i)=>`
+    <a class="gi ${LY[i]||'b-sq'} rv" href="#proj-${p.id}" onclick="openProj(event,${p.id||'p.id'})" style="text-decoration:none;cursor:pointer;">
+      <img src="${p.img}" alt="${p.name}" loading="${i<3?'eager':'lazy'}" onerror="this.style.display='none'"/>
+      <div class="giov"><p class="gcat">${CL2[p.cat]}</p><p class="gname">${p.name}</p><p class="gyr">${p.year}${p.client!==p.name?' · '+p.client:''}</p></div>
+      <div class="gbadge"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+      <span class="gnum">0${i+1}</span>
+    </a>`).join('');
+  oa();
+}
+
+function oa(){
+  const o=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');o.unobserve(e.target);}});
+  },{threshold:.06});
+  document.querySelectorAll('.rv:not(.vis)').forEach(el=>o.observe(el));
+}
+
+// Clients
+document.getElementById('clirow').innerHTML=CL.map((c,i)=>
+  `<span class="cliitem"${i===CL.length-1?' style="border-right:none"':''}>${c}</span>`).join('');
+
+// Cursor
+const cur=document.getElementById('cur'), ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function t(){
+  cur.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;
+  rx+=(mx-rx)*.11; ry+=(my-ry)*.11;
+  ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+  requestAnimationFrame(t);
+})();
+document.querySelectorAll('a,button,.gi').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('big'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('big'));
+});
+
+// Parallax
+const hbg=document.getElementById('hbg');
+window.addEventListener('scroll',()=>{hbg.style.transform=`translateY(${scrollY*.42}px)`;},{passive:true});
+
+// Nav scroll
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',scrollY>60);},{passive:true});
+
+// Hamburger
+const ham=document.getElementById('hamburger'), nl=document.getElementById('nlinks');
+ham.addEventListener('click',()=>{ham.classList.toggle('open');nl.classList.toggle('open');});
+nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+  ham.classList.remove('open'); nl.classList.remove('open');
+}));
+
+// Filters
+document.querySelectorAll('.fb').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    rb(b.dataset.f||'all');
+  });
+});
+
+// Init
+rb('all');
+oa();
+</script>
+
+<a href="https://wa.me/56991344540" target="_blank" class="wa-float" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- PROJECT MODAL -->
+<div class="pm-overlay" id="pmOverlay">
+  <button class="pm-close" onclick="closeProj()">← Cerrar</button>
+  <div id="pmContent"></div>
+</div>
+<!-- PROJECT LIGHTBOX -->
+<div class="pm-lb" id="pmLb">
+  <button class="pm-lb-close" onclick="pmLbClose()">ESC / Cerrar</button>
+  <button class="pm-lb-prev" onclick="pmLbNav(-1)"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+  <img id="pmLbImg" src="" alt=""/>
+  <button class="pm-lb-next" onclick="pmLbNav(1)"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+</div>
+<script>
+const CL2x={film:'Film',foto:'Fotografía',corp:'Corporativo',deporte:'Deportes'};
+let pmLbImgs=[],pmLbIdx=0;
+
+function openProj(e,id){
+  e.preventDefault();
+  const p=P.find(x=>x.id===id);
+  if(!p) return;
+  const imgs=p.images||[];
+  const vurl=p.videoUrl||'';
+  const isYT=vurl.includes('youtube')||vurl.includes('youtu.be');
+  const isVimeo=vurl.includes('vimeo');
+  let vblock='';
+  if(vurl){
+    if(isYT){
+      const yid=vurl.match(/(?:v=|youtu\.be\/)([^&?/]+)/)?.[1]||'';
+      vblock=`<div class="pm-vwrap"><iframe src="https://www.youtube.com/embed/${yid}?rel=0" allowfullscreen></iframe></div><p class="pm-vlabel">Video — ${p.name}</p>`;
+    } else if(isVimeo){
+      const vid=vurl.match(/vimeo\.com\/(\d+)/)?.[1]||'';
+      vblock=`<div class="pm-vwrap"><iframe src="https://player.vimeo.com/video/${vid}" allowfullscreen></iframe></div><p class="pm-vlabel">Video — ${p.name}</p>`;
+    } else {
+      vblock=`<div class="pm-vwrap"><video src="${vurl}" controls preload="metadata"></video></div><p class="pm-vlabel">Video — ${p.name}</p>`;
+    }
+  }
+  let galblock='';
+  if(imgs.length){
+    pmLbImgs=imgs;
+    galblock=`<p class="pm-galtitle">Galería</p><div class="pm-galgrid">${imgs.map((s,i)=>`<div class="pm-galimg" onclick="pmLbOpen(${i})"><img src="${s}" loading="lazy" onerror="this.parentNode.style.display='none'"/></div>`).join('')}</div>`;
+  }
+  document.getElementById('pmContent').innerHTML=`
+    <div class="pm-hero">
+      <div class="pm-bg" style="background-image:url('${p.img}')"></div>
+      <div class="pm-grad"></div>
+      <div class="pm-hcont">
+        <p class="pm-bread">Portfolio / ${CL2x[p.cat]||p.cat}</p>
+        <h1 class="pm-title">${p.name}</h1>
+        <div class="pm-meta">
+          <div class="pm-mi"><span class="pm-ml">Cliente</span><span class="pm-mv">${p.client||p.name}</span></div>
+          <div class="pm-sep"></div>
+          <div class="pm-mi"><span class="pm-ml">Categoría</span><span class="pm-mv">${CL2x[p.cat]||p.cat}</span></div>
+          <div class="pm-sep"></div>
+          <div class="pm-mi"><span class="pm-ml">Año</span><span class="pm-mv">${p.year}</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="pm-body">
+      <div class="pm-desc">
+        <p class="pm-dlabel">Sobre el proyecto</p>
+        <p class="pm-dtext">${p.desc||'Proyecto de fotografía y producción audiovisual.'}</p>
+      </div>
+      ${vblock}
+      ${galblock}
+    </div>`;
+  const ov=document.getElementById('pmOverlay');
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeProj(){
+  document.getElementById('pmOverlay').classList.remove('open');
+  document.body.style.overflow='';
+  document.getElementById('pmContent').innerHTML='';
+}
+function pmLbOpen(i){pmLbIdx=i;document.getElementById('pmLbImg').src=pmLbImgs[i];document.getElementById('pmLb').classList.add('open');}
+function pmLbClose(){document.getElementById('pmLb').classList.remove('open');}
+function pmLbNav(d){pmLbIdx=(pmLbIdx+d+pmLbImgs.length)%pmLbImgs.length;document.getElementById('pmLbImg').src=pmLbImgs[pmLbIdx];}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){pmLbClose();closeProj();}
+  if(e.key==='ArrowRight')pmLbNav(1);
+  if(e.key==='ArrowLeft')pmLbNav(-1);
+});
+</script>
+
 </body>
 </html>

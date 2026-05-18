@@ -3,49 +3,149 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Matías Brieba — Filmmaker & Fotógrafo</title>
-  <meta name="description" content="Filmmaker y fotógrafo chileno. Más de 15 años capturando historias visuales extraordinarias."/>
+  <title>Matías Brieba — Filmmaker & Fotógrafo | Chile</title>
+  <meta name="description" content="Matías Brieba, filmmaker y fotógrafo profesional chileno con más de 15 años de experiencia en fotografía comercial, filmmaking, contenido corporativo y eventos deportivos."/>
+  <meta name="keywords" content="Matías Brieba, filmmaker, fotógrafo, Chile, fotografía comercial, filmmaking, contenido corporativo, eventos deportivos, fotografía deportiva, producción audiovisual"/>
+  <meta name="author" content="Matías Brieba"/>
+  <meta name="robots" content="index, follow"/>
+  <meta name="language" content="es"/>
+  <meta name="geo.region" content="CL"/>
+  <meta name="geo.placename" content="Chile"/>
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://matiasbrieba.cl"/>
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://matiasbrieba.cl"/>
+  <meta property="og:title" content="Matías Brieba — Filmmaker & Fotógrafo | Chile"/>
+  <meta property="og:description" content="Filmmaker y fotógrafo profesional chileno. Más de 15 años capturando historias visuales extraordinarias."/>
+  <meta property="og:image" content="https://matiasbrieba.cl/images/matias-brieba.jpg"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="800"/>
+  <meta property="og:locale" content="es_CL"/>
+  <meta property="og:site_name" content="Matías Brieba"/>
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:url" content="https://matiasbrieba.cl"/>
+  <meta name="twitter:title" content="Matías Brieba — Filmmaker & Fotógrafo | Chile"/>
+  <meta name="twitter:description" content="Filmmaker y fotógrafo profesional chileno. Más de 15 años capturando historias visuales extraordinarias."/>
+  <meta name="twitter:image" content="https://matiasbrieba.cl/images/matias-brieba.jpg"/>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="images/favicon/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png"/>
+  <link rel="manifest" href="site.webmanifest"/>
+  <meta name="theme-color" content="#080808"/>
+  <meta name="msapplication-TileColor" content="#080808"/>
+
+  <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com"/>
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com"/>
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+
+  <!-- Styles -->
   <link rel="stylesheet" href="css/style.css"/>
+
+  <!-- Structured Data: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Matías Brieba",
+    "jobTitle": "Filmmaker & Fotógrafo",
+    "description": "Filmmaker y fotógrafo profesional chileno con más de 15 años de experiencia.",
+    "url": "https://matiasbrieba.cl",
+    "image": "https://matiasbrieba.cl/images/matias-brieba.jpg",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "CL"
+    },
+    "sameAs": [],
+    "knowsAbout": ["Fotografía Comercial", "Filmmaking", "Contenido Corporativo", "Fotografía Deportiva", "Producción Audiovisual"]
+  }
+  </script>
+
+  <!-- Structured Data: WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Matías Brieba — Filmmaker & Fotógrafo",
+    "url": "https://matiasbrieba.cl",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://matiasbrieba.cl?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
 </head>
 <body>
 
-  <div id="cur"></div>
-  <div id="cur-ring"></div>
+  <!-- Custom Cursor -->
+  <div id="cur" aria-hidden="true"></div>
+  <div id="cur-ring" aria-hidden="true"></div>
 
   <!-- ════════════════════════════════════════
-       CINEMATIC VIDEO HERO
-       Pure immersive visual experience
+       NAVIGATION
   ════════════════════════════════════════ -->
-  <section class="cinematic-hero" id="cinematicHero">
-    <div class="hero-video-wrap" id="heroVideoWrap">
-      <video
-        id="heroVideo"
-        class="hero-video"
-        src="videobanner.mp4"
-        preload="auto"
-        playsinline
-        muted
-        loop="false"
-        disablePictureInPicture
-        disableRemotePlayback
-      ></video>
-      <div class="hero-video-overlay"></div>
+  <nav id="nav" role="navigation" aria-label="Navegación principal">
+    <a href="#" class="n-logo" aria-label="Matías Brieba - Inicio">
+      <img src="logomb.png" alt="Logo Matías Brieba" class="n-logo-img" width="34" height="34"/>
+      <span class="n-name">Matías Brieba</span>
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="nlinks">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <ul class="n-links" id="nlinks">
+      <li><a href="#about">Sobre</a></li>
+      <li><a href="#services">Servicios</a></li>
+      <li><a href="#work">Portafolio</a></li>
+      <li><a href="#contact" class="nav-cta">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- ════════════════════════════════════════
+       HERO SECTION
+       Clean cinematic image hero
+  ════════════════════════════════════════ -->
+  <section class="hero" id="hero" aria-label="Inicio">
+    <div class="hero-bg" id="hbg" style="background-image:url('imagenmb.jpg')"></div>
+    <div class="hero-grad"></div>
+    <div class="hero-noise" aria-hidden="true"></div>
+
+    <div class="hero-content" id="heroContent">
+      <p class="h-eyebrow">Filmmaker &amp; Fotógrafo — Chile</p>
+      <h1 class="h-title">MATÍAS<br/><span class="out">BRIEBA</span></h1>
+      <div class="h-sub">
+        <div class="h-sub-line"></div>
+        <span>Historias visuales que perduran</span>
+      </div>
     </div>
-    <div class="hero-scroll-indicator" id="scrollIndicator">
-      <div class="scroll-line"></div>
+
+    <div class="h-scroll" aria-hidden="true">
+      <span>Scroll</span>
+      <div class="h-scroll-bar"></div>
     </div>
   </section>
 
   <!-- ════════════════════════════════════════
-       PAGE CONTENT — seamlessly blends from hero
+       PAGE CONTENT
   ════════════════════════════════════════ -->
   <div class="page-body" id="pageBody">
 
     <!-- ── MARQUEE ── -->
-    <div class="marquee-wrap">
+    <div class="marquee-wrap" aria-hidden="true">
       <div class="marquee-inner">
         <span class="mi">Fotografía <b>·</b></span>
         <span class="mi">Filmmaking <b>·</b></span>
@@ -62,23 +162,26 @@
       </div>
     </div>
 
-    <!-- ── WORK ── -->
-    <section class="sec work" id="work">
+    <!-- ── PORTFOLIO PLACEHOLDER ── -->
+    <section class="sec work" id="work" aria-label="Portafolio">
       <div class="work-head rv">
         <div>
-          <div class="sec-label">Portafolio selecto</div>
-          <h2 class="work-title">WORK<br/><span class="out">2024</span></h2>
-        </div>
-        <div class="filters">
-          <button class="fb on" data-filter="all">Todos</button>
-          <button class="fb" data-filter="film">Film</button>
-          <button class="fb" data-filter="foto">Foto</button>
-          <button class="fb" data-filter="corp">Corporativo</button>
+          <div class="sec-label">Portafolio</div>
+          <h2 class="work-title">WORK<br/><span class="out">2025</span></h2>
         </div>
       </div>
-      <div class="bento" id="bento"></div>
-      <div class="work-more rv">
-        <a href="portfolio.html" target="_blank" class="btn-outline">Ver Portfolio Completo ↗</a>
+      <div class="work-placeholder rv">
+        <div class="placeholder-content">
+          <div class="placeholder-icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="8" y="12" width="48" height="40" rx="2"/>
+              <circle cx="26" cy="28" r="6"/>
+              <path d="M8 44l14-14 8 8 10-10 16 16"/>
+            </svg>
+          </div>
+          <h3 class="placeholder-title">Próximamente</h3>
+          <p class="placeholder-text">Nueva selección de proyectos en curso.<br/>Vuelve pronto para descubrir el trabajo más reciente.</p>
+        </div>
       </div>
     </section>
 
@@ -97,12 +200,16 @@
     </div>
 
     <!-- ── ABOUT ── -->
-    <section class="sec about" id="about">
+    <section class="sec about" id="about" aria-label="Sobre Matías Brieba">
       <div class="ab-inner">
         <div class="ab-img-wrap rv">
           <img class="ab-img"
-            src="https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/1029c1dd-c9da-45ad-aa61-bf9c0ca24f51_rw_600.png?h=6b198400613aefd30fd12ef0782a6d01"
-            alt="Matías Brieba"/>
+            src="images/matias-brieba.jpg"
+            srcset="images/matias-brieba-600.jpg 600w, images/matias-brieba.jpg 1200w"
+            sizes="(max-width: 900px) 100vw, 42vw"
+            alt="Matías Brieba — Filmmaker y Fotógrafo profesional en Chile"
+            width="1200" height="800"
+            loading="lazy"/>
           <div class="ab-img-caption">Chile</div>
           <div class="ab-num">15</div>
         </div>
@@ -121,7 +228,7 @@
             <span class="ab-tag">Productos</span>
           </div>
           <a href="#contact" class="ab-cta">Trabajemos juntos
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
               <line x1="5" y1="12" x2="19" y2="12"/>
               <polyline points="12 5 19 12 12 19"/>
             </svg>
@@ -131,7 +238,7 @@
     </section>
 
     <!-- ── SERVICES ── -->
-    <section class="sec services" id="services">
+    <section class="sec services" id="services" aria-label="Servicios">
       <div class="rv">
         <div class="sec-label">Especialidades</div>
         <h2 class="srv-head">LO QUE<br/><span class="out">OFREZCO</span></h2>
@@ -145,7 +252,7 @@
     </section>
 
     <!-- ── CONTACT ── -->
-    <section class="contact" id="contact">
+    <section class="contact" id="contact" aria-label="Contacto">
       <p class="ct-pre rv">Nuevos proyectos</p>
       <h2 class="ct-heading rv">HABLE<br/><span class="out">MOS</span></h2>
       <a href="mailto:matiasbrieba@gmail.com" class="ct-email rv">matiasbrieba@gmail.com</a>
@@ -157,16 +264,16 @@
       <div class="ft-logo">MB © 2024</div>
       <div class="ft-copy">Matías Brieba — Filmmaker &amp; Fotógrafo</div>
       <div class="ft-soc">
-        <a href="portfolio.html" target="_blank">Portfolio</a>
-        <a href="https://www.instagram.com" target="_blank">Instagram</a>
+        <a href="#work">Portfolio</a>
+        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
       </div>
     </footer>
 
   </div><!-- /page-body -->
 
   <!-- WhatsApp flotante -->
-  <a href="https://wa.me/56991344540" target="_blank" class="wa-float" aria-label="WhatsApp">
-    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  <a href="https://wa.me/56991344540" target="_blank" class="wa-float" aria-label="Contactar por WhatsApp" rel="noopener noreferrer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
   </a>
 
   <script src="js/data.js"></script>

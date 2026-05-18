@@ -25,29 +25,7 @@ body{
   color:var(--white);
   font-family:var(--font-body);
   overflow-x:hidden;
-  cursor:none;
 }
-@media(pointer:coarse){body{cursor:auto;}}
-
-/* ── CURSOR ── */
-#cur{
-  position:fixed;top:0;left:0;
-  width:6px;height:6px;
-  background:var(--white);border-radius:50%;
-  pointer-events:none;z-index:9999;
-  transform:translate(-50%,-50%);
-}
-#cur-ring{
-  position:fixed;top:0;left:0;
-  width:30px;height:30px;
-  border:1px solid rgba(250,250,250,.3);
-  border-radius:50%;
-  pointer-events:none;z-index:9998;
-  transform:translate(-50%,-50%);
-  transition:width .35s cubic-bezier(.16,1,.3,1),height .35s cubic-bezier(.16,1,.3,1),opacity .3s;
-}
-#cur-ring.big{width:52px;height:52px;opacity:.5;}
-@media(pointer:coarse){#cur,#cur-ring{display:none;}}
 
 /* ── NAV ── */
 nav{

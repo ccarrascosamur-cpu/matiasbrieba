@@ -302,7 +302,7 @@
         <button class="s-item" onclick="showPage('projects',this)">Proyectos</button>
         <button class="s-item" onclick="showPage('clients',this)">Clientes</button>
         <button class="s-item" onclick="showPage('settings',this)">Configuración</button>
-        <a href="index.html" target="_blank" class="s-item">Ver sitio ↗</a>
+        <a href="/" target="_blank" class="s-item">Ver sitio ↗</a>
       </nav>
       <div class="sidebar-footer">
         <button class="s-out" onclick="doLogout()">Cerrar sesión</button>
@@ -526,7 +526,7 @@
       document.getElementById('dc-cli').textContent  = clis.length;
       document.getElementById('dc-feat').textContent = projs.filter(p=>p.featured).length;
       // Dashboard table
-      renderProjTable(projs.slice(0,5), 'dashTbl', false);
+      renderProjTable(projs.slice(0,5), 'dashTbl', true);
       renderProjTable(projs, 'projTbl', true);
       renderCliTable(clis);
       // Settings

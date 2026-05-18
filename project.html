@@ -225,9 +225,6 @@
   </style>
 </head>
 <body>
-  <div id="cur"></div>
-  <div id="cur-ring"></div>
-
   <nav id="nav" class="scrolled">
     <a href="index.html" class="n-logo">
       <img class="n-logo-img" src="https://cdn.myportfolio.com/99e3222b-7b10-4664-a4cf-206afa74b111/0c3864eb-30af-45f4-9fbc-2a8c27377bd4_rwc_0x0x1542x1542x4096.png?h=1d173751776d0296528023ed82d96617" alt="MB"/>
@@ -422,17 +419,6 @@
       if(e.key==='ArrowRight') lbNav(1);
       if(e.key==='ArrowLeft') lbNav(-1);
     });
-
-    // CURSOR
-    const cur=document.getElementById('cur'), ring=document.getElementById('cur-ring');
-    let mx=0,my=0,rx=0,ry=0;
-    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
-    (function t(){
-      cur.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;
-      rx+=(mx-rx)*.11;ry+=(my-ry)*.11;
-      ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
-      requestAnimationFrame(t);
-    })();
 
     // NAV
     const nav=document.getElementById('nav');

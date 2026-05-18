@@ -174,3 +174,23 @@ function saveMBData(data){
     saveMBData(MB_DEFAULT);
   }
 })();
+
+// Convert Google Drive share links to embeddable image URLs
+function fixImgUrl(url){
+  if(!url) return '';
+  const m=url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([A-Za-z0-9_-]+)/);
+  if(m) return 'https://lh3.googleusercontent.com/d/'+m[1];
+  return url;
+}
+
+// Parse a video URL and return {type, src} ready to embed as hero
+function parseHeroVideo(url){
+  if(!url) return null;
+  const yt=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
+  if(yt) return {type:'iframe',src:`https://www.youtube.com/embed/${yt[1]}?autoplay=1&mute=1&loop=1&playlist=${yt[1]}&controls=0&playsinline=1&rel=0&modestbranding=1`};
+  const vm=url.match(/vimeo\.com\/(\d+)/);
+  if(vm) return {type:'iframe',src:`https://player.vimeo.com/video/${vm[1]}?autoplay=1&loop=1&background=1&muted=1`};
+  const gd=url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([A-Za-z0-9_-]+)/);
+  if(gd) return {type:'iframe',src:`https://drive.google.com/file/d/${gd[1]}/preview`};
+  return {type:'video',src:url};
+}

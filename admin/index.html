@@ -373,6 +373,28 @@
           </div>
         </div>
         <div class="settings-section">
+          <div class="ss-head">Hero del sitio</div>
+          <div class="ss-body">
+            <div class="ss-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
+              <span class="ss-key">Video de fondo (hero)</span>
+              <input style="width:100%;padding:6px 10px;background:#1a1a1a;border:1px solid rgba(250,250,250,.08);color:#fafafa;font-size:12px;outline:none;" id="cfgHeroVideo" placeholder="URL de YouTube, Vimeo, Google Drive o .mp4 directo"/>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;line-height:1.6;">
+                Acepta: YouTube · Vimeo · Google Drive · enlace directo .mp4<br/>
+                El video se reproduce en loop, sin sonido, a pantalla completa.<br/>
+                Si está vacío, se usa la imagen del primer proyecto destacado.
+              </span>
+            </div>
+            <div class="ss-row" style="flex-direction:column;align-items:flex-start;gap:10px;padding-top:20px;">
+              <span class="ss-key" style="margin-bottom:4px;">Imágenes desde Google Drive</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;line-height:1.6;">
+                1. Sube tu imagen a Google Drive<br/>
+                2. Clic derecho → "Obtener enlace" → acceso "Cualquier persona con el enlace"<br/>
+                3. Copia el enlace y pégalo en el campo de imagen — se convierte automáticamente.
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="settings-section">
           <div class="ss-head">Seguridad</div>
           <div class="ss-body">
             <div class="ss-row"><span class="ss-key">Nueva contraseña</span><input type="password" style="width:260px;padding:6px 10px;background:#1a1a1a;border:1px solid rgba(250,250,250,.08);color:#fafafa;font-size:12px;outline:none;" id="cfgPwd" placeholder="Nueva contraseña"/></div>
@@ -413,7 +435,8 @@
       </div>
       <div class="form-row">
         <label>URL de imagen</label>
-        <input type="url" id="fImg" placeholder="https://..."/>
+        <input type="text" id="fImg" placeholder="https://... o link de Google Drive"/>
+        <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Puedes pegar un link de Google Drive directamente — se convierte solo.</small>
       </div>
       <div class="form-row">
         <label>URL del proyecto (opcional)</label>
@@ -531,9 +554,10 @@
       renderCliTable(clis);
       // Settings
       const cfg = data.config || {};
-      document.getElementById('cfgEmail').value = cfg.email || '';
-      document.getElementById('cfgIG').value    = cfg.instagram || '';
-      document.getElementById('cfgCity').value  = cfg.city || '';
+      document.getElementById('cfgEmail').value      = cfg.email || '';
+      document.getElementById('cfgIG').value         = cfg.instagram || '';
+      document.getElementById('cfgCity').value       = cfg.city || '';
+      document.getElementById('cfgHeroVideo').value  = cfg.heroVideo || '';
     }
 
     function badgeHtml(cat){
@@ -541,8 +565,9 @@
       return `<span class="badge badge-${map[cat]||'foto'}">${cat}</span>`;
     }
     function thumbHtml(img){
-      if(!img) return `<div class="thumb-placeholder"><span>—</span></div>`;
-      return `<img class="thumb" src="${img}" onerror="this.parentNode.innerHTML='<div class=\\'thumb-placeholder\\'><span>—</span></div>'"/>`;
+      const src=typeof fixImgUrl==='function'?fixImgUrl(img):img;
+      if(!src) return `<div class="thumb-placeholder"><span>—</span></div>`;
+      return `<img class="thumb" src="${src}" onerror="this.parentNode.innerHTML='<div class=\\'thumb-placeholder\\'><span>—</span></div>'"/>`;
     }
 
     function renderProjTable(projs, id, withActions){
@@ -692,9 +717,10 @@
     function saveSettings(){
       const d = getMBData();
       d.config = {
-        email:     document.getElementById('cfgEmail').value.trim(),
-        instagram: document.getElementById('cfgIG').value.trim(),
-        city:      document.getElementById('cfgCity').value.trim(),
+        email:      document.getElementById('cfgEmail').value.trim(),
+        instagram:  document.getElementById('cfgIG').value.trim(),
+        city:       document.getElementById('cfgCity').value.trim(),
+        heroVideo:  document.getElementById('cfgHeroVideo').value.trim(),
       };
       const pwd = document.getElementById('cfgPwd').value;
       if(pwd) localStorage.setItem('mb_pwd', pwd);

@@ -51,6 +51,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { threshold: .08 });
   document.querySelectorAll('.rv').forEach(el => obs.observe(el));
 
+  // ── HERO BACKGROUND from first featured project ──
+  const hbg = document.getElementById('hbg');
+  if (hbg) {
+    const d = getMBData();
+    const featured = d.projects.find(p => p.featured && p.img);
+    if (featured) hbg.style.backgroundImage = `url('${featured.img}')`;
+  }
+
   // ── RENDER BENTO + CLIENTS + STATS ──
   const bento = document.getElementById('bento');
   if (bento) renderBento('all');
@@ -156,8 +164,7 @@ function renderBento(filter) {
     return `
       <a class="gi ${cls} rv" href="${href}" target="_blank"
          style="text-decoration:none;" data-cat="${p.cat}">
-        <img src="${p.img}" alt="${p.name}" loading="${i < 3 ? 'eager' : 'lazy'}"
-             onerror="this.style.display='none';this.parentNode.style.background='#1a1a1a'"/>
+        ${p.img ? `<img src="${p.img}" alt="${p.name}" loading="${i < 3 ? 'eager' : 'lazy'}" onerror="this.style.display='none'"/>` : ''}
         <div class="gi-over">
           <p class="gi-cat">${catLabel(p.cat)}</p>
           <p class="gi-name">${p.name}</p>

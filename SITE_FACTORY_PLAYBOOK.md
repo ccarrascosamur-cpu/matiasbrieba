@@ -82,6 +82,13 @@ Siempre preguntar primero:
 
 - `¿Es una landing page simple o un sitio con backend autoadministrable?`
 
+Antes de diseñar o implementar, también pedir o asumir permiso para buscar referencias en Lazyweb cuando ayude a definir:
+
+- estilo visual
+- estructura de secciones
+- referencias de interacción
+- patrones de portfolios, estudios o landings
+
 Si es landing simple:
 
 - no crear backend
@@ -117,6 +124,7 @@ Construir:
 - responsive
 - enlaces y CTA
 - assets
+- referencias visuales tomadas de Lazyweb si aportan dirección clara
 
 No crear:
 
@@ -168,12 +176,14 @@ En Cloudflare:
 Landing simple:
 
 - render estático
+- usar referencias de Lazyweb si ayudan a definir una dirección visual concreta
 
 Autoadministrable:
 
 - render desde `js/data.js`
 - leer desde `/api/data`
 - actualizar cuando cambie la data
+- usar referencias de Lazyweb para UI pública y, si hace sentido, para el admin
 
 ### 9. Implementar admin
 
@@ -247,6 +257,8 @@ Todo agente que cree un sitio debe preguntar primero:
 - `¿Es una landing page simple o un sitio con backend autoadministrable?`
 
 No debe asumir backend por defecto.
+
+También debe considerar buscar referencias en Lazyweb antes de diseñar, especialmente si el usuario no entregó una dirección visual suficientemente concreta.
 
 ## Referencia útil
 

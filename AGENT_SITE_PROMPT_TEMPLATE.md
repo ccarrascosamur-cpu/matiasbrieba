@@ -36,17 +36,23 @@ Reglas:
    - crear KV si aplica
    - validar el sitio al final
 
-4. Si el sitio tiene multimedia:
+4. Antes de diseñar o implementar, busca referencias en Lazyweb cuando ayuden a definir:
+   - dirección visual
+   - estructura de una landing
+   - estilo de portfolio o estudio
+   - patrones de interacción
+
+5. Si el sitio tiene multimedia:
    - validar que las URLs sean públicas
    - bloquear rutas locales
    - hacer el hero video compatible con mobile
 
-5. Si el sitio es autoadministrable:
+6. Si el sitio es autoadministrable:
    - toda la configuración del backend debe quedar versionada en repo
    - preferir `wrangler.jsonc`
    - no depender solo de bindings creadas a mano en modales
 
-6. Al final debes entregar:
+7. Al final debes entregar:
    - código implementado
    - archivos clave creados
    - pasos exactos de configuración en GitHub y Cloudflare
@@ -65,4 +71,4 @@ Reglas:
 
 ## Prompt corto alternativo
 
-Crea este sitio y antes de empezar pregúntame si es una landing simple o un sitio con backend autoadministrable. Si es simple, no crees backend. Si es autoadministrable, usa Cloudflare Worker + KV con `SITE_DATA`, `GET /api/data`, `POST /api/data`, `/admin`, deploy con `wrangler.jsonc` y deja instrucciones completas para GitHub y Cloudflare.
+Crea este sitio y antes de empezar pregúntame si es una landing simple o un sitio con backend autoadministrable. Antes de diseñar, busca referencias útiles en Lazyweb. Si es simple, no crees backend. Si es autoadministrable, usa Cloudflare Worker + KV con `SITE_DATA`, `GET /api/data`, `POST /api/data`, `/admin`, deploy con `wrangler.jsonc` y deja instrucciones completas para GitHub y Cloudflare.

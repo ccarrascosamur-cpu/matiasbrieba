@@ -334,7 +334,7 @@ function parseHeroVideo(url){
   const clean = normalizeMediaUrl(url);
   if(!clean) return null;
   const yt=clean.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
-  if(yt) return {type:'iframe',src:`https://www.youtube.com/embed/${yt[1]}?autoplay=1&mute=1&loop=1&playlist=${yt[1]}&controls=0&playsinline=1&rel=0&modestbranding=1`};
+  if(yt) return {type:'iframe',src:`https://www.youtube-nocookie.com/embed/${yt[1]}?autoplay=1&mute=1&loop=1&playlist=${yt[1]}&controls=0&playsinline=1&rel=0&disablekb=1&fs=0&iv_load_policy=3`};
   const vm=clean.match(/vimeo\.com\/(\d+)/);
   if(vm) return {type:'iframe',src:`https://player.vimeo.com/video/${vm[1]}?autoplay=1&loop=1&background=1&muted=1`};
   const gd=clean.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([A-Za-z0-9_-]+)/);

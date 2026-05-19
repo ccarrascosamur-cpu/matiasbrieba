@@ -1,32 +1,43 @@
 # Cloudflare Setup
 
-This site now expects a Cloudflare Pages Function at `/api/data` backed by a KV namespace binding named `MB_DATA`.
+This project deploys with `wrangler deploy`, not Cloudflare Pages Functions.
 
-## Required bindings
+## Current repo config
 
-In your Cloudflare Pages project:
+The repository already includes:
 
-1. Go to `Workers & Pages` > your project.
-2. Open `Settings` > `Bindings`.
-3. Add a `KV namespace` binding named `MB_DATA`.
-4. Redeploy the project.
+- `wrangler.jsonc` with the KV namespace binding `MB_DATA`
+- `worker.js` serving static assets plus `/api/data`
+
+KV namespace ID configured in repo:
+
+- `b519979e323b4a50b7ea7d62b7705d73`
+
+## What Cloudflare still needs
+
+You do not need to keep fighting the UI binding modal if the deploy uses the repo config.
+
+You only need:
+
+1. The KV namespace to exist in Cloudflare.
+2. A redeploy of the Worker/project.
 
 ## Optional admin credentials
 
 The admin write endpoint accepts HTTP Basic auth.
 
-If you want to override the built-in defaults, add these environment variables in `Settings` > `Variables and Secrets`:
+If you want to override the built-in defaults, add these variables in Cloudflare:
 
 - `MB_ADMIN_USER`
 - `MB_ADMIN_PASSWORD`
 
-If you do not set them, the API uses:
+Defaults used by the code:
 
 - user: `matias`
 - password: `brieba2024`
 
 ## Result
 
-- `GET /api/data` returns the current site data.
-- `POST /api/data` saves projects, clients, and config into KV.
-- The frontend caches the last successful response in `localStorage`, but the source of truth is now KV.
+- `GET /api/data` returns the current site data
+- `POST /api/data` saves projects, clients, and config into KV
+- the frontend still caches the latest successful response in `localStorage`, but KV is now the source of truth

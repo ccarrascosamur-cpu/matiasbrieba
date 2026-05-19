@@ -1,0 +1,15 @@
+{
+  "name": "matiasbrieba",
+  "main": "worker.js",
+  "compatibility_date": "2026-05-19",
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "MB_DATA",
+      "id": "b519979e323b4a50b7ea7d62b7705d73"
+    }
+  ]
+}

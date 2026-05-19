@@ -109,28 +109,44 @@ async function readStoredData(env) {
   return raw ? normalizeData(raw) : normalizeData(DEFAULT_DATA);
 }
 
-export async function onRequestGet(context) {
-  const data = await readStoredData(context.env);
-  return json(data);
+async function handleApi(request, env) {
+  if (request.method === 'GET') {
+    return json(await readStoredData(env));
+  }
+
+  if (request.method === 'POST') {
+    if (!env.MB_DATA) {
+      return json({ error: 'Missing KV binding: MB_DATA' }, { status: 500 });
+    }
+    if (!isAuthorized(request, env)) {
+      return json({ error: 'Unauthorized' }, {
+        status: 401,
+        headers: { 'WWW-Authenticate': 'Basic realm="admin"' },
+      });
+    }
+    let payload;
+    try {
+      payload = await request.json();
+    } catch (_err) {
+      return json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
+    const normalized = normalizeData(payload);
+    await env.MB_DATA.put(STORAGE_KEY, JSON.stringify(normalized));
+    return json(normalized);
+  }
+
+  return new Response('Method Not Allowed', {
+    status: 405,
+    headers: { Allow: 'GET, POST' },
+  });
 }
 
-export async function onRequestPost(context) {
-  if (!context.env.MB_DATA) {
-    return json({ error: 'Missing KV binding: MB_DATA' }, { status: 500 });
-  }
-  if (!isAuthorized(context.request, context.env)) {
-    return json({ error: 'Unauthorized' }, {
-      status: 401,
-      headers: { 'WWW-Authenticate': 'Basic realm="admin"' },
-    });
-  }
-  let payload;
-  try {
-    payload = await context.request.json();
-  } catch (_err) {
-    return json({ error: 'Invalid JSON body' }, { status: 400 });
-  }
-  const normalized = normalizeData(payload);
-  await context.env.MB_DATA.put(STORAGE_KEY, JSON.stringify(normalized));
-  return json(normalized);
-}
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    if (url.pathname === '/api/data') {
+      return handleApi(request, env);
+    }
+    return env.ASSETS.fetch(request);
+  },
+};

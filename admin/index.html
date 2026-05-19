@@ -658,6 +658,11 @@
         desc:    document.getElementById('fDesc').value.trim(),
         featured:document.getElementById('toggleFeatured').classList.contains('on'),
       };
+      const mediaUrls = [proj.img, ...proj.videos, ...proj.images].filter(Boolean);
+      if(typeof isLocalOnlyMediaUrl === 'function' && mediaUrls.some(isLocalOnlyMediaUrl)){
+        alert('Una o más URLs multimedia apuntan a tu computador o localhost. Usa una URL pública o una ruta del sitio como images/archivo.jpg.');
+        return;
+      }
       proj.videoUrl = proj.videos[0] || '';
       if(!proj.name){alert('El nombre es requerido.');return;}
       if(editingId){
@@ -720,11 +725,16 @@
 
     function saveSettings(){
       const d = getMBData();
+      const heroVideo = document.getElementById('cfgHeroVideo').value.trim();
+      if(typeof isLocalOnlyMediaUrl === 'function' && isLocalOnlyMediaUrl(heroVideo)){
+        alert('El video del hero apunta a una URL local. Usa YouTube, Vimeo, Google Drive público o un .mp4 accesible públicamente.');
+        return;
+      }
       d.config = {
         email:      document.getElementById('cfgEmail').value.trim(),
         instagram:  document.getElementById('cfgIG').value.trim(),
         city:       document.getElementById('cfgCity').value.trim(),
-        heroVideo:  document.getElementById('cfgHeroVideo').value.trim(),
+        heroVideo,
       };
       const pwd = document.getElementById('cfgPwd').value;
       if(pwd) localStorage.setItem('mb_pwd', pwd);

@@ -156,7 +156,39 @@ const MB_DEFAULT = {
 
 function normalizeMediaUrl(url){
   if(!url) return '';
-  return String(url).trim();
+  const clean = String(url).trim();
+  if(!clean) return '';
+  if(/^(?:data:|blob:|https?:)?\/\//i.test(clean)) return clean;
+  if(/^file:/i.test(clean)) return clean;
+  if(/^[a-zA-Z]:[\\/]/.test(clean) || clean.startsWith('\\\\')) return clean;
+  try{
+    return new URL(clean, getSiteBaseUrl()).href;
+  }catch(_err){
+    return clean;
+  }
+}
+
+function getSiteBaseUrl(){
+  if(typeof window === 'undefined' || !window.location) return 'http://localhost/';
+  const {origin, pathname} = window.location;
+  const adminIdx = pathname.indexOf('/admin/');
+  const basePath = adminIdx >= 0
+    ? `${pathname.slice(0, adminIdx) || ''}/`
+    : pathname.replace(/\/[^/]*$/, '/');
+  return `${origin}${basePath}`;
+}
+
+function isLocalOnlyMediaUrl(url){
+  const clean = String(url || '').trim();
+  if(!clean) return false;
+  if(/^file:/i.test(clean)) return true;
+  if(/^[a-zA-Z]:[\\/]/.test(clean) || clean.startsWith('\\\\')) return true;
+  try{
+    const parsed = new URL(clean, getSiteBaseUrl());
+    return ['localhost', '127.0.0.1', '::1'].includes(parsed.hostname);
+  }catch(_err){
+    return false;
+  }
 }
 
 function parseList(value){

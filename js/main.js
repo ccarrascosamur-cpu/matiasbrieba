@@ -56,7 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (hbg) {
     const d = getMBData();
     const featured = d.projects.find(p => p.featured && p.img);
-    if (featured) hbg.style.backgroundImage = `url('${featured.img}')`;
+    const imgSrc = featured ? fixImgUrl(featured.img) : '';
+    if (imgSrc) hbg.style.backgroundImage = `url('${imgSrc}')`;
   }
 
   // ── RENDER BENTO + CLIENTS + STATS ──
@@ -161,10 +162,11 @@ function renderBento(filter) {
   bento.innerHTML = items.slice(0, 8).map((p, i) => {
     const cls  = layouts[i] || 'b-sq';
     const href = `project.html?id=${p.id}`;
+    const imgSrc = typeof fixImgUrl === 'function' ? fixImgUrl(p.img) : p.img;
     return `
       <a class="gi ${cls} rv" href="${href}" target="_blank"
          style="text-decoration:none;" data-cat="${p.cat}">
-        ${p.img ? `<img src="${p.img}" alt="${p.name}" loading="${i < 3 ? 'eager' : 'lazy'}" onerror="this.style.display='none'"/>` : ''}
+        ${imgSrc ? `<img src="${imgSrc}" alt="${p.name}" loading="${i < 3 ? 'eager' : 'lazy'}" onerror="this.style.display='none'"/>` : ''}
         <div class="gi-over">
           <p class="gi-cat">${catLabel(p.cat)}</p>
           <p class="gi-name">${p.name}</p>

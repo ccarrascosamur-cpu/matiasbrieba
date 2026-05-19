@@ -167,15 +167,15 @@ function renderBento(filter) {
       <a class="gi ${cls} rv" href="${href}" target="_blank"
          style="text-decoration:none;" data-cat="${p.cat}">
         ${imgSrc ? `<img src="${imgSrc}" alt="${p.name}" loading="${i < 3 ? 'eager' : 'lazy'}" onerror="this.style.display='none'"/>` : ''}
-        <div class="gi-over">
-          <p class="gi-cat">${catLabel(p.cat)}</p>
-          <p class="gi-name">${p.name}</p>
-          <p class="gi-yr">${p.year}${p.client && p.client !== p.name ? ' · ' + p.client : ''}</p>
+        <div class="giov">
+          <p class="gcat">${catLabel(p.cat)}</p>
+          <p class="gname">${p.name}</p>
+          <p class="gyr">${p.year}${p.client && p.client !== p.name ? ' · ' + p.client : ''}</p>
         </div>
-        <div class="gi-badge">
+        <div class="gbadge">
           <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
         </div>
-        <span class="gi-num">0${i + 1}</span>
+        <span class="gnum">0${i + 1}</span>
       </a>`;
   }).join('');
 

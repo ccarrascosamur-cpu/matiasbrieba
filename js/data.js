@@ -244,8 +244,8 @@ function saveMBData(data){
 function fixImgUrl(url){
   const clean = normalizeMediaUrl(url);
   if(!clean) return '';
-  const m=clean.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([A-Za-z0-9_-]+)/);
-  if(m) return 'https://lh3.googleusercontent.com/d/'+m[1];
+  const m = clean.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=[^&]+&)?id=|thumbnail\?id=)([A-Za-z0-9_-]+)/);
+  if(m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w2000`;
   return clean;
 }
 

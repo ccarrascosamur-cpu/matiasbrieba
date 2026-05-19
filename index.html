@@ -175,13 +175,13 @@ footer{background:var(--obk);padding:26px 48px;display:flex;align-items:center;j
 .wa-float:hover{transform:scale(1.1);box-shadow:0 8px 28px rgba(37,211,102,.35);}
 .wa-float svg{width:28px;height:28px;fill:#fff;}
 
-/* Hero starts below fixed nav */
-.hero{position:relative;width:100%;height:calc(100vh - 80px);margin-top:80px;display:flex;align-items:flex-end;overflow:hidden;}
+/* Hero: fullscreen, nav overlays on top */
+.hero{position:relative;width:100%;height:100vh;margin-top:0;display:flex;align-items:flex-end;overflow:hidden;}
 .hbg{position:absolute;inset:0;background-size:cover;background-position:center;filter:grayscale(1) brightness(.5) contrast(1.15);}
 .hvideo{position:absolute;inset:0;z-index:0;overflow:hidden;background:var(--bk);}
 .hvideo video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.5) contrast(1.15);pointer-events:none;}
-/* iframe: taller than container so bottom control bar is clipped by overflow:hidden */
-.hvideo iframe{position:absolute;top:0;left:50%;width:max(100%,177.78vh);height:calc(100% + 80px);transform:translateX(-50%);border:none;pointer-events:none;filter:grayscale(1) brightness(.5) contrast(1.15);}
+/* iframe: oversized on all sides so YT top/bottom UI is clipped by overflow:hidden */
+.hvideo iframe{position:absolute;top:-60px;left:50%;width:max(100%,177.78vh);height:calc(100% + 120px);transform:translateX(-50%);border:none;pointer-events:none;filter:grayscale(1) brightness(.5) contrast(1.15);}
 /* shield: covers iframe entirely — blocks hover/click so YT controls never appear */
 .hvideo::after{content:'';position:absolute;inset:0;z-index:2;pointer-events:all;cursor:default;background:transparent;}
 .hero-noise{position:absolute;inset:0;z-index:1;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px;}
@@ -366,7 +366,7 @@ function fixImgUrl(url){
   if(!src){const gd=vurl.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([A-Za-z0-9_-]+)/);if(gd){type='video';src=`https://drive.google.com/uc?export=view&id=${gd[1]}`;}}
   // URL directa (.mp4 u otro)
   if(!src){type='video';src=vurl;}
-  document.addEventListener('DOMContentLoaded',function(){
+  function mountVideo(){
     const hbg=document.getElementById('hbg');
     if(hbg) hbg.style.display='none';
     const hero=document.querySelector('.hero');
@@ -379,7 +379,12 @@ function fixImgUrl(url){
       wrap.innerHTML=`<iframe src="${src}" allow="autoplay; encrypted-media" allowfullscreen="0" frameborder="0" tabindex="-1" aria-hidden="true"></iframe>`;
     }
     hero.insertBefore(wrap, hero.firstChild);
-  });
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',mountVideo);
+  } else {
+    mountVideo();
+  }
 })();
 const CL2={film:'Film',foto:'Fotografía',corp:'Corporativo',deporte:'Deportes'};
 const LY=['b-hero','b-tall','b-sq','b-sq','b-sq','b-sq','b-wide','b-wide'];
@@ -464,21 +469,18 @@ function openProj(e,id){
   e.preventDefault();
   const p=P.find(x=>x.id===id);
   if(!p) return;
-  const imgs=p.images||[];
-  const vurl=p.videoUrl||'';
-  const isYT=vurl.includes('youtube')||vurl.includes('youtu.be');
-  const isVimeo=vurl.includes('vimeo');
+  const imgs=(p.images||[]).map(s=>fixImgUrl(s)).filter(Boolean);
+  const videos=Array.isArray(p.videos)&&p.videos.length ? p.videos : (p.videoUrl?[p.videoUrl]:[]);
   let vblock='';
-  if(vurl){
-    if(isYT){
-      const yid=vurl.match(/(?:v=|youtu\.be\/)([^&?/]+)/)?.[1]||'';
-      vblock=`<div class="pm-vwrap"><iframe src="https://www.youtube.com/embed/${yid}?rel=0" allowfullscreen></iframe></div><p class="pm-vlabel">Video — ${p.name}</p>`;
-    } else if(isVimeo){
-      const vid=vurl.match(/vimeo\.com\/(\d+)/)?.[1]||'';
-      vblock=`<div class="pm-vwrap"><iframe src="https://player.vimeo.com/video/${vid}" allowfullscreen></iframe></div><p class="pm-vlabel">Video — ${p.name}</p>`;
-    } else {
-      vblock=`<div class="pm-vwrap"><video src="${vurl}" controls preload="metadata"></video></div><p class="pm-vlabel">Video — ${p.name}</p>`;
-    }
+  if(videos.length){
+    vblock=videos.map((videoUrl,index)=>{
+      const media=typeof parseProjectVideo==='function'?parseProjectVideo(videoUrl):null;
+      if(!media) return '';
+      if(media.type==='iframe'){
+        return `<div class="pm-vwrap"><iframe src="${media.src}" loading="lazy" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe></div><p class="pm-vlabel">${videos.length>1?`Video ${index+1}`:'Video'} — ${p.name}</p>`;
+      }
+      return `<div class="pm-vwrap"><video src="${media.src}" controls playsinline preload="metadata"></video></div><p class="pm-vlabel">${videos.length>1?`Video ${index+1}`:'Video'} — ${p.name}</p>`;
+    }).join('');
   }
   let galblock='';
   if(imgs.length){

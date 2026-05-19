@@ -154,18 +154,51 @@ const MB_DEFAULT = {
   }
 };
 
+function normalizeMediaUrl(url){
+  if(!url) return '';
+  return String(url).trim();
+}
+
+function parseList(value){
+  if(Array.isArray(value)) return value.map(item => normalizeMediaUrl(item)).filter(Boolean);
+  if(typeof value !== 'string') return [];
+  return value.split('\n').map(item => normalizeMediaUrl(item)).filter(Boolean);
+}
+
+function normaliseProject(project){
+  if(!project || typeof project !== 'object') return project;
+  const videos = Array.isArray(project.videos)
+    ? project.videos
+    : (project.videoUrl ? [project.videoUrl] : []);
+  return {
+    ...project,
+    img: fixImgUrl(project.img || ''),
+    images: parseList(project.images || []),
+    videos: parseList(videos),
+    videoUrl: normalizeMediaUrl(project.videoUrl || videos[0] || ''),
+  };
+}
+
 function getMBData(){
   try {
     const raw = localStorage.getItem(MB_KEY);
     if(!raw) return structuredClone(MB_DEFAULT);
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    return {
+      ...parsed,
+      projects: Array.isArray(parsed.projects) ? parsed.projects.map(normaliseProject) : [],
+    };
   } catch(e){
     return structuredClone(MB_DEFAULT);
   }
 }
 
 function saveMBData(data){
-  localStorage.setItem(MB_KEY, JSON.stringify(data));
+  const payload = {
+    ...data,
+    projects: Array.isArray(data?.projects) ? data.projects.map(normaliseProject) : [],
+  };
+  localStorage.setItem(MB_KEY, JSON.stringify(payload));
 }
 
 // Init default if empty
@@ -177,20 +210,49 @@ function saveMBData(data){
 
 // Convert Google Drive share links to embeddable image URLs
 function fixImgUrl(url){
-  if(!url) return '';
-  const m=url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([A-Za-z0-9_-]+)/);
+  const clean = normalizeMediaUrl(url);
+  if(!clean) return '';
+  const m=clean.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([A-Za-z0-9_-]+)/);
   if(m) return 'https://lh3.googleusercontent.com/d/'+m[1];
-  return url;
+  return clean;
 }
 
 // Parse a video URL and return {type, src} ready to embed as hero
 function parseHeroVideo(url){
-  if(!url) return null;
-  const yt=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
+  const clean = normalizeMediaUrl(url);
+  if(!clean) return null;
+  const yt=clean.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
   if(yt) return {type:'iframe',src:`https://www.youtube.com/embed/${yt[1]}?autoplay=1&mute=1&loop=1&playlist=${yt[1]}&controls=0&playsinline=1&rel=0&modestbranding=1`};
-  const vm=url.match(/vimeo\.com\/(\d+)/);
+  const vm=clean.match(/vimeo\.com\/(\d+)/);
   if(vm) return {type:'iframe',src:`https://player.vimeo.com/video/${vm[1]}?autoplay=1&loop=1&background=1&muted=1`};
-  const gd=url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([A-Za-z0-9_-]+)/);
+  const gd=clean.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([A-Za-z0-9_-]+)/);
   if(gd) return {type:'iframe',src:`https://drive.google.com/file/d/${gd[1]}/preview`};
-  return {type:'video',src:url};
+  return {type:'video',src:clean};
+}
+
+function parseProjectVideo(url){
+  const clean = normalizeMediaUrl(url);
+  if(!clean) return null;
+  const yt = clean.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
+  if(yt){
+    return {
+      type: 'iframe',
+      src: `https://www.youtube-nocookie.com/embed/${yt[1]}?rel=0&playsinline=1`,
+    };
+  }
+  const vm = clean.match(/vimeo\.com\/(\d+)/);
+  if(vm){
+    return {
+      type: 'iframe',
+      src: `https://player.vimeo.com/video/${vm[1]}`,
+    };
+  }
+  const gd = clean.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([A-Za-z0-9_-]+)/);
+  if(gd){
+    return {
+      type: 'iframe',
+      src: `https://drive.google.com/file/d/${gd[1]}/preview`,
+    };
+  }
+  return {type:'video', src: clean};
 }

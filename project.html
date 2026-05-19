@@ -280,35 +280,29 @@
       }
       document.title = `${proj.name} — Matías Brieba`;
 
-      const imgs = proj.images || [];
-      const videoUrl = proj.videoUrl || '';
-      const isYT = videoUrl.includes('youtube') || videoUrl.includes('youtu.be');
-      const isVimeo = videoUrl.includes('vimeo');
+      const imgs = (proj.images || []).map(src => fixImgUrl(src)).filter(Boolean);
+      const videoUrls = Array.isArray(proj.videos) && proj.videos.length
+        ? proj.videos
+        : (proj.videoUrl ? [proj.videoUrl] : []);
 
-      // Video embed
       let videoBlock = '';
-      if(videoUrl){
-        if(isYT){
-          const ytId = videoUrl.match(/(?:v=|youtu\.be\/)([^&?/]+)/)?.[1] || '';
-          videoBlock = `
+      if(videoUrls.length){
+        videoBlock = videoUrls.map((videoUrl, index) => {
+          const media = typeof parseProjectVideo === 'function' ? parseProjectVideo(videoUrl) : null;
+          if(!media) return '';
+          if(media.type === 'iframe'){
+            return `
+              <div class="proj-video-wrap">
+                <iframe src="${media.src}" loading="lazy" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe>
+              </div>
+              <p class="proj-video-label">${videoUrls.length > 1 ? `Video ${index + 1}` : 'Video'} — ${proj.name}</p>`;
+          }
+          return `
             <div class="proj-video-wrap">
-              <iframe src="https://www.youtube.com/embed/${ytId}?autoplay=0&rel=0" allowfullscreen></iframe>
+              <video src="${media.src}" controls playsinline preload="metadata"></video>
             </div>
-            <p class="proj-video-label">Video — ${proj.name}</p>`;
-        } else if(isVimeo){
-          const vmId = videoUrl.match(/vimeo\.com\/(\d+)/)?.[1] || '';
-          videoBlock = `
-            <div class="proj-video-wrap">
-              <iframe src="https://player.vimeo.com/video/${vmId}" allowfullscreen></iframe>
-            </div>
-            <p class="proj-video-label">Video — ${proj.name}</p>`;
-        } else {
-          videoBlock = `
-            <div class="proj-video-wrap">
-              <video src="${videoUrl}" controls preload="metadata"></video>
-            </div>
-            <p class="proj-video-label">Video — ${proj.name}</p>`;
-        }
+            <p class="proj-video-label">${videoUrls.length > 1 ? `Video ${index + 1}` : 'Video'} — ${proj.name}</p>`;
+        }).join('');
       }
 
       // Gallery
@@ -329,7 +323,7 @@
       root.innerHTML = `
         <!-- HERO -->
         <section class="proj-hero">
-          <div class="proj-hero-bg" id="projBg" style="background-image:url('${proj.img}')"></div>
+          <div class="proj-hero-bg" id="projBg" style="background-image:url('${fixImgUrl(proj.img)}')"></div>
           <div class="proj-hero-grad"></div>
           <div class="proj-hero-content">
             <p class="proj-breadcrumb"><a href="portfolio.html">Portfolio</a> &nbsp;/&nbsp; ${CATL[proj.cat]||proj.cat}</p>
@@ -398,7 +392,7 @@
 
     // LIGHTBOX
     let lbIndex = 0;
-    const lbImgs = proj?.images || [];
+    const lbImgs = (proj?.images || []).map(src => fixImgUrl(src)).filter(Boolean);
 
     function openLightbox(i){
       lbIndex = i;

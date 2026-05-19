@@ -444,13 +444,14 @@
         <input type="url" id="fUrl" placeholder="https://..."/>
       </div>
       <div class="form-row">
-        <label>Video — URL de YouTube, Vimeo o enlace directo .mp4</label>
-        <input type="url" id="fVideoUrl" placeholder="https://youtube.com/watch?v=... o https://vimeo.com/..."/>
+        <label>Videos — una URL por línea</label>
+        <textarea id="fVideos" placeholder="https://youtube.com/watch?v=...&#10;https://vimeo.com/...&#10;https://cdn.tusitio.com/video.mp4" style="min-height:100px;"></textarea>
+        <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Pega una URL por línea. Puedes quitar un video borrando su URL.</small>
       </div>
       <div class="form-row">
         <label>Imágenes de galería — una URL por línea</label>
         <textarea id="fImages" placeholder="https://imagen1.jpg&#10;https://imagen2.jpg&#10;https://imagen3.jpg" style="min-height:100px;"></textarea>
-        <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Pega las URLs de tus imágenes, una por línea. Puedes usar Cloudflare Images, imgbb.com o cualquier hosting.</small>
+        <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Pega las URLs de tus imágenes, una por línea. Puedes quitar una foto borrando su URL.</small>
       </div>
       <div class="form-row">
         <label>Descripción breve</label>
@@ -620,7 +621,8 @@
         document.getElementById('fYear').value   = data?.year  || new Date().getFullYear();
         document.getElementById('fImg').value    = data?.img   || '';
         document.getElementById('fUrl').value    = data?.url   || '';
-        document.getElementById('fVideoUrl').value = data?.videoUrl || '';
+        const videos = Array.isArray(data?.videos) ? data.videos : (data?.videoUrl ? [data.videoUrl] : []);
+        document.getElementById('fVideos').value   = videos.join('\n');
         document.getElementById('fImages').value   = (data?.images||[]).join('\n');
         document.getElementById('fDesc').value   = data?.desc  || '';
         const tog = document.getElementById('toggleFeatured');
@@ -651,11 +653,12 @@
         year:    parseInt(document.getElementById('fYear').value)||2024,
         img:     document.getElementById('fImg').value.trim(),
         url:     document.getElementById('fUrl').value.trim(),
-        videoUrl: document.getElementById('fVideoUrl').value.trim(),
+        videos:   document.getElementById('fVideos').value.split('\n').map(s=>s.trim()).filter(Boolean),
         images:  document.getElementById('fImages').value.split('\n').map(s=>s.trim()).filter(Boolean),
         desc:    document.getElementById('fDesc').value.trim(),
         featured:document.getElementById('toggleFeatured').classList.contains('on'),
       };
+      proj.videoUrl = proj.videos[0] || '';
       if(!proj.name){alert('El nombre es requerido.');return;}
       if(editingId){
         d.projects = d.projects.map(p=>p.id===editingId ? proj : p);

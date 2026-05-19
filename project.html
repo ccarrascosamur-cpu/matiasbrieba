@@ -267,12 +267,20 @@
     // Get project ID from URL ?id=X
     const params = new URLSearchParams(location.search);
     const projId = parseInt(params.get('id'));
-    const d = getMBData();
-    const proj = d.projects.find(p => p.id === projId);
-    const allProjs = d.projects;
-    const nextProj = allProjs[(allProjs.indexOf(proj) + 1) % allProjs.length];
+    let lbImgs = [];
+
+    function getProjectState(){
+      const data = getMBData();
+      const projects = Array.isArray(data.projects) ? data.projects : [];
+      const project = projects.find(p => p.id === projId);
+      const nextProject = project && projects.length
+        ? projects[(projects.indexOf(project) + 1) % projects.length]
+        : null;
+      return { project, nextProject };
+    }
 
     function render(){
+      const { project: proj, nextProject: nextProj } = getProjectState();
       const root = document.getElementById('projRoot');
       if(!proj){
         root.innerHTML = `<div class="proj-empty"><h2>Proyecto no encontrado</h2><p><a href="portfolio.html" style="color:var(--white)">← Volver al portfolio</a></p></div>`;
@@ -308,6 +316,7 @@
       // Gallery
       let galleryBlock = '';
       if(imgs.length){
+        lbImgs = imgs;
         galleryBlock = `
           <div class="proj-gallery">
             <p class="proj-gallery-title">Galería</p>
@@ -392,7 +401,6 @@
 
     // LIGHTBOX
     let lbIndex = 0;
-    const lbImgs = (proj?.images || []).map(src => fixImgUrl(src)).filter(Boolean);
 
     function openLightbox(i){
       lbIndex = i;
@@ -425,6 +433,7 @@
       ham.classList.remove('open');nl.classList.remove('open');
     }));
 
+    window.addEventListener('mb:data-updated', render);
     render();
   </script>
 </body>

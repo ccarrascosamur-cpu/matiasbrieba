@@ -1,8 +1,10 @@
 // ── MB DATA LAYER ──
-// Centralised data stored in localStorage
-// Admin panel writes here; front-end reads here.
+// Remote-first storage backed by Cloudflare Pages Functions + KV,
+// with localStorage used as a client-side cache/fallback.
 
 const MB_KEY = 'mb_portfolio_data';
+const MB_API_URL = '/api/data';
+const MB_DATA_EVENT = 'mb:data-updated';
 
 const MB_DEFAULT = {
   projects: [
@@ -211,34 +213,112 @@ function normaliseProject(project){
   };
 }
 
+function cloneDefaultData(){
+  return JSON.parse(JSON.stringify(MB_DEFAULT));
+}
+
+function normaliseData(data){
+  const base = cloneDefaultData();
+  return {
+    ...base,
+    ...(data && typeof data === 'object' ? data : {}),
+    projects: Array.isArray(data?.projects) ? data.projects.map(normaliseProject) : base.projects.map(normaliseProject),
+    clients: Array.isArray(data?.clients) ? data.clients : base.clients,
+    config: data?.config && typeof data.config === 'object' ? data.config : base.config,
+  };
+}
+
+function dispatchDataUpdate(data, source){
+  if(typeof window === 'undefined' || typeof window.dispatchEvent !== 'function') return;
+  window.dispatchEvent(new CustomEvent(MB_DATA_EVENT, {
+    detail: { data, source },
+  }));
+}
+
+function writeLocalData(data, source = 'local'){
+  const payload = normaliseData(data);
+  localStorage.setItem(MB_KEY, JSON.stringify(payload));
+  dispatchDataUpdate(payload, source);
+  return payload;
+}
+
 function getMBData(){
   try {
     const raw = localStorage.getItem(MB_KEY);
-    if(!raw) return structuredClone(MB_DEFAULT);
-    const parsed = JSON.parse(raw);
-    return {
-      ...parsed,
-      projects: Array.isArray(parsed.projects) ? parsed.projects.map(normaliseProject) : [],
-    };
+    if(!raw) return normaliseData(MB_DEFAULT);
+    return normaliseData(JSON.parse(raw));
   } catch(e){
-    return structuredClone(MB_DEFAULT);
+    return normaliseData(MB_DEFAULT);
   }
 }
 
 function saveMBData(data){
-  const payload = {
-    ...data,
-    projects: Array.isArray(data?.projects) ? data.projects.map(normaliseProject) : [],
+  return writeLocalData(data, 'local-save');
+}
+
+function getAdminAuthHeader(){
+  try{
+    const raw = localStorage.getItem('mb_admin_auth');
+    return raw ? `Basic ${raw}` : '';
+  }catch(_err){
+    return '';
+  }
+}
+
+async function fetchMBDataRemote(){
+  const res = await fetch(MB_API_URL, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Cache-Control': 'no-store',
+    },
+  });
+  if(!res.ok) throw new Error(`GET ${MB_API_URL} failed with ${res.status}`);
+  return normaliseData(await res.json());
+}
+
+async function loadMBDataRemote(){
+  try{
+    const data = await fetchMBDataRemote();
+    return writeLocalData(data, 'remote-load');
+  }catch(_err){
+    return getMBData();
+  }
+}
+
+async function saveMBDataRemote(data){
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
   };
-  localStorage.setItem(MB_KEY, JSON.stringify(payload));
+  const authHeader = getAdminAuthHeader();
+  if(authHeader) headers.Authorization = authHeader;
+  const res = await fetch(MB_API_URL, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(normaliseData(data)),
+  });
+  if(!res.ok){
+    const message = await res.text();
+    throw new Error(message || `POST ${MB_API_URL} failed with ${res.status}`);
+  }
+  return writeLocalData(await res.json(), 'remote-save');
 }
 
 // Init default if empty
 (function(){
   if(!localStorage.getItem(MB_KEY)){
-    saveMBData(MB_DEFAULT);
+    writeLocalData(MB_DEFAULT, 'default-init');
   }
 })();
+
+window.MBDataStore = {
+  ready: typeof fetch === 'function' ? loadMBDataRemote() : Promise.resolve(getMBData()),
+  eventName: MB_DATA_EVENT,
+  get: getMBData,
+  loadRemote: loadMBDataRemote,
+  saveRemote: saveMBDataRemote,
+};
 
 // Convert Google Drive share links to embeddable image URLs
 function fixImgUrl(url){

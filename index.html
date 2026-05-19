@@ -316,53 +316,36 @@ footer{background:var(--obk);padding:26px 48px;display:flex;align-items:center;j
     <div class="ftdev">Desarrollado por <a href="https://www.emmagination.cl" target="_blank">Emmagination</a></div>
   </div>
 </footer>
+<script src="js/data.js"></script>
 <script>
-const MB_DEFAULTS={
-  projects:[
-    {id:1,name:'Barra Central',client:'Barra Central',cat:'film',year:2026,img:'',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Barra Central.'},
-    {id:2,name:'Monster Energy Chile',client:'Monster Energy',cat:'foto',year:2026,img:'',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Monster Energy Chile.'},
-    {id:3,name:'Juan Valdez Café',client:'Juan Valdez',cat:'corp',year:2026,img:'',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Juan Valdez Café.'},
-    {id:4,name:'Xclusive Chile',client:'Xclusive',cat:'foto',year:2026,img:'',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Xclusive Chile.'},
-    {id:5,name:'Nevados de Chillán',client:'Nevados',cat:'deporte',year:2026,img:'',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Nevados de Chillán.'},
-    {id:6,name:'Chile Suplementos',client:'Chile Suplementos',cat:'corp',year:2026,img:'',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Chile Suplementos.'},
-    {id:7,name:'Cruzados',client:'Cruzados',cat:'deporte',year:2026,img:'',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Cruzados.'},
-    {id:8,name:'Tamango Brebajes',client:'Tamango',cat:'film',year:2026,img:'',url:'',videoUrl:'',images:[],desc:'Proyecto de fotografía y producción visual para Tamango Brebajes.'},
-  ],
-  clients:['Monster Energy','Juan Valdez','Cruzados','Nevados de Chillán','Xclusive Chile','Chile Suplementos','Barra Central','Tamango'],
-};
+let P=[];
+let CL=[];
 let MB_CONFIG={};
-(function(){
-  try{
-    const raw=localStorage.getItem('mb_portfolio_data');
-    if(raw){
-      const d=JSON.parse(raw);
-      if(d.projects&&d.projects.length) MB_DEFAULTS.projects=d.projects;
-      if(d.clients&&d.clients.length) MB_DEFAULTS.clients=d.clients.filter(c=>c.visible!==false).map(c=>c.name||c);
-      if(d.config) MB_CONFIG=d.config;
-    }
-  }catch(e){}
-})();
-const P=MB_DEFAULTS.projects;
-const CL=MB_DEFAULTS.clients;
 
-function fixImgUrl(url){
-  if(!url) return '';
-  const m=url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([A-Za-z0-9_-]+)/);
-  if(m) return 'https://lh3.googleusercontent.com/d/'+m[1];
-  return url;
+function syncHomeData(){
+  const data=typeof getMBData==='function' ? getMBData() : {projects:[],clients:[],config:{}};
+  P=Array.isArray(data.projects) ? data.projects : [];
+  CL=Array.isArray(data.clients) ? data.clients.filter(c=>c.visible!==false).map(c=>c.name||c) : [];
+  MB_CONFIG=data.config||{};
 }
 
-// Mount hero video if configured
-(function(){
+function renderHeroVideo(){
+  syncHomeData();
   const vurl=MB_CONFIG.heroVideo||'';
-  if(!vurl) return;
+  const hero=document.querySelector('.hero');
+  const hbg=document.getElementById('hbg');
+  if(!hero) return;
+  hero.querySelector('.hvideo')?.remove();
+  if(!vurl){
+    if(hbg) hbg.style.display='';
+    return;
+  }
   const media=typeof parseHeroVideo==='function' ? parseHeroVideo(vurl) : {type:'video',src:vurl};
-  if(!media || !media.src) return;
+  if(!media || !media.src){
+    if(hbg) hbg.style.display='';
+    return;
+  }
   function mountVideo(){
-    const hbg=document.getElementById('hbg');
-    const hero=document.querySelector('.hero');
-    if(!hero) return;
-    if(hero.querySelector('.hvideo')) return;
     const wrap=document.createElement('div');
     wrap.className='hvideo';
     if(media.type==='video'){
@@ -399,7 +382,10 @@ function fixImgUrl(url){
   } else {
     mountVideo();
   }
-})();
+}
+
+syncHomeData();
+renderHeroVideo();
 const CL2={film:'Film',foto:'Fotografía',corp:'Corporativo',deporte:'Deportes'};
 const LY=['b-hero','b-tall','b-sq','b-sq','b-sq','b-sq','b-wide','b-wide'];
 
@@ -434,9 +420,10 @@ function oa(){
   document.querySelectorAll('.rv:not(.vis)').forEach(el=>o.observe(el));
 }
 
-// Clients
-document.getElementById('clirow').innerHTML=CL.map((c,i)=>
-  `<span class="cliitem"${i===CL.length-1?' style="border-right:none"':''}>${c}</span>`).join('');
+function renderClients(){
+  document.getElementById('clirow').innerHTML=CL.map((c,i)=>
+    `<span class="cliitem"${i===CL.length-1?' style="border-right:none"':''}>${c}</span>`).join('');
+}
 
 // Hamburger
 const ham=document.getElementById('hamburger'), nl=document.getElementById('nlinks');
@@ -454,7 +441,15 @@ document.querySelectorAll('.fb').forEach(b=>{
   });
 });
 
+window.addEventListener('mb:data-updated',()=>{
+  syncHomeData();
+  renderHeroVideo();
+  renderClients();
+  rb(document.querySelector('.fb.on')?.dataset.f||'all');
+});
+
 // Init
+renderClients();
 rb('all');
 oa();
 </script>

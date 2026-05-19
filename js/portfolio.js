@@ -1,14 +1,20 @@
 // ── PORTFOLIO.JS ──
 
 document.addEventListener('DOMContentLoaded', () => {
-  renderPortfolio('all');
+  let activeFilter = 'all';
+  renderPortfolio(activeFilter);
 
   document.querySelectorAll('.pf-btn').forEach(b=>{
     b.addEventListener('click',()=>{
       document.querySelectorAll('.pf-btn').forEach(x=>x.classList.remove('on'));
       b.classList.add('on');
-      renderPortfolio(b.dataset.filter||'all');
+      activeFilter = b.dataset.filter||'all';
+      renderPortfolio(activeFilter);
     });
+  });
+
+  window.addEventListener('mb:data-updated', () => {
+    renderPortfolio(activeFilter);
   });
 });
 

@@ -1,43 +1,96 @@
 # Cloudflare Setup
 
-This project deploys with `wrangler deploy`, not Cloudflare Pages Functions.
+## Objetivo
 
-## Current repo config
+Conectar un sitio estático con backend mínimo usando:
 
-The repository already includes:
+- Cloudflare Worker
+- Cloudflare KV
+- deploy con `wrangler deploy`
 
-- `wrangler.jsonc` with the KV namespace binding `MB_DATA`
-- `worker.js` serving static assets plus `/api/data`
+## Naming recomendado
 
-KV namespace ID configured in repo:
+- binding KV en código: `SITE_DATA`
+- variables admin:
+  - `SITE_ADMIN_USER`
+  - `SITE_ADMIN_PASSWORD`
 
-- `b519979e323b4a50b7ea7d62b7705d73`
+El namespace real en Cloudflare debe ser específico del proyecto.
 
-## What Cloudflare still needs
+Ejemplo:
 
-You do not need to keep fighting the UI binding modal if the deploy uses the repo config.
+- `mi-sitio-data`
 
-You only need:
+## Pasos
 
-1. The KV namespace to exist in Cloudflare.
-2. A redeploy of the Worker/project.
+### 1. Crear el namespace KV
 
-## Optional admin credentials
+En Cloudflare:
 
-The admin write endpoint accepts HTTP Basic auth.
+1. Ve a `Storage & Databases`
+2. Entra a `KV`
+3. Crea un namespace nuevo
 
-If you want to override the built-in defaults, add these variables in Cloudflare:
+Ejemplo de nombre:
 
-- `MB_ADMIN_USER`
-- `MB_ADMIN_PASSWORD`
+- `mi-sitio-data`
 
-Defaults used by the code:
+### 2. Copiar el namespace ID
 
-- user: `matias`
-- password: `brieba2024`
+Una vez creado, copia el `id` del namespace.
 
-## Result
+### 3. Configurarlo en `wrangler.jsonc`
 
-- `GET /api/data` returns the current site data
-- `POST /api/data` saves projects, clients, and config into KV
-- the frontend still caches the latest successful response in `localStorage`, but KV is now the source of truth
+Usa esta estructura:
+
+```jsonc
+{
+  "kv_namespaces": [
+    {
+      "binding": "SITE_DATA",
+      "id": "TU_NAMESPACE_ID"
+    }
+  ]
+}
+```
+
+## 4. Configurar credenciales admin
+
+En Cloudflare agrega variables:
+
+- `SITE_ADMIN_USER`
+- `SITE_ADMIN_PASSWORD`
+
+No dejar defaults inseguros en producción.
+
+## 5. Deploy
+
+Haz redeploy del proyecto para que Cloudflare tome:
+
+- `worker.js`
+- `wrangler.jsonc`
+- binding `SITE_DATA`
+
+## 6. Validación
+
+Primero prueba:
+
+- `GET /api/data`
+
+Debe devolver JSON con:
+
+- `projects`
+- `clients`
+- `config`
+
+Luego prueba:
+
+- guardar desde `/admin`
+
+Eso debe hacer `POST /api/data` y persistir en KV.
+
+## Regla importante
+
+Si el proyecto deploya con `wrangler deploy`, la configuración real debe vivir en el repo.
+
+No depender de modales manuales como fuente principal de configuración.

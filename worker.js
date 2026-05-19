@@ -98,14 +98,14 @@ function readAuth(request) {
 
 function isAuthorized(request, env) {
   const creds = readAuth(request);
-  const expectedUser = env.MB_ADMIN_USER || 'matias';
-  const expectedPassword = env.MB_ADMIN_PASSWORD || 'brieba2024';
+  const expectedUser = env.SITE_ADMIN_USER || 'admin';
+  const expectedPassword = env.SITE_ADMIN_PASSWORD || 'change-me';
   return creds && creds.user === expectedUser && creds.password === expectedPassword;
 }
 
 async function readStoredData(env) {
-  if (!env.MB_DATA) return normalizeData(DEFAULT_DATA);
-  const raw = await env.MB_DATA.get(STORAGE_KEY, 'json');
+  if (!env.SITE_DATA) return normalizeData(DEFAULT_DATA);
+  const raw = await env.SITE_DATA.get(STORAGE_KEY, 'json');
   return raw ? normalizeData(raw) : normalizeData(DEFAULT_DATA);
 }
 
@@ -115,8 +115,8 @@ async function handleApi(request, env) {
   }
 
   if (request.method === 'POST') {
-    if (!env.MB_DATA) {
-      return json({ error: 'Missing KV binding: MB_DATA' }, { status: 500 });
+    if (!env.SITE_DATA) {
+      return json({ error: 'Missing KV binding: SITE_DATA' }, { status: 500 });
     }
     if (!isAuthorized(request, env)) {
       return json({ error: 'Unauthorized' }, {
@@ -131,7 +131,7 @@ async function handleApi(request, env) {
       return json({ error: 'Invalid JSON body' }, { status: 400 });
     }
     const normalized = normalizeData(payload);
-    await env.MB_DATA.put(STORAGE_KEY, JSON.stringify(normalized));
+    await env.SITE_DATA.put(STORAGE_KEY, JSON.stringify(normalized));
     return json(normalized);
   }
 

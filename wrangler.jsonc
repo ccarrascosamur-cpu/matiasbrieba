@@ -8,7 +8,7 @@
   },
   "kv_namespaces": [
     {
-      "binding": "MB_DATA",
+      "binding": "SITE_DATA",
       "id": "b519979e323b4a50b7ea7d62b7705d73"
     }
   ]

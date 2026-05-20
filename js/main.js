@@ -185,7 +185,7 @@ function renderBento(filter) {
     return `
       <a class="gi ${cls} rv" href="${href}" target="_blank"
          style="text-decoration:none;" data-cat="${p.cat}">
-        ${imgSrc ? `<img src="${imgSrc}" alt="${p.name}" loading="${i < 3 ? 'eager' : 'lazy'}" onerror="this.style.display='none'"/>` : ''}
+        ${imgSrc ? `<img src="${imgSrc}" alt="${p.name}" loading="${i < 3 ? 'eager' : 'lazy'}" onerror="this.style.display='none'"/>` : `<div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%);"></div>`}
         <div class="giov">
           <p class="gcat">${catLabel(p.cat)}</p>
           <p class="gname">${p.name}</p>

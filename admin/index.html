@@ -518,6 +518,22 @@
       };
       window.saveMBData=function(d){localStorage.setItem('mb_portfolio_data',JSON.stringify(d));};
     }
+    // fallback para funciones nuevas de data.js (por si hay cache vieja)
+    if(typeof parseDriveFolderUrl==='undefined'){
+      window.parseDriveFolderUrl=function(url){
+        if(!url)return'';
+        const m=String(url).match(/drive\.google\.com\/drive\/folders\/([A-Za-z0-9_-]+)/);
+        if(m)return m[1];
+        if(/^[A-Za-z0-9_-]{20,}$/.test(String(url)))return String(url);
+        return'';
+      };
+    }
+    if(typeof driveImageUrl==='undefined'){
+      window.driveImageUrl=function(fileId,size){return fileId?'https://drive.google.com/thumbnail?id='+fileId+'&sz='+(size||'w2000'):'';};
+    }
+    if(typeof fixImgUrl==='undefined'){
+      window.fixImgUrl=function(url){return url||'';};
+    }
 
     // ── AUTH ──
     const CREDS = {user:'matias',pass:'brieba2024'};

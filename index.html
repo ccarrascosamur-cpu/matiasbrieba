@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
 <title>Matías Brieba — Filmmaker &amp; Fotógrafo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -317,7 +320,12 @@ footer{background:var(--obk);padding:26px 48px;display:flex;align-items:center;j
     <div class="ftdev">Desarrollado por <a href="https://www.emmagination.cl" target="_blank">Emmagination</a></div>
   </div>
 </footer>
-<script src="js/data.js?v=2"></script>
+<script>
+// Carga data.js con timestamp para evitar cache
+const _dataScript = document.createElement('script');
+_dataScript.src = 'js/data.js?v=' + Date.now();
+document.head.appendChild(_dataScript);
+</script>
 <script>
 let P=[];
 let CL=[];
@@ -499,7 +507,7 @@ function openProj(e,id){
   }
   document.getElementById('pmContent').innerHTML=`
     <div class="pm-hero">
-      <div class="pm-bg" style="background-image:url('${fixImgUrl(p.img)}')"></div>
+      <div class="pm-bg" style="background-image:url('${fixImgUrl(p.coverImg||p.img)}')"></div>
       <div class="pm-grad"></div>
       <div class="pm-hcont">
         <p class="pm-bread">Portfolio / ${CL2x[p.cat]||p.cat}</p>

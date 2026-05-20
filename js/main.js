@@ -55,8 +55,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const hbg = document.getElementById('hbg');
   if (hbg) {
     const d = getMBData();
-    const featured = d.projects.find(p => p.featured && p.img);
-    const imgSrc = featured ? fixImgUrl(featured.img) : '';
+    const featured = d.projects.find(p => p.featured && (p.img || (p.driveFolderImages && p.driveFolderImages.length)));
+    let imgSrc = '';
+    if(featured){
+      imgSrc = fixImgUrl(featured.img || '');
+      if(!imgSrc && featured.driveFolderImages && featured.driveFolderImages.length){
+        imgSrc = typeof driveImageUrl === 'function'
+          ? driveImageUrl(featured.driveFolderImages[0])
+          : `https://drive.google.com/thumbnail?id=${featured.driveFolderImages[0]}&sz=w2000`;
+      }
+    }
     if (imgSrc) hbg.style.backgroundImage = `url('${imgSrc}')`;
   }
 
@@ -81,6 +89,33 @@ document.addEventListener('DOMContentLoaded', () => {
       b.classList.add('on');
       if (bento) renderBento(b.dataset.filter || 'all');
     });
+  });
+
+  // ── RE-RENDER WHEN REMOTE DATA ARRIVES ──
+  window.addEventListener('mb:data-updated', () => {
+    const d = getMBData();
+    if (hbg) {
+      const featured = d.projects.find(p => p.featured && (p.img || (p.driveFolderImages && p.driveFolderImages.length)));
+      let imgSrc = '';
+      if(featured){
+        imgSrc = fixImgUrl(featured.img || '');
+        if(!imgSrc && featured.driveFolderImages && featured.driveFolderImages.length){
+          imgSrc = typeof driveImageUrl === 'function'
+            ? driveImageUrl(featured.driveFolderImages[0])
+            : `https://drive.google.com/thumbnail?id=${featured.driveFolderImages[0]}&sz=w2000`;
+        }
+      }
+      if (imgSrc) hbg.style.backgroundImage = `url('${imgSrc}')`;
+    }
+    if (bento) {
+      const activeBtn = document.querySelector('.fb.on');
+      renderBento(activeBtn ? (activeBtn.dataset.filter || 'all') : 'all');
+    }
+    if (clientsRow) renderClients();
+    const sp = document.getElementById('statProjects');
+    const sc = document.getElementById('statClients');
+    if (sp) sp.innerHTML = `${d.projects.length}<sub>+</sub>`;
+    if (sc) sc.innerHTML  = `${d.clients.length}<sub>+</sub>`;
   });
 
   // ── SCROLL-DRIVEN VIDEO HERO ──
@@ -162,7 +197,13 @@ function renderBento(filter) {
   bento.innerHTML = items.slice(0, 8).map((p, i) => {
     const cls  = layouts[i] || 'b-sq';
     const href = `project.html?id=${p.id}`;
-    const imgSrc = typeof fixImgUrl === 'function' ? fixImgUrl(p.img) : p.img;
+    let imgSrc = typeof fixImgUrl === 'function' ? fixImgUrl(p.img) : p.img;
+    // If no main img but has driveFolder images, use first one
+    if(!imgSrc && p.driveFolderImages && p.driveFolderImages.length){
+      imgSrc = typeof driveImageUrl === 'function'
+        ? driveImageUrl(p.driveFolderImages[0])
+        : `https://drive.google.com/thumbnail?id=${p.driveFolderImages[0]}&sz=w2000`;
+    }
     return `
       <a class="gi ${cls} rv" href="${href}" target="_blank"
          style="text-decoration:none;" data-cat="${p.cat}">

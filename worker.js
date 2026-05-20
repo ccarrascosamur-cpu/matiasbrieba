@@ -60,6 +60,8 @@ function normalizeData(input) {
         url: String(project?.url || '').trim(),
         videoUrl: String(project?.videoUrl || videos[0] || '').trim(),
         videos: normalizeList(videos),
+        driveFolder: String(project?.driveFolder || '').trim(),
+        driveFolderImages: normalizeList(project?.driveFolderImages || []),
         images: normalizeList(project?.images || []),
         desc: String(project?.desc || '').trim(),
         featured: Boolean(project?.featured),
@@ -98,8 +100,8 @@ function readAuth(request) {
 
 function isAuthorized(request, env) {
   const creds = readAuth(request);
-  const expectedUser = env.SITE_ADMIN_USER || 'admin';
-  const expectedPassword = env.SITE_ADMIN_PASSWORD || 'change-me';
+  const expectedUser = env.SITE_ADMIN_USER || 'matias';
+  const expectedPassword = env.SITE_ADMIN_PASSWORD || 'brieba2024';
   return creds && creds.user === expectedUser && creds.password === expectedPassword;
 }
 
@@ -119,10 +121,7 @@ async function handleApi(request, env) {
       return json({ error: 'Missing KV binding: SITE_DATA' }, { status: 500 });
     }
     if (!isAuthorized(request, env)) {
-      return json({ error: 'Unauthorized' }, {
-        status: 401,
-        headers: { 'WWW-Authenticate': 'Basic realm="admin"' },
-      });
+      return json({ error: 'Unauthorized' }, { status: 401 });
     }
     let payload;
     try {

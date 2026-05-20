@@ -199,15 +199,47 @@ function parseList(value){
   return value.split('\n').map(item => normalizeMediaUrl(item)).filter(Boolean);
 }
 
+// Extract Google Drive folder ID from various folder URL formats
+function parseDriveFolderUrl(url){
+  if(!url) return '';
+  const clean = String(url).trim();
+  // Match drive.google.com/drive/folders/FOLDER_ID
+  const m = clean.match(/drive\.google\.com\/drive\/folders\/([A-Za-z0-9_-]+)/);
+  if(m) return m[1];
+  // Match just the folder ID
+  if(/^[A-Za-z0-9_-]{20,}$/.test(clean)) return clean;
+  return '';
+}
+
+// Build direct image URL from Drive file ID (using thumbnail endpoint for reliability)
+function driveImageUrl(fileId, size = 'w2000'){
+  if(!fileId) return '';
+  return `https://drive.google.com/thumbnail?id=${fileId}&sz=${size}`;
+}
+
 function normaliseProject(project){
   if(!project || typeof project !== 'object') return project;
   const videos = Array.isArray(project.videos)
     ? project.videos
     : (project.videoUrl ? [project.videoUrl] : []);
+  
+  // Handle driveFolder: if present, images come from folder + any explicit images
+  let images = parseList(project.images || []);
+  const folderId = parseDriveFolderUrl(project.driveFolder || '');
+  if(folderId){
+    // driveFolderImages is an array of file IDs inside the folder
+    const folderImages = Array.isArray(project.driveFolderImages)
+      ? project.driveFolderImages.filter(Boolean)
+      : [];
+    // Convert file IDs to full URLs and prepend to images list
+    const folderImageUrls = folderImages.map(id => driveImageUrl(id));
+    images = [...folderImageUrls, ...images];
+  }
+  
   return {
     ...project,
     img: fixImgUrl(project.img || ''),
-    images: parseList(project.images || []),
+    images: images,
     videos: parseList(videos),
     videoUrl: normalizeMediaUrl(project.videoUrl || videos[0] || ''),
   };

@@ -172,9 +172,9 @@ footer{background:var(--obk);padding:26px 48px;display:flex;align-items:center;j
 .rv.vis{opacity:1;transform:translateY(0);}
 .d1{transition-delay:.09s;}.d2{transition-delay:.18s;}.d3{transition-delay:.27s;}
 
-.wa-float{position:fixed;bottom:28px;right:28px;z-index:500;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.4);text-decoration:none;transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s;}
-.wa-float:hover{transform:scale(1.1);box-shadow:0 8px 28px rgba(37,211,102,.35);}
-.wa-float svg{width:28px;height:28px;fill:#fff;}
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:500;width:56px;height:56px;background:var(--bk);border:1px solid rgba(250,250,250,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.5);text-decoration:none;transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s,border-color .25s;}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 8px 28px rgba(0,0,0,.6);border-color:rgba(250,250,250,.5);}
+.wa-float svg{width:26px;height:26px;fill:var(--wh);}
 
 /* Hero: fullscreen, nav overlays on top */
 .hero{position:relative;width:100%;height:100vh;margin-top:0;display:flex;align-items:flex-end;overflow:hidden;}
@@ -217,11 +217,11 @@ footer{background:var(--obk);padding:26px 48px;display:flex;align-items:center;j
 .pm-galimg img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.2) brightness(.9);transition:transform .6s cubic-bezier(.16,1,.3,1),filter .4s;}
 .pm-galimg:hover img{transform:scale(1.05);filter:grayscale(0) brightness(1);}
 .pm-galimg:nth-child(6n+1){grid-column:span 8;aspect-ratio:16/10;}
-.pm-galimg:nth-child(6n+2){grid-column:span 4;aspect-ratio:4/5;}
-.pm-galimg:nth-child(6n+3){grid-column:span 4;aspect-ratio:4/5;}
+.pm-galimg:nth-child(6n+2){grid-column:span 4;aspect-ratio:16/10;}
+.pm-galimg:nth-child(6n+3){grid-column:span 4;aspect-ratio:16/10;}
 .pm-galimg:nth-child(6n+4){grid-column:span 8;aspect-ratio:16/10;}
-.pm-galimg:nth-child(6n+5){grid-column:span 6;aspect-ratio:4/3;}
-.pm-galimg:nth-child(6n+6){grid-column:span 6;aspect-ratio:4/3;}
+.pm-galimg:nth-child(6n+5){grid-column:span 6;aspect-ratio:16/10;}
+.pm-galimg:nth-child(6n+6){grid-column:span 6;aspect-ratio:16/10;}
 /* lightbox */
 .pm-lb{position:fixed;inset:0;background:rgba(8,8,8,.96);z-index:900;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
 .pm-lb.open{display:flex;}
@@ -234,7 +234,7 @@ footer{background:var(--obk);padding:26px 48px;display:flex;align-items:center;j
 @media(max-width:700px){
   .pm-desc{grid-template-columns:1fr;gap:20px;}
   .pm-galgrid{grid-template-columns:1fr 1fr;gap:2px;}
-  .pm-galimg{grid-column:span 1!important;aspect-ratio:4/3!important;}
+  .pm-galimg:nth-child(n){grid-column:span 1!important;aspect-ratio:4/3!important;}
   .pm-body{padding:40px 20px;}
   .pm-hcont{padding:0 20px 48px;}
 }
@@ -402,7 +402,13 @@ function rb(f){
     if(!it.length)it=sorted;
   }
   b.innerHTML=it.slice(0,8).map((p,i)=>{
-    const imgSrc=fixImgUrl(p.img);
+    let imgSrc=fixImgUrl(p.img);
+    // If no main img but has driveFolder images, use first one
+    if(!imgSrc && p.driveFolderImages && p.driveFolderImages.length){
+      imgSrc=typeof driveImageUrl==='function'
+        ? driveImageUrl(p.driveFolderImages[0])
+        : `https://drive.google.com/thumbnail?id=${p.driveFolderImages[0]}&sz=w2000`;
+    }
     return `
     <a class="gi ${LY[i]||'b-sq'}${imgSrc?'':' no-img'} rv" href="#proj-${p.id}" onclick="openProj(event,${p.id})" style="text-decoration:none;cursor:pointer;">
       ${imgSrc?`<img src="${imgSrc}" alt="${p.name}" loading="${i<3?'eager':'lazy'}" onerror="this.style.display='none'"/>`:''}
@@ -479,7 +485,16 @@ function openProj(e,id){
   e.preventDefault();
   const p=P.find(x=>x.id===id);
   if(!p) return;
-  const imgs=(p.images||[]).map(s=>fixImgUrl(s)).filter(Boolean);
+  // Build image list from driveFolder + explicit images
+  let imgs=(p.images||[]).map(s=>fixImgUrl(s)).filter(Boolean);
+  const folderId=typeof parseDriveFolderUrl==='function'?parseDriveFolderUrl(p.driveFolder||''):'';
+  if(folderId && Array.isArray(p.driveFolderImages)){
+    const folderImgs=p.driveFolderImages.filter(Boolean).map(fid=>{
+      if(typeof driveImageUrl==='function') return driveImageUrl(fid);
+      return `https://drive.google.com/thumbnail?id=${fid}&sz=w2000`;
+    });
+    imgs=[...folderImgs,...imgs];
+  }
   const videos=Array.isArray(p.videos)&&p.videos.length ? p.videos : (p.videoUrl?[p.videoUrl]:[]);
   let vblock='';
   if(videos.length){
@@ -497,9 +512,16 @@ function openProj(e,id){
     pmLbImgs=imgs;
     galblock=`<p class="pm-galtitle">Galería</p><div class="pm-galgrid">${imgs.map((s,i)=>`<div class="pm-galimg" onclick="pmLbOpen(${i})"><img src="${s}" loading="lazy" onerror="this.parentNode.style.display='none'"/></div>`).join('')}</div>`;
   }
+  // Use driveFolder image for hero if no main img
+  let heroImg=fixImgUrl(p.img);
+  if(!heroImg && p.driveFolderImages && p.driveFolderImages.length){
+    heroImg=typeof driveImageUrl==='function'
+      ? driveImageUrl(p.driveFolderImages[0])
+      : `https://drive.google.com/thumbnail?id=${p.driveFolderImages[0]}&sz=w2000`;
+  }
   document.getElementById('pmContent').innerHTML=`
     <div class="pm-hero">
-      <div class="pm-bg" style="background-image:url('${fixImgUrl(p.img)}')"></div>
+      <div class="pm-bg" style="background-image:url('${heroImg}')"></div>
       <div class="pm-grad"></div>
       <div class="pm-hcont">
         <p class="pm-bread">Portfolio / ${CL2x[p.cat]||p.cat}</p>

@@ -56,6 +56,7 @@ function normalizeData(input) {
         client: String(project?.client || '').trim(),
         cat: String(project?.cat || 'foto').trim(),
         year: Number(project?.year) || new Date().getFullYear(),
+        coverImg: String(project?.coverImg || '').trim(),
         img: String(project?.img || '').trim(),
         headerVideo: String(project?.headerVideo || '').trim(),
         url: String(project?.url || '').trim(),

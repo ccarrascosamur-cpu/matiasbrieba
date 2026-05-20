@@ -55,8 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const hbg = document.getElementById('hbg');
   if (hbg) {
     const d = getMBData();
-    const featured = d.projects.find(p => p.featured && p.img);
-    const imgSrc = featured ? fixImgUrl(featured.img) : '';
+    const featured = d.projects.find(p => p.featured && (p.coverImg || p.img));
+    const imgSrc = featured ? fixImgUrl(featured.coverImg || featured.img) : '';
     if (imgSrc) hbg.style.backgroundImage = `url('${imgSrc}')`;
   }
 
@@ -87,8 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('mb:data-updated', () => {
     const d = getMBData();
     if (hbg) {
-      const featured = d.projects.find(p => p.featured && p.img);
-      const imgSrc = featured ? fixImgUrl(featured.img) : '';
+      const featured = d.projects.find(p => p.featured && (p.coverImg || p.img));
+      const imgSrc = featured ? fixImgUrl(featured.coverImg || featured.img) : '';
       if (imgSrc) hbg.style.backgroundImage = `url('${imgSrc}')`;
     }
     if (bento) {
@@ -181,7 +181,7 @@ function renderBento(filter) {
   bento.innerHTML = items.slice(0, 8).map((p, i) => {
     const cls  = layouts[i] || 'b-sq';
     const href = `project.html?id=${p.id}`;
-    const imgSrc = typeof fixImgUrl === 'function' ? fixImgUrl(p.img) : p.img;
+    const imgSrc = typeof fixImgUrl === 'function' ? fixImgUrl(p.coverImg || p.img) : (p.coverImg || p.img);
     return `
       <a class="gi ${cls} rv" href="${href}" target="_blank"
          style="text-decoration:none;" data-cat="${p.cat}">

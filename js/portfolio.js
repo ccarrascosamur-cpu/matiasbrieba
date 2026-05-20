@@ -29,7 +29,7 @@ function renderPortfolio(filter){
 
   grid.innerHTML = items.map((p,i)=>{
     const href = `project.html?id=${p.id}`;
-    const imgSrc = typeof fixImgUrl === 'function' ? fixImgUrl(p.img) : p.img;
+    const imgSrc = typeof fixImgUrl === 'function' ? fixImgUrl(p.coverImg || p.img) : (p.coverImg || p.img);
     return `
       <a class="pg-item rv" href="${href}" target="_blank"
          style="text-decoration:none;">

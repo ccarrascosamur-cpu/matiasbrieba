@@ -508,8 +508,13 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="../js/data.js?v=2"></script>
+  <script src="../js/data.js?v=2" onerror="console.error('ERROR: data.js no cargo');window.dataJsError=true;"></script>
   <script>
+    console.log('Admin cargando...');
+    console.log('data.js cargado:', typeof getMBData !== 'undefined');
+    console.log('parseDriveFolderUrl:', typeof parseDriveFolderUrl !== 'undefined');
+    console.log('driveImageUrl:', typeof driveImageUrl !== 'undefined');
+    console.log('fixImgUrl:', typeof fixImgUrl !== 'undefined');
     // fallback si data.js no cargó
     if(typeof getMBData==='undefined'){
       window.getMBData=function(){
@@ -517,6 +522,8 @@
         catch(e){return {projects:[],clients:[],config:{}};}
       };
       window.saveMBData=function(d){localStorage.setItem('mb_portfolio_data',JSON.stringify(d));};
+      window.loadMBDataRemote=function(){return Promise.resolve(getMBData());};
+      window.saveMBDataRemote=function(d){return Promise.resolve(saveMBData(d));};
     }
     // fallback para funciones nuevas de data.js (por si hay cache vieja)
     if(typeof parseDriveFolderUrl==='undefined'){
@@ -534,20 +541,28 @@
     if(typeof fixImgUrl==='undefined'){
       window.fixImgUrl=function(url){return url||'';};
     }
+    if(typeof normalizeMediaUrl==='undefined'){
+      window.normalizeMediaUrl=function(url){return url||'';};
+    }
 
     // ── AUTH ──
     const CREDS = {user:'matias',pass:'brieba2024'};
     function doLogin(){
-      const u=document.getElementById('loginUser').value.trim();
-      const p=document.getElementById('loginPass').value;
-      if(u===CREDS.user && p===CREDS.pass){
-        localStorage.setItem('mb_auth','1');
-        localStorage.setItem('mb_admin_auth', btoa(`${u}:${p}`));
-        document.getElementById('loginScreen').style.display='none';
-        document.getElementById('app').style.display='flex';
-        renderAll();
-      } else {
-        document.getElementById('loginErr').style.display='block';
+      try{
+        const u=document.getElementById('loginUser').value.trim();
+        const p=document.getElementById('loginPass').value;
+        if(u===CREDS.user && p===CREDS.pass){
+          localStorage.setItem('mb_auth','1');
+          localStorage.setItem('mb_admin_auth', btoa(`${u}:${p}`));
+          document.getElementById('loginScreen').style.display='none';
+          document.getElementById('app').style.display='flex';
+          if(typeof renderAll==='function') renderAll();
+        } else {
+          document.getElementById('loginErr').style.display='block';
+        }
+      }catch(err){
+        console.error('Login error:',err);
+        alert('Error al iniciar sesión: '+err.message);
       }
     }
     document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});

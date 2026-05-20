@@ -620,8 +620,8 @@
           ? driveImageUrl(driveFolderImages[0])
           : 'https://drive.google.com/thumbnail?id='+driveFolderImages[0]+'&sz=w2000';
       }
-      if(!src) return '<div class="thumb-placeholder"><span>—</span></div>';
-      return '<img class="thumb" src="'+src+'" onerror="this.parentNode.innerHTML=\'<div class=\\'thumb-placeholder\\'><span>—</span></div>\'"/>';
+      if(!src) return `<div class="thumb-placeholder"><span>—</span></div>`;
+      return `<img class="thumb" src="${src}" onerror="this.parentNode.innerHTML='<div class=\\'thumb-placeholder\\'><span>—</span></div>'"/>`;
     }
 
     function renderProjTable(projs, id, withActions){

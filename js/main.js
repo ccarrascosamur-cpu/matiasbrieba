@@ -55,16 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const hbg = document.getElementById('hbg');
   if (hbg) {
     const d = getMBData();
-    const featured = d.projects.find(p => p.featured && (p.img || (p.driveFolderImages && p.driveFolderImages.length)));
-    let imgSrc = '';
-    if(featured){
-      imgSrc = fixImgUrl(featured.img || '');
-      if(!imgSrc && featured.driveFolderImages && featured.driveFolderImages.length){
-        imgSrc = typeof driveImageUrl === 'function'
-          ? driveImageUrl(featured.driveFolderImages[0])
-          : `https://drive.google.com/thumbnail?id=${featured.driveFolderImages[0]}&sz=w2000`;
-      }
-    }
+    const featured = d.projects.find(p => p.featured && p.img);
+    const imgSrc = featured ? fixImgUrl(featured.img) : '';
     if (imgSrc) hbg.style.backgroundImage = `url('${imgSrc}')`;
   }
 
@@ -95,16 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('mb:data-updated', () => {
     const d = getMBData();
     if (hbg) {
-      const featured = d.projects.find(p => p.featured && (p.img || (p.driveFolderImages && p.driveFolderImages.length)));
-      let imgSrc = '';
-      if(featured){
-        imgSrc = fixImgUrl(featured.img || '');
-        if(!imgSrc && featured.driveFolderImages && featured.driveFolderImages.length){
-          imgSrc = typeof driveImageUrl === 'function'
-            ? driveImageUrl(featured.driveFolderImages[0])
-            : `https://drive.google.com/thumbnail?id=${featured.driveFolderImages[0]}&sz=w2000`;
-        }
-      }
+      const featured = d.projects.find(p => p.featured && p.img);
+      const imgSrc = featured ? fixImgUrl(featured.img) : '';
       if (imgSrc) hbg.style.backgroundImage = `url('${imgSrc}')`;
     }
     if (bento) {
@@ -197,13 +181,7 @@ function renderBento(filter) {
   bento.innerHTML = items.slice(0, 8).map((p, i) => {
     const cls  = layouts[i] || 'b-sq';
     const href = `project.html?id=${p.id}`;
-    let imgSrc = typeof fixImgUrl === 'function' ? fixImgUrl(p.img) : p.img;
-    // If no main img but has driveFolder images, use first one
-    if(!imgSrc && p.driveFolderImages && p.driveFolderImages.length){
-      imgSrc = typeof driveImageUrl === 'function'
-        ? driveImageUrl(p.driveFolderImages[0])
-        : `https://drive.google.com/thumbnail?id=${p.driveFolderImages[0]}&sz=w2000`;
-    }
+    const imgSrc = typeof fixImgUrl === 'function' ? fixImgUrl(p.img) : p.img;
     return `
       <a class="gi ${cls} rv" href="${href}" target="_blank"
          style="text-decoration:none;" data-cat="${p.cat}">

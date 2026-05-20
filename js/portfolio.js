@@ -29,13 +29,7 @@ function renderPortfolio(filter){
 
   grid.innerHTML = items.map((p,i)=>{
     const href = `project.html?id=${p.id}`;
-    let imgSrc = typeof fixImgUrl === 'function' ? fixImgUrl(p.img) : p.img;
-    // If no main img but has driveFolder images, use first one
-    if(!imgSrc && p.driveFolderImages && p.driveFolderImages.length){
-      imgSrc = typeof driveImageUrl === 'function'
-        ? driveImageUrl(p.driveFolderImages[0])
-        : `https://drive.google.com/thumbnail?id=${p.driveFolderImages[0]}&sz=w2000`;
-    }
+    const imgSrc = typeof fixImgUrl === 'function' ? fixImgUrl(p.img) : p.img;
     return `
       <a class="pg-item rv" href="${href}" target="_blank"
          style="text-decoration:none;">

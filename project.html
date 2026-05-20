@@ -288,16 +288,7 @@
       }
       document.title = `${proj.name} — Matías Brieba`;
 
-      // Build image list from driveFolder + explicit images
-      let imgs = (proj.images || []).map(src => fixImgUrl(src)).filter(Boolean);
-      const folderId = typeof parseDriveFolderUrl === 'function' ? parseDriveFolderUrl(proj.driveFolder || '') : '';
-      if(folderId && Array.isArray(proj.driveFolderImages)){
-        const folderImgs = proj.driveFolderImages.filter(Boolean).map(fid => {
-          if(typeof driveImageUrl === 'function') return driveImageUrl(fid);
-          return `https://drive.google.com/thumbnail?id=${fid}&sz=w2000`;
-        });
-        imgs = [...folderImgs, ...imgs];
-      }
+      const imgs = (proj.images || []).map(src => fixImgUrl(src)).filter(Boolean);
       const videoUrls = Array.isArray(proj.videos) && proj.videos.length
         ? proj.videos
         : (proj.videoUrl ? [proj.videoUrl] : []);
@@ -338,17 +329,10 @@
           </div>`;
       }
 
-      // Use driveFolder image for hero if no main img
-      let heroImg = fixImgUrl(proj.img);
-      if(!heroImg && proj.driveFolderImages && proj.driveFolderImages.length){
-        heroImg = typeof driveImageUrl === 'function'
-          ? driveImageUrl(proj.driveFolderImages[0])
-          : `https://drive.google.com/thumbnail?id=${proj.driveFolderImages[0]}&sz=w2000`;
-      }
       root.innerHTML = `
         <!-- HERO -->
         <section class="proj-hero">
-          <div class="proj-hero-bg" id="projBg" style="background-image:url('${heroImg}')"></div>
+          <div class="proj-hero-bg" id="projBg" style="background-image:url('${fixImgUrl(proj.img)}')"></div>
           <div class="proj-hero-grad"></div>
           <div class="proj-hero-content">
             <p class="proj-breadcrumb"><a href="portfolio.html">Portfolio</a> &nbsp;/&nbsp; ${CATL[proj.cat]||proj.cat}</p>

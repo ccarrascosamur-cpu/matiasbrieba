@@ -449,19 +449,9 @@
         <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Pega una URL por línea. Puedes quitar un video borrando su URL.</small>
       </div>
       <div class="form-row">
-        <label>Carpeta de Google Drive (opcional)</label>
-        <input type="text" id="fDriveFolder" placeholder="https://drive.google.com/drive/folders/1ABC... o solo el ID de la carpeta"/>
-        <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Pega el enlace de la carpeta de Drive que contiene las imágenes. Las fotos se leen desde aquí automáticamente.</small>
-      </div>
-      <div class="form-row">
-        <label>IDs de imágenes en la carpeta Drive — uno por línea</label>
-        <textarea id="fDriveFolderImages" placeholder="1ABCxyz...&#10;1DEFabc...&#10;1GHIdef..." style="min-height:80px;"></textarea>
-        <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Pega los IDs de archivo de Google Drive (uno por línea). Para obtener el ID: clic derecho en la imagen → "Compartir" → copia el ID del enlace.</small>
-      </div>
-      <div class="form-row">
-        <label>Imágenes de galería adicionales — una URL por línea</label>
-        <textarea id="fImages" placeholder="https://imagen1.jpg&#10;https://imagen2.jpg&#10;https://imagen3.jpg" style="min-height:80px;"></textarea>
-        <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">URLs adicionales fuera de Drive. Puedes quitar una foto borrando su URL.</small>
+        <label>Imágenes de galería — una URL por línea</label>
+        <textarea id="fImages" placeholder="https://imagen1.jpg&#10;https://imagen2.jpg&#10;https://imagen3.jpg" style="min-height:100px;"></textarea>
+        <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Pega las URLs de tus imágenes, una por línea. Puedes quitar una foto borrando su URL.</small>
       </div>
       <div class="form-row">
         <label>Descripción breve</label>
@@ -508,13 +498,8 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="../js/data.js?v=2" onerror="console.error('ERROR: data.js no cargo');window.dataJsError=true;"></script>
+  <script src="../js/data.js?v=2"></script>
   <script>
-    console.log('Admin cargando...');
-    console.log('data.js cargado:', typeof getMBData !== 'undefined');
-    console.log('parseDriveFolderUrl:', typeof parseDriveFolderUrl !== 'undefined');
-    console.log('driveImageUrl:', typeof driveImageUrl !== 'undefined');
-    console.log('fixImgUrl:', typeof fixImgUrl !== 'undefined');
     // fallback si data.js no cargó
     if(typeof getMBData==='undefined'){
       window.getMBData=function(){
@@ -522,47 +507,21 @@
         catch(e){return {projects:[],clients:[],config:{}};}
       };
       window.saveMBData=function(d){localStorage.setItem('mb_portfolio_data',JSON.stringify(d));};
-      window.loadMBDataRemote=function(){return Promise.resolve(getMBData());};
-      window.saveMBDataRemote=function(d){return Promise.resolve(saveMBData(d));};
-    }
-    // fallback para funciones nuevas de data.js (por si hay cache vieja)
-    if(typeof parseDriveFolderUrl==='undefined'){
-      window.parseDriveFolderUrl=function(url){
-        if(!url)return'';
-        const m=String(url).match(/drive\.google\.com\/drive\/folders\/([A-Za-z0-9_-]+)/);
-        if(m)return m[1];
-        if(/^[A-Za-z0-9_-]{20,}$/.test(String(url)))return String(url);
-        return'';
-      };
-    }
-    if(typeof driveImageUrl==='undefined'){
-      window.driveImageUrl=function(fileId,size){return fileId?'https://drive.google.com/thumbnail?id='+fileId+'&sz='+(size||'w2000'):'';};
-    }
-    if(typeof fixImgUrl==='undefined'){
-      window.fixImgUrl=function(url){return url||'';};
-    }
-    if(typeof normalizeMediaUrl==='undefined'){
-      window.normalizeMediaUrl=function(url){return url||'';};
     }
 
     // ── AUTH ──
     const CREDS = {user:'matias',pass:'brieba2024'};
     function doLogin(){
-      try{
-        const u=document.getElementById('loginUser').value.trim();
-        const p=document.getElementById('loginPass').value;
-        if(u===CREDS.user && p===CREDS.pass){
-          localStorage.setItem('mb_auth','1');
-          localStorage.setItem('mb_admin_auth', btoa(`${u}:${p}`));
-          document.getElementById('loginScreen').style.display='none';
-          document.getElementById('app').style.display='flex';
-          if(typeof renderAll==='function') renderAll();
-        } else {
-          document.getElementById('loginErr').style.display='block';
-        }
-      }catch(err){
-        console.error('Login error:',err);
-        alert('Error al iniciar sesión: '+err.message);
+      const u=document.getElementById('loginUser').value.trim();
+      const p=document.getElementById('loginPass').value;
+      if(u===CREDS.user && p===CREDS.pass){
+        localStorage.setItem('mb_auth','1');
+        localStorage.setItem('mb_admin_auth', btoa(`${u}:${p}`));
+        document.getElementById('loginScreen').style.display='none';
+        document.getElementById('app').style.display='flex';
+        renderAll();
+      } else {
+        document.getElementById('loginErr').style.display='block';
       }
     }
     document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
@@ -613,13 +572,8 @@
       const map={film:'film',foto:'foto',corp:'corp',deporte:'deporte'};
       return `<span class="badge badge-${map[cat]||'foto'}">${cat}</span>`;
     }
-    function thumbHtml(img, driveFolderImages){
-      let src=typeof fixImgUrl==='function'?fixImgUrl(img):img;
-      if(!src && driveFolderImages && driveFolderImages.length){
-        src=typeof driveImageUrl==='function'
-          ? driveImageUrl(driveFolderImages[0])
-          : 'https://drive.google.com/thumbnail?id='+driveFolderImages[0]+'&sz=w2000';
-      }
+    function thumbHtml(img){
+      const src=typeof fixImgUrl==='function'?fixImgUrl(img):img;
       if(!src) return `<div class="thumb-placeholder"><span>—</span></div>`;
       return `<img class="thumb" src="${src}" onerror="this.parentNode.innerHTML='<div class=\\'thumb-placeholder\\'><span>—</span></div>'"/>`;
     }
@@ -629,7 +583,7 @@
       if(!tb) return;
       tb.innerHTML = projs.map((p,i)=>`
         <tr>
-          <td>${thumbHtml(p.img, p.driveFolderImages)}</td>
+          <td>${thumbHtml(p.img)}</td>
           <td>${p.name}</td>
           ${withActions ? `<td>${p.client||'—'}</td>` : ''}
           <td>${badgeHtml(p.cat)}</td>
@@ -675,8 +629,6 @@
         document.getElementById('fUrl').value    = data?.url   || '';
         const videos = Array.isArray(data?.videos) ? data.videos : (data?.videoUrl ? [data.videoUrl] : []);
         document.getElementById('fVideos').value   = videos.join('\n');
-        document.getElementById('fDriveFolder').value = data?.driveFolder || '';
-        document.getElementById('fDriveFolderImages').value = (data?.driveFolderImages||[]).join('\n');
         document.getElementById('fImages').value   = (data?.images||[]).join('\n');
         document.getElementById('fDesc').value   = data?.desc  || '';
         const tog = document.getElementById('toggleFeatured');
@@ -731,8 +683,6 @@
         img:     document.getElementById('fImg').value.trim(),
         url:     document.getElementById('fUrl').value.trim(),
         videos:   document.getElementById('fVideos').value.split('\n').map(s=>s.trim()).filter(Boolean),
-        driveFolder: document.getElementById('fDriveFolder').value.trim(),
-        driveFolderImages: document.getElementById('fDriveFolderImages').value.split('\n').map(s=>s.trim()).filter(Boolean),
         images:  document.getElementById('fImages').value.split('\n').map(s=>s.trim()).filter(Boolean),
         desc:    document.getElementById('fDesc').value.trim(),
         featured:document.getElementById('toggleFeatured').classList.contains('on'),

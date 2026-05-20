@@ -402,13 +402,7 @@ function rb(f){
     if(!it.length)it=sorted;
   }
   b.innerHTML=it.slice(0,8).map((p,i)=>{
-    let imgSrc=fixImgUrl(p.img);
-    // If no main img but has driveFolder images, use first one
-    if(!imgSrc && p.driveFolderImages && p.driveFolderImages.length){
-      imgSrc=typeof driveImageUrl==='function'
-        ? driveImageUrl(p.driveFolderImages[0])
-        : `https://drive.google.com/thumbnail?id=${p.driveFolderImages[0]}&sz=w2000`;
-    }
+    const imgSrc=fixImgUrl(p.img);
     return `
     <a class="gi ${LY[i]||'b-sq'}${imgSrc?'':' no-img'} rv" href="#proj-${p.id}" onclick="openProj(event,${p.id})" style="text-decoration:none;cursor:pointer;">
       ${imgSrc?`<img src="${imgSrc}" alt="${p.name}" loading="${i<3?'eager':'lazy'}" onerror="this.style.display='none'"/>`:''}
@@ -485,16 +479,7 @@ function openProj(e,id){
   e.preventDefault();
   const p=P.find(x=>x.id===id);
   if(!p) return;
-  // Build image list from driveFolder + explicit images
-  let imgs=(p.images||[]).map(s=>fixImgUrl(s)).filter(Boolean);
-  const folderId=typeof parseDriveFolderUrl==='function'?parseDriveFolderUrl(p.driveFolder||''):'';
-  if(folderId && Array.isArray(p.driveFolderImages)){
-    const folderImgs=p.driveFolderImages.filter(Boolean).map(fid=>{
-      if(typeof driveImageUrl==='function') return driveImageUrl(fid);
-      return `https://drive.google.com/thumbnail?id=${fid}&sz=w2000`;
-    });
-    imgs=[...folderImgs,...imgs];
-  }
+  const imgs=(p.images||[]).map(s=>fixImgUrl(s)).filter(Boolean);
   const videos=Array.isArray(p.videos)&&p.videos.length ? p.videos : (p.videoUrl?[p.videoUrl]:[]);
   let vblock='';
   if(videos.length){
@@ -512,16 +497,9 @@ function openProj(e,id){
     pmLbImgs=imgs;
     galblock=`<p class="pm-galtitle">Galería</p><div class="pm-galgrid">${imgs.map((s,i)=>`<div class="pm-galimg" onclick="pmLbOpen(${i})"><img src="${s}" loading="lazy" onerror="this.parentNode.style.display='none'"/></div>`).join('')}</div>`;
   }
-  // Use driveFolder image for hero if no main img
-  let heroImg=fixImgUrl(p.img);
-  if(!heroImg && p.driveFolderImages && p.driveFolderImages.length){
-    heroImg=typeof driveImageUrl==='function'
-      ? driveImageUrl(p.driveFolderImages[0])
-      : `https://drive.google.com/thumbnail?id=${p.driveFolderImages[0]}&sz=w2000`;
-  }
   document.getElementById('pmContent').innerHTML=`
     <div class="pm-hero">
-      <div class="pm-bg" style="background-image:url('${heroImg}')"></div>
+      <div class="pm-bg" style="background-image:url('${fixImgUrl(p.img)}')"></div>
       <div class="pm-grad"></div>
       <div class="pm-hcont">
         <p class="pm-bread">Portfolio / ${CL2x[p.cat]||p.cat}</p>

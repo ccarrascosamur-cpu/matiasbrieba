@@ -207,6 +207,7 @@ function normaliseProject(project){
   return {
     ...project,
     img: fixImgUrl(project.img || ''),
+    headerVideo: normalizeMediaUrl(project.headerVideo || ''),
     images: parseList(project.images || []),
     videos: parseList(videos),
     videoUrl: normalizeMediaUrl(project.videoUrl || videos[0] || ''),

@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0"/>
   <title>Admin — Matías Brieba</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Familjen+Grotesk:wght@400;500;700&display=swap" rel="stylesheet"/>
@@ -435,7 +438,12 @@
         </div>
       </div>
       <div class="form-row">
-        <label>URL de imagen</label>
+        <label>Video de header</label>
+        <input type="text" id="fHeaderVideo" placeholder="https://youtube.com/...  https://vimeo.com/...  .mp4"/>
+        <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Si agregás un video, se usa como fondo del hero. Soporta YouTube, Vimeo, Google Drive y .mp4 directo.</small>
+      </div>
+      <div class="form-row">
+        <label>URL de imagen (fallback si no hay video)</label>
         <input type="text" id="fImg" placeholder="https://... o link de Google Drive"/>
         <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Puedes pegar un link de Google Drive directamente — se convierte solo.</small>
       </div>
@@ -498,7 +506,10 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="../js/data.js?v=2"></script>
+  <script>
+    // Carga data.js con timestamp para evitar cache
+    document.write('<script src="../js/data.js?v=' + Date.now() + '"><\/script>');
+  </script>
   <script>
     // fallback si data.js no cargó
     if(typeof getMBData==='undefined'){
@@ -508,6 +519,24 @@
       };
       window.saveMBData=function(d){localStorage.setItem('mb_portfolio_data',JSON.stringify(d));};
     }
+
+    // ── ANTI-CACHE: recarga si hay nueva versión ──
+    (function(){
+      const now = Date.now();
+      const last = parseInt(localStorage.getItem('mb_admin_loaded')||'0',10);
+      // Si pasaron más de 2 minutos desde la última carga, forzar recarga limpia
+      if(last && (now - last > 120000)){
+        localStorage.setItem('mb_admin_loaded', String(now));
+        // Solo recargar si no viene de una recarga reciente
+        if(!sessionStorage.getItem('mb_admin_refreshed')){
+          sessionStorage.setItem('mb_admin_refreshed','1');
+          location.reload(true);
+          return;
+        }
+      }
+      localStorage.setItem('mb_admin_loaded', String(now));
+      sessionStorage.removeItem('mb_admin_refreshed');
+    })();
 
     // ── AUTH ──
     const CREDS = {user:'matias',pass:'brieba2024'};
@@ -625,6 +654,7 @@
         document.getElementById('fClient').value = data?.client|| '';
         document.getElementById('fCat').value    = data?.cat   || 'foto';
         document.getElementById('fYear').value   = data?.year  || new Date().getFullYear();
+        document.getElementById('fHeaderVideo').value = data?.headerVideo || '';
         document.getElementById('fImg').value    = data?.img   || '';
         document.getElementById('fUrl').value    = data?.url   || '';
         const videos = Array.isArray(data?.videos) ? data.videos : (data?.videoUrl ? [data.videoUrl] : []);
@@ -653,6 +683,11 @@
       try{
         if(typeof loadMBDataRemote === 'function') return await loadMBDataRemote();
       }catch(_){}
+      // Forzar recarga fresca de data.js agregando timestamp
+      try{
+        const ts = Date.now();
+        await import('../js/data.js?v=' + ts);
+      }catch(_){}
       return getMBData();
     }
 
@@ -680,6 +715,7 @@
         client:  document.getElementById('fClient').value.trim(),
         cat:     document.getElementById('fCat').value,
         year:    parseInt(document.getElementById('fYear').value)||2024,
+        headerVideo: document.getElementById('fHeaderVideo').value.trim(),
         img:     document.getElementById('fImg').value.trim(),
         url:     document.getElementById('fUrl').value.trim(),
         videos:   document.getElementById('fVideos').value.split('\n').map(s=>s.trim()).filter(Boolean),

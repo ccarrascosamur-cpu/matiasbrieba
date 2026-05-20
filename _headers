@@ -8,6 +8,13 @@
   Cache-Control: no-cache, no-store, must-revalidate
   Pragma: no-cache
   Expires: 0
+  Vary: *
+
+/admin/index.html
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+  Vary: *
 
 /css/*
   Cache-Control: public, max-age=31536000, immutable

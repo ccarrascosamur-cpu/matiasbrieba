@@ -723,7 +723,7 @@
         desc:    document.getElementById('fDesc').value.trim(),
         featured:document.getElementById('toggleFeatured').classList.contains('on'),
       };
-      const mediaUrls = [proj.img, ...proj.videos, ...proj.images].filter(Boolean);
+      const mediaUrls = [proj.img, proj.headerVideo, ...proj.videos, ...proj.images].filter(Boolean);
       if(typeof isLocalOnlyMediaUrl === 'function' && mediaUrls.some(isLocalOnlyMediaUrl)){
         alert('Una o más URLs multimedia apuntan a tu computador o localhost. Usa una URL pública o una ruta del sitio como images/archivo.jpg.');
         return;

@@ -57,6 +57,7 @@ function normalizeData(input) {
         cat: String(project?.cat || 'foto').trim(),
         year: Number(project?.year) || new Date().getFullYear(),
         img: String(project?.img || '').trim(),
+        headerVideo: String(project?.headerVideo || '').trim(),
         url: String(project?.url || '').trim(),
         videoUrl: String(project?.videoUrl || videos[0] || '').trim(),
         videos: normalizeList(videos),

@@ -402,7 +402,7 @@ function rb(f){
     if(!it.length)it=sorted;
   }
   b.innerHTML=it.slice(0,8).map((p,i)=>{
-    const imgSrc=fixImgUrl(p.img);
+    const imgSrc=fixImgUrl(p.coverImg||p.img);
     return `
     <a class="gi ${LY[i]||'b-sq'}${imgSrc?'':' no-img'} rv" href="#proj-${p.id}" onclick="openProj(event,${p.id})" style="text-decoration:none;cursor:pointer;">
       ${imgSrc?`<img src="${imgSrc}" alt="${p.name}" loading="${i<3?'eager':'lazy'}" onerror="this.style.display='none'"/>`:''}

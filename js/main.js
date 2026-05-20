@@ -172,6 +172,8 @@ function renderBento(filter) {
   const bento = document.getElementById('bento');
   if (!bento) return;
   const d     = getMBData();
+  // DEBUG: log projects to console
+  console.log('[BENTO] projects:', d.projects.map(p => ({id: p.id, name: p.name, coverImg: p.coverImg, img: p.img, featured: p.featured})));
   let items   = d.projects.filter(p => p.featured);
   if (filter !== 'all') items = items.filter(p => p.cat === filter);
   if (!items.length) items = d.projects.slice(0, 8);

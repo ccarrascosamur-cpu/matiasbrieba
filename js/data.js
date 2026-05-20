@@ -326,8 +326,12 @@ window.MBDataStore = {
 function fixImgUrl(url){
   const clean = normalizeMediaUrl(url);
   if(!clean) return '';
-  const m = clean.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=[^&]+&)?id=|thumbnail\?id=)([A-Za-z0-9_-]+)/);
-  if(m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w2000`;
+  // Already a thumbnail URL — ensure large size
+  const thumbMatch = clean.match(/drive\.google\.com\/thumbnail\?id=([A-Za-z0-9_-]+)/);
+  if(thumbMatch) return `https://drive.google.com/thumbnail?id=${thumbMatch[1]}&sz=w1600`;
+  // Share/file links
+  const m = clean.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=[^&]+&)?id=)([A-Za-z0-9_-]+)/);
+  if(m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w1600`;
   return clean;
 }
 

@@ -398,11 +398,9 @@ function rb(f){
   const sorted=[...P].sort((a,bb)=>(a.order||0)-(bb.order||0));
   let it;
   if(f==='all'){
-    const feat=sorted.filter(p=>p.featured);
-    it=feat.length?feat:sorted;
+    it=sorted.filter(p=>p.featured);
   } else {
-    it=sorted.filter(p=>p.cat===f);
-    if(!it.length)it=sorted;
+    it=sorted.filter(p=>p.featured&&p.cat===f);
   }
   b.innerHTML=it.slice(0,8).map((p,i)=>{
     const imgSrc=fixImgUrl(p.coverImg||p.img);
@@ -483,18 +481,8 @@ function openProj(e,id){
   const p=P.find(x=>x.id===id);
   if(!p) return;
   const imgs=(p.images||[]).map(s=>fixImgUrl(s)).filter(Boolean);
-  const videos=Array.isArray(p.videos)&&p.videos.length ? p.videos : (p.videoUrl?[p.videoUrl]:[]);
+  // En el home (destacados) NO se muestran videos, solo imagenes
   let vblock='';
-  if(videos.length){
-    vblock=videos.map((videoUrl,index)=>{
-      const media=typeof parseProjectVideo==='function'?parseProjectVideo(videoUrl):null;
-      if(!media) return '';
-      if(media.type==='iframe'){
-        return `<div class="pm-vwrap"><iframe src="${media.src}" loading="lazy" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe></div><p class="pm-vlabel">${videos.length>1?`Video ${index+1}`:'Video'} — ${p.name}</p>`;
-      }
-      return `<div class="pm-vwrap"><video src="${media.src}" controls playsinline preload="metadata"></video></div><p class="pm-vlabel">${videos.length>1?`Video ${index+1}`:'Video'} — ${p.name}</p>`;
-    }).join('');
-  }
   let galblock='';
   if(imgs.length){
     pmLbImgs=imgs;
@@ -521,7 +509,6 @@ function openProj(e,id){
         <p class="pm-dlabel">Sobre el proyecto</p>
         <p class="pm-dtext">${p.desc||'Proyecto de fotografía y producción audiovisual.'}</p>
       </div>
-      ${vblock}
       ${galblock}
     </div>`;
   const ov=document.getElementById('pmOverlay');

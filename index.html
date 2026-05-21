@@ -395,7 +395,7 @@ const LY=['b-hero','b-tall','b-sq','b-sq','b-sq','b-sq','b-wide','b-wide'];
 
 function rb(f){
   const b=document.getElementById('bento');
-  const sorted=[...P].sort((a,bb)=>bb.year-a.year);
+  const sorted=[...P].sort((a,bb)=>(a.order||0)-(bb.order||0));
   let it;
   if(f==='all'){
     const feat=sorted.filter(p=>p.featured);

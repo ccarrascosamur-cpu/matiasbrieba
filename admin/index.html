@@ -163,6 +163,9 @@
     }
     .act-btn:hover{color:var(--white);border-color:rgba(250,250,250,.3);}
     .act-btn.del:hover{color:#e55;border-color:#e55;}
+    .act-btn.ord{padding:5px 8px;margin-left:3px;}
+    .act-btn.ord:disabled{opacity:.25;cursor:not-allowed;}
+    .act-btn.ord:hover{color:var(--white);border-color:rgba(250,250,250,.3);}
 
     /* THUMBNAIL */
     .thumb{
@@ -583,8 +586,21 @@
 
     // ── RENDER ──
     function renderAll(){
-      const data = getMBData();
-      const projs = (data.projects || []).slice().sort((a,b)=>b.year-a.year);
+      let data = getMBData();
+      // Migrar proyectos sin order asignándoles uno basado en su posición actual
+      let needsSave = false;
+      const sorted = (data.projects || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
+      sorted.forEach((p,idx)=>{
+        if(typeof p.order !== 'number'){
+          p.order = idx + 1;
+          needsSave = true;
+        }
+      });
+      if(needsSave){
+        data.projects = sorted;
+        saveMBData(data);
+      }
+      const projs = (data.projects || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
       const clis  = data.clients  || [];
       // Dashboard cards
       document.getElementById('dc-proj').textContent = projs.length;
@@ -616,7 +632,7 @@
       const tb = document.getElementById(id);
       if(!tb) return;
       tb.innerHTML = projs.map((p,i)=>`
-        <tr>
+        <tr data-id="${p.id}">
           <td>${thumbHtml(p.coverImg || p.img)}</td>
           <td>${p.name}</td>
           ${withActions ? `<td>${p.client||'—'}</td>` : ''}
@@ -626,6 +642,8 @@
             <div class="toggle ${p.featured?'on':''}" onclick="toggleFeat(${p.id},this)"></div>
           </td>
           ${withActions ? `<td>
+            <button class="act-btn ord" onclick="moveProject(${p.id},-1)" title="Subir" ${i===0?'disabled':''}>▲</button>
+            <button class="act-btn ord" onclick="moveProject(${p.id},1)" title="Bajar" ${i===projs.length-1?'disabled':''}>▼</button>
             <button class="act-btn" onclick="editProject(${p.id})">Editar</button>
             <button class="act-btn del" onclick="delProject(${p.id})">Eliminar</button>
           </td>` : ''}
@@ -740,6 +758,8 @@
       if(editingId){
         d.projects = d.projects.map(p=>p.id===editingId ? proj : p);
       } else {
+        const maxOrder = Math.max(0, ...d.projects.map(p=>typeof p.order==='number'?p.order:0));
+        proj.order = maxOrder + 1;
         d.projects.push(proj);
       }
       if(await persistData(d, 'Proyecto guardado')){
@@ -791,6 +811,19 @@
       const d = await getServerData();
       d.projects = d.projects.map(p=>p.id===id ? {...p, featured:el.classList.contains('on')} : p);
       await persistData(d, 'Actualizado');
+    }
+    async function moveProject(id, dir){
+      const d = await getServerData();
+      const list = d.projects.slice().sort((a,b)=>(a.order||0)-(b.order||0));
+      const idx = list.findIndex(p=>p.id===id);
+      if(idx<0) return;
+      const swapIdx = idx+dir;
+      if(swapIdx<0 || swapIdx>=list.length) return;
+      const temp = list[idx].order;
+      list[idx].order = list[swapIdx].order;
+      list[swapIdx].order = temp;
+      d.projects = list;
+      await persistData(d, 'Orden actualizado');
     }
     async function toggleCli(id, el){
       el.classList.toggle('on');

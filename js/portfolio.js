@@ -23,7 +23,7 @@ function renderPortfolio(filter){
   const cntEl = document.getElementById('port-count');
   if(!grid) return;
   const d = getMBData();
-  let items = d.projects;
+  let items = d.projects.slice().sort((a,b)=>(a.order||0)-(b.order||0));
   if(filter !== 'all') items = items.filter(p=>p.cat===filter);
   if(cntEl) cntEl.textContent = `${items.length} proyectos`;
 

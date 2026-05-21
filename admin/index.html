@@ -589,7 +589,7 @@
       let data = getMBData();
       // Migrar proyectos sin order asignándoles uno basado en su posición actual
       let needsSave = false;
-      const sorted = (data.projects || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
+      let sorted = (data.projects || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
       sorted.forEach((p,idx)=>{
         if(typeof p.order !== 'number'){
           p.order = idx + 1;
@@ -814,14 +814,16 @@
     }
     async function moveProject(id, dir){
       const d = getMBData();
-      const list = d.projects.slice().sort((a,b)=>(a.order||0)-(b.order||0));
+      let list = d.projects.slice().sort((a,b)=>(a.order||0)-(b.order||0));
       const idx = list.findIndex(p=>p.id===id);
       if(idx<0) return;
       const swapIdx = idx+dir;
       if(swapIdx<0 || swapIdx>=list.length) return;
-      const temp = list[idx].order;
-      list[idx].order = list[swapIdx].order;
-      list[swapIdx].order = temp;
+      // Mover el elemento en el array
+      const [moved] = list.splice(idx,1);
+      list.splice(swapIdx,0,moved);
+      // Reasignar order secuencial
+      list.forEach((p,i)=>{ p.order = i+1; });
       d.projects = list;
       saveMBData(d);
       renderAll();

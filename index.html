@@ -320,12 +320,7 @@ footer{background:var(--obk);padding:26px 48px;display:flex;align-items:center;j
     <div class="ftdev">Desarrollado por <a href="https://www.emmagination.cl" target="_blank">Emmagination</a></div>
   </div>
 </footer>
-<script>
-// Carga data.js con timestamp para evitar cache
-const _dataScript = document.createElement('script');
-_dataScript.src = 'js/data.js?v=' + Date.now();
-document.head.appendChild(_dataScript);
-</script>
+<script src="js/data.js?v=3"></script>
 <script>
 let P=[];
 let CL=[];
@@ -413,7 +408,7 @@ function rb(f){
     const imgSrc=fixImgUrl(p.coverImg||p.img);
     return `
     <a class="gi ${LY[i]||'b-sq'}${imgSrc?'':' no-img'} rv" href="#proj-${p.id}" onclick="openProj(event,${p.id})" style="text-decoration:none;cursor:pointer;">
-      ${imgSrc?`<img src="${imgSrc}" alt="${p.name}" loading="${i<3?'eager':'lazy'}" onerror="this.style.display='none'"/>`:''}
+      ${imgSrc?`<img src="${imgSrc}" alt="${p.name}" loading="${i<3?'eager':'lazy'}" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%)'"/>`:''}
       <div class="giov"><p class="gcat">${CL2[p.cat]}</p><p class="gname">${p.name}</p><p class="gyr">${p.year}${p.client!==p.name?' · '+p.client:''}</p></div>
       <div class="gbadge"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
       <span class="gnum">0${i+1}</span>

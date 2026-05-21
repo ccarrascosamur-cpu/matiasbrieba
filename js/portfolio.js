@@ -33,7 +33,7 @@ function renderPortfolio(filter){
     return `
       <a class="pg-item rv" href="${href}" target="_blank"
          style="text-decoration:none;">
-        ${imgSrc?`<img src="${imgSrc}" alt="${p.name}" loading="${i<6?'eager':'lazy'}" onerror="this.style.display='none'"/>`:''}
+        ${imgSrc?`<img src="${imgSrc}" alt="${p.name}" loading="${i<6?'eager':'lazy'}" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%)'"/>`:''}
         <div class="pg-over" style="${!imgSrc?'opacity:1;background:linear-gradient(to top,rgba(8,8,8,.85) 0%,rgba(8,8,8,.2) 100%);':''}">
           <p class="pg-cat">${catLabel(p.cat)}</p>
           <p class="pg-name">${p.name}</p>

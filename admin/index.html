@@ -813,7 +813,7 @@
       await persistData(d, 'Actualizado');
     }
     async function moveProject(id, dir){
-      const d = getMBData();
+      const d = await getServerData();
       let list = d.projects.slice().sort((a,b)=>(a.order||0)-(b.order||0));
       const idx = list.findIndex(p=>p.id===id);
       if(idx<0) return;
@@ -825,13 +825,7 @@
       // Reasignar order secuencial
       list.forEach((p,i)=>{ p.order = i+1; });
       d.projects = list;
-      saveMBData(d);
-      renderAll();
-      toast('Orden actualizado');
-      // Sync async in background
-      try{
-        if(typeof saveMBDataRemote === 'function') await saveMBDataRemote(d);
-      }catch(_){}
+      await persistData(d, 'Orden actualizado');
     }
     async function toggleCli(id, el){
       el.classList.toggle('on');

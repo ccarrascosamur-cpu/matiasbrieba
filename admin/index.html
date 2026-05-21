@@ -607,7 +607,7 @@
       document.getElementById('dc-cli').textContent  = clis.length;
       document.getElementById('dc-feat').textContent = projs.filter(p=>p.featured).length;
       // Dashboard table
-      renderProjTable(projs.slice(0,5), 'dashTbl', true);
+      renderProjTable(projs, 'dashTbl', true);
       renderProjTable(projs, 'projTbl', true);
       renderCliTable(clis);
       // Settings

@@ -194,10 +194,10 @@ function renderBento(filter) {
     const imgSrc = typeof fixImgUrl === 'function' ? fixImgUrl(p.coverImg || p.img) : (p.coverImg || p.img);
     const logoSrc = typeof fixImgUrl === 'function' ? fixImgUrl(p.logo || '') : (p.logo || '');
     return `
-      <a class="gi ${cls} rv" href="${href}" target="_blank"
+      <a class="gi ${cls} rv${logoSrc ? '' : ' no-logo'}" href="${href}" target="_blank"
          style="text-decoration:none;" data-cat="${p.cat}">
         ${imgSrc ? `<img src="${imgSrc}" alt="${p.name}" loading="${i < 3 ? 'eager' : 'lazy'}" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%)'"/>` : `<div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%);"></div>`}
-        ${logoSrc ? `<div class="gilogo"><img src="${logoSrc}" alt="${p.client}"/></div>` : ''}
+        ${logoSrc ? `<div class="gi-logo"><img src="${logoSrc}" alt="${p.client}"/></div>` : ''}
         <div class="giov">
           <p class="gcat">${catLabel(p.cat)}</p>
           <p class="gname">${p.name}</p>

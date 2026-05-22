@@ -88,6 +88,8 @@
     .s-out:hover{color:var(--white);}
 
     .main{margin-left:220px;padding:48px;min-height:100vh;}
+    .page{display:none;}
+    .page.active{display:block;}
 
     .page-title{
       font-family:'JetBrains Mono',monospace;
@@ -96,50 +98,6 @@
       display:flex;align-items:center;gap:12px;
     }
     .page-title::before{content:'';width:20px;height:1px;background:var(--gray);}
-
-    /* COLLAPSIBLE CONFIG */
-    .cfg-section{
-      border:1px solid var(--border);margin-bottom:32px;
-    }
-    .cfg-head{
-      padding:16px 24px;
-      font-family:'JetBrains Mono',monospace;
-      font-size:9px;letter-spacing:.22em;text-transform:uppercase;
-      color:var(--gray);cursor:pointer;
-      display:flex;align-items:center;justify-content:space-between;
-      transition:color .2s;
-      user-select:none;
-    }
-    .cfg-head:hover{color:var(--white);}
-    .cfg-head::after{content:'▼';font-size:8px;transition:transform .2s;}
-    .cfg-head.open::after{transform:rotate(180deg);}
-    .cfg-body{
-      display:none;padding:0 24px 24px;
-      border-top:1px solid var(--border);
-    }
-    .cfg-body.open{display:block;}
-    .cfg-row{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:14px 0;border-bottom:1px solid rgba(250,250,250,.04);
-      gap:16px;
-    }
-    .cfg-row:last-child{border-bottom:none;}
-    .cfg-key{font-size:13px;color:var(--white);white-space:nowrap;}
-    .cfg-input{
-      flex:1;max-width:400px;
-      padding:8px 12px;
-      background:var(--dark);border:1px solid var(--border);
-      color:var(--white);font-family:'Familjen Grotesk',sans-serif;
-      font-size:13px;outline:none;transition:border-color .2s;
-    }
-    .cfg-input:focus{border-color:rgba(250,250,250,.3);}
-    .cfg-input::placeholder{color:#444;}
-    .cfg-hint{
-      font-family:'JetBrains Mono',monospace;
-      font-size:9px;color:#555;line-height:1.6;
-      margin-top:8px;
-    }
-    .cfg-save-wrap{padding-top:16px;}
 
     /* TABLES */
     .tbl-wrap{border:1px solid var(--border);}
@@ -272,6 +230,38 @@
     .toggle.on::after{transform:translateX(16px);background:var(--black);}
     .toggle-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--gray);}
 
+    /* SETTINGS */
+    .settings-section{
+      border:1px solid var(--border);margin-bottom:24px;
+    }
+    .ss-head{
+      padding:20px 24px;border-bottom:1px solid var(--border);
+      font-family:'JetBrains Mono',monospace;
+      font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+      color:var(--white);
+    }
+    .ss-body{padding:24px;}
+    .ss-row{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:14px 0;border-bottom:1px solid rgba(250,250,250,.04);
+      gap:16px;
+    }
+    .ss-row:last-child{border-bottom:none;}
+    .ss-key{font-size:13px;color:var(--white);white-space:nowrap;}
+    .ss-input{
+      flex:1;max-width:400px;
+      padding:8px 12px;
+      background:var(--dark);border:1px solid var(--border);
+      color:var(--white);font-family:'Familjen Grotesk',sans-serif;
+      font-size:13px;outline:none;transition:border-color .2s;
+    }
+    .ss-input:focus{border-color:rgba(250,250,250,.3);}
+    .ss-hint{
+      font-family:'JetBrains Mono',monospace;
+      font-size:9px;color:#555;line-height:1.6;
+      margin-top:8px;
+    }
+
     /* TOAST */
     .toast{
       position:fixed;bottom:32px;right:32px;
@@ -308,7 +298,9 @@
     <div class="sidebar">
       <div class="sidebar-logo">Panel Admin</div>
       <nav class="sidebar-nav">
-        <button class="s-item active">Proyectos</button>
+        <button class="s-item active" onclick="showPage('projects',this)">Proyectos</button>
+        <button class="s-item" onclick="showPage('clients',this)">Clientes</button>
+        <button class="s-item" onclick="showPage('settings',this)">Configuración</button>
         <a href="/" target="_blank" class="s-item">Ver sitio ↗</a>
       </nav>
       <div class="sidebar-footer">
@@ -317,61 +309,82 @@
     </div>
 
     <div class="main">
-      <div class="page-title">Proyectos</div>
-
-      <!-- Config colapsable -->
-      <div class="cfg-section">
-        <div class="cfg-head" id="cfgHead" onclick="toggleCfg()">
-          Configuración del sitio
-        </div>
-        <div class="cfg-body" id="cfgBody">
-          <div class="cfg-row">
-            <span class="cfg-key">Email</span>
-            <input class="cfg-input" id="cfgEmail" placeholder="email@gmail.com"/>
+      <!-- PROJECTS -->
+      <div class="page active" id="page-projects">
+        <div class="page-title">Proyectos</div>
+        <div class="tbl-wrap">
+          <div class="tbl-head">
+            <h3>Todos los proyectos</h3>
+            <button class="btn-add" onclick="openModal('project')">+ Nuevo proyecto</button>
           </div>
-          <div class="cfg-row">
-            <span class="cfg-key">Instagram</span>
-            <input class="cfg-input" id="cfgIG" placeholder="@usuario"/>
-          </div>
-          <div class="cfg-row">
-            <span class="cfg-key">Ciudad</span>
-            <input class="cfg-input" id="cfgCity" placeholder="Chile"/>
-          </div>
-          <div class="cfg-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
-            <span class="cfg-key">Video de fondo (hero)</span>
-            <input class="cfg-input" id="cfgHeroVideo" placeholder="URL de YouTube, Vimeo, Google Drive o .mp4 directo" style="max-width:none;width:100%;"/>
-            <p class="cfg-hint">
-              Acepta: YouTube · Vimeo · enlace directo .mp4 · Google Drive<br>
-              El video se reproduce en loop, sin sonido, a pantalla completa.
-            </p>
-          </div>
-          <div class="cfg-save-wrap">
-            <button class="btn-save" onclick="saveSettings()">Guardar configuración</button>
-          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Orden</th>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Cliente</th>
+                <th>Cat</th>
+                <th>Año</th>
+                <th>Home</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="projTbl"></tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Projects table -->
-      <div class="tbl-wrap">
-        <div class="tbl-head">
-          <h3>Todos los proyectos</h3>
-          <button class="btn-add" onclick="openModal('project')">+ Nuevo proyecto</button>
+      <!-- CLIENTS -->
+      <div class="page" id="page-clients">
+        <div class="page-title">Clientes</div>
+        <div class="tbl-wrap">
+          <div class="tbl-head">
+            <h3>Marcas y clientes</h3>
+            <button class="btn-add" onclick="openModal('client')">+ Nuevo cliente</button>
+          </div>
+          <table>
+            <thead><tr><th>Nombre</th><th>URL</th><th>Visible</th><th>Acciones</th></tr></thead>
+            <tbody id="cliTbl"></tbody>
+          </table>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Orden</th>
-              <th>Imagen</th>
-              <th>Nombre</th>
-              <th>Cliente</th>
-              <th>Cat</th>
-              <th>Año</th>
-              <th>Home</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="projTbl"></tbody>
-        </table>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page" id="page-settings">
+        <div class="page-title">Configuración</div>
+        <div class="settings-section">
+          <div class="ss-head">Contacto</div>
+          <div class="ss-body">
+            <div class="ss-row"><span class="ss-key">Email</span><input class="ss-input" id="cfgEmail" placeholder="email@gmail.com"/></div>
+            <div class="ss-row"><span class="ss-key">Instagram</span><input class="ss-input" id="cfgIG" placeholder="@usuario"/></div>
+            <div class="ss-row"><span class="ss-key">Ciudad</span><input class="ss-input" id="cfgCity" placeholder="Chile"/></div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="ss-head">Hero del sitio</div>
+          <div class="ss-body">
+            <div class="ss-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
+              <span class="ss-key">Video de fondo (hero)</span>
+              <input class="ss-input" id="cfgHeroVideo" placeholder="URL de YouTube, Vimeo, Google Drive o .mp4 directo" style="max-width:none;width:100%;"/>
+              <span class="ss-hint">
+                Acepta: YouTube · Vimeo · enlace directo .mp4<br>
+                El video se reproduce en loop, sin sonido, a pantalla completa.<br>
+                <strong style="color:#e8a020;">Recomendado: YouTube</strong> (sube el video en privado/no listado → copia el link).<br>
+                Google Drive puede mostrar controles y reproducir con audio — no recomendado para el hero.
+              </span>
+            </div>
+            <div class="ss-row" style="flex-direction:column;align-items:flex-start;gap:10px;padding-top:20px;">
+              <span class="ss-key" style="margin-bottom:4px;">Imágenes desde Google Drive</span>
+              <span class="ss-hint">
+                1. Sube tu imagen a Google Drive<br>
+                2. Clic derecho → "Obtener enlace" → acceso "Cualquier persona con el enlace"<br>
+                3. Copia el enlace y pégalo en el campo de imagen — se convierte automáticamente.
+              </span>
+            </div>
+          </div>
+        </div>
+        <button class="btn-save" onclick="saveSettings()">Guardar cambios</button>
       </div>
     </div>
   </div>
@@ -413,17 +426,17 @@
       <div class="form-row">
         <label>Imagen de portada (home + portfolio)</label>
         <input type="text" id="fCoverImg" placeholder="https://... o link de Google Drive"/>
-        <p class="cfg-hint">Esta imagen se muestra en la grilla del home y del portfolio. Google Drive se convierte automáticamente.</p>
+        <p class="ss-hint">Esta imagen se muestra en la grilla del home y del portfolio. Google Drive se convierte automáticamente.</p>
       </div>
       <div class="form-row">
         <label>Video de header (fondo del proyecto)</label>
         <input type="text" id="fHeaderVideo" placeholder="https://youtube.com/...  https://vimeo.com/...  .mp4"/>
-        <p class="cfg-hint">Video de fondo en la página del proyecto. Soporta YouTube, Vimeo, Google Drive y .mp4 directo.</p>
+        <p class="ss-hint">Video de fondo en la página del proyecto. Soporta YouTube, Vimeo, Google Drive y .mp4 directo.</p>
       </div>
       <div class="form-row">
         <label>Imagen de header (fallback si no hay video)</label>
         <input type="text" id="fImg" placeholder="https://... o link de Google Drive"/>
-        <p class="cfg-hint">Fondo de la página del proyecto cuando no hay video.</p>
+        <p class="ss-hint">Fondo de la página del proyecto cuando no hay video.</p>
       </div>
       <div class="form-row">
         <label>URL del proyecto (opcional)</label>
@@ -432,12 +445,12 @@
       <div class="form-row">
         <label>Videos del proyecto — una URL por línea</label>
         <textarea id="fVideos" placeholder="https://youtube.com/watch?v=...&#10;https://vimeo.com/...&#10;https://drive.google.com/file/d/..." style="min-height:100px;"></textarea>
-        <p class="cfg-hint">Pega una URL por línea. Soporta YouTube, Vimeo, Google Drive y .mp4 directo.</p>
+        <p class="ss-hint">Pega una URL por línea. Soporta YouTube, Vimeo, Google Drive y .mp4 directo.</p>
       </div>
       <div class="form-row">
         <label>Imágenes de galería — una URL por línea</label>
         <textarea id="fImages" placeholder="https://imagen1.jpg&#10;https://imagen2.jpg" style="min-height:80px;"></textarea>
-        <p class="cfg-hint">Pega las URLs de tus imágenes, una por línea. Google Drive se convierte automáticamente.</p>
+        <p class="ss-hint">Pega las URLs de tus imágenes, una por línea. Google Drive se convierte automáticamente.</p>
       </div>
       <div class="form-row">
         <label>Descripción breve</label>
@@ -452,6 +465,32 @@
       <div class="form-actions">
         <button class="btn-cancel" onclick="closeModal('project')">Cancelar</button>
         <button class="btn-save" onclick="saveProject()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CLIENT -->
+  <div class="modal-overlay" id="modalClient">
+    <div class="modal">
+      <h3 id="modalClientTitle">Nuevo Cliente</h3>
+      <input type="hidden" id="editCliId"/>
+      <div class="form-row">
+        <label>Nombre</label>
+        <input type="text" id="fCliName" placeholder="Ej: Monster Energy"/>
+      </div>
+      <div class="form-row">
+        <label>URL (opcional)</label>
+        <input type="url" id="fCliUrl" placeholder="https://..."/>
+      </div>
+      <div class="form-row">
+        <div class="toggle-wrap">
+          <div class="toggle on" id="toggleCliVisible" onclick="this.classList.toggle('on')"></div>
+          <span class="toggle-label">Visible en sitio</span>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="closeModal('client')">Cancelar</button>
+        <button class="btn-save" onclick="saveClient()">Guardar</button>
       </div>
     </div>
   </div>
@@ -500,12 +539,12 @@
       setTimeout(renderAll,50);
     }
 
-    // ── CONFIG COLLAPSE ──
-    function toggleCfg(){
-      const h=document.getElementById('cfgHead');
-      const b=document.getElementById('cfgBody');
-      h.classList.toggle('open');
-      b.classList.toggle('open');
+    // ── PAGES ──
+    function showPage(id,btn){
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.querySelectorAll('.s-item').forEach(b=>b.classList.remove('active'));
+      document.getElementById('page-'+id).classList.add('active');
+      if(btn)btn.classList.add('active');
     }
 
     // ── RENDER ──
@@ -520,9 +559,11 @@
       if(needsSave){data.projects=sorted;saveMBData(data);}
 
       const projs=(data.projects||[]).slice().sort((a,b)=>(a.order||0)-(b.order||0));
+      const clis=data.clients||[];
       renderProjTable(projs);
+      renderCliTable(clis);
 
-      // Config
+      // Settings
       const cfg=data.config||{};
       document.getElementById('cfgEmail').value=cfg.email||'';
       document.getElementById('cfgIG').value=cfg.instagram||'';
@@ -562,27 +603,53 @@
       `).join('');
     }
 
+    function renderCliTable(clis){
+      const tb=document.getElementById('cliTbl');
+      if(!tb)return;
+      tb.innerHTML=clis.map(c=>`
+        <tr>
+          <td>${c.name}</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray)">${c.url||'—'}</td>
+          <td><div class="toggle ${c.visible?'on':''}" onclick="toggleCli(${c.id},this)"></div></td>
+          <td>
+            <button class="act-btn" onclick="editClient(${c.id})">Editar</button>
+            <button class="act-btn del" onclick="delClient(${c.id})">Eliminar</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
     // ── MODAL ──
     let editingId=null;
     function openModal(type,data=null){
-      editingId=data?data.id:null;
-      document.getElementById('modalProjectTitle').textContent=data?'Editar Proyecto':'Nuevo Proyecto';
-      document.getElementById('fName').value=data?.name||'';
-      document.getElementById('fClient').value=data?.client||'';
-      document.getElementById('fCat').value=data?.cat||'foto';
-      document.getElementById('fYear').value=data?.year||new Date().getFullYear();
-      document.getElementById('fOrder').value=data?.order||'';
-      document.getElementById('fCoverImg').value=data?.coverImg||'';
-      document.getElementById('fHeaderVideo').value=data?.headerVideo||'';
-      document.getElementById('fImg').value=data?.img||'';
-      document.getElementById('fUrl').value=data?.url||'';
-      const videos=Array.isArray(data?.videos)?data.videos:(data?.videoUrl?[data.videoUrl]:[]);
-      document.getElementById('fVideos').value=videos.join('\n');
-      document.getElementById('fImages').value=(data?.images||[]).join('\n');
-      document.getElementById('fDesc').value=data?.desc||'';
-      const tog=document.getElementById('toggleFeatured');
-      tog.classList.toggle('on',!!(data?.featured));
-      document.getElementById('modalProject').classList.add('open');
+      if(type==='project'){
+        editingId=data?data.id:null;
+        document.getElementById('modalProjectTitle').textContent=data?'Editar Proyecto':'Nuevo Proyecto';
+        document.getElementById('fName').value=data?.name||'';
+        document.getElementById('fClient').value=data?.client||'';
+        document.getElementById('fCat').value=data?.cat||'foto';
+        document.getElementById('fYear').value=data?.year||new Date().getFullYear();
+        document.getElementById('fOrder').value=data?.order||'';
+        document.getElementById('fCoverImg').value=data?.coverImg||'';
+        document.getElementById('fHeaderVideo').value=data?.headerVideo||'';
+        document.getElementById('fImg').value=data?.img||'';
+        document.getElementById('fUrl').value=data?.url||'';
+        const videos=Array.isArray(data?.videos)?data.videos:(data?.videoUrl?[data.videoUrl]:[]);
+        document.getElementById('fVideos').value=videos.join('\n');
+        document.getElementById('fImages').value=(data?.images||[]).join('\n');
+        document.getElementById('fDesc').value=data?.desc||'';
+        const tog=document.getElementById('toggleFeatured');
+        tog.classList.toggle('on',!!(data?.featured));
+        document.getElementById('modalProject').classList.add('open');
+      }else{
+        editingId=data?data.id:null;
+        document.getElementById('modalClientTitle').textContent=data?'Editar Cliente':'Nuevo Cliente';
+        document.getElementById('fCliName').value=data?.name||'';
+        document.getElementById('fCliUrl').value=data?.url||'';
+        const tog=document.getElementById('toggleCliVisible');
+        tog.classList.toggle('on',data?!!data.visible:true);
+        document.getElementById('modalClient').classList.add('open');
+      }
     }
     function closeModal(type){
       document.getElementById('modal'+type.charAt(0).toUpperCase()+type.slice(1)).classList.remove('open');
@@ -643,10 +710,28 @@
       }else{
         d.projects.push(proj);
       }
-      // Re-sort by order
       d.projects.sort((a,b)=>(a.order||0)-(b.order||0));
       if(await persistData(d,'Proyecto guardado')){
         closeModal('project');
+      }
+    }
+
+    async function saveClient(){
+      const d=await getServerData();
+      const cli={
+        id:editingId||Date.now(),
+        name:document.getElementById('fCliName').value.trim(),
+        url:document.getElementById('fCliUrl').value.trim(),
+        visible:document.getElementById('toggleCliVisible').classList.contains('on'),
+      };
+      if(!cli.name){alert('El nombre es requerido.');return;}
+      if(editingId){
+        d.clients=d.clients.map(c=>c.id===editingId?cli:c);
+      }else{
+        d.clients.push(cli);
+      }
+      if(await persistData(d,'Cliente guardado')){
+        closeModal('client');
       }
     }
 
@@ -654,11 +739,21 @@
       const d=getMBData();
       openModal('project',d.projects.find(p=>p.id===id));
     }
+    function editClient(id){
+      const d=getMBData();
+      openModal('client',d.clients.find(c=>c.id===id));
+    }
     async function delProject(id){
       if(!confirm('¿Eliminar este proyecto?'))return;
       const d=await getServerData();
       d.projects=d.projects.filter(p=>p.id!==id);
       await persistData(d,'Proyecto eliminado');
+    }
+    async function delClient(id){
+      if(!confirm('¿Eliminar este cliente?'))return;
+      const d=await getServerData();
+      d.clients=d.clients.filter(c=>c.id!==id);
+      await persistData(d,'Cliente eliminado');
     }
     async function toggleFeat(id,el){
       el.classList.toggle('on');
@@ -678,6 +773,12 @@
       list.forEach((p,i)=>{p.order=i+1;});
       d.projects=list;
       await persistData(d,'Orden actualizado');
+    }
+    async function toggleCli(id,el){
+      el.classList.toggle('on');
+      const d=await getServerData();
+      d.clients=d.clients.map(c=>c.id===id?{...c,visible:el.classList.contains('on')}:c);
+      await persistData(d,'Actualizado');
     }
 
     async function saveSettings(){

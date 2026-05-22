@@ -252,10 +252,8 @@ nav.scrolled{
 }
 .gi img{
   width:100%;height:100%;object-fit:cover;display:block;
-  transition:filter .5s;
-  filter:brightness(.55) grayscale(.2);
+  filter:brightness(1) grayscale(0);
 }
-.gi:hover img{filter:brightness(1) grayscale(0);}
 /* Logo overlay - visible by default, hides on hover */
 .gi-logo{
   position:absolute;inset:0;
@@ -296,9 +294,7 @@ nav.scrolled{
   font-family:var(--font-mono);
   font-size:9px;color:var(--gray);margin-top:5px;
 }
-/* Items without logo: show image clean by default */
-.gi.no-logo img{filter:brightness(.9) grayscale(.35);}
-.gi.no-logo:hover img{filter:brightness(1.02) grayscale(0);}
+/* Items without logo: hide overlay */
 .gi.no-logo .gi-logo{display:none;}
 .gi-badge{
   position:absolute;top:14px;right:14px;

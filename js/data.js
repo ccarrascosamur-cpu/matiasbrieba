@@ -17,7 +17,7 @@ const MB_DEFAULT = {
     { id: 7,  order: 7,  name: 'Cruzados',             client: 'Cruzados',             cat: 'deporte', year: 2024, img: '', url: 'https://matiasbriebaf.myportfolio.com/cruzados', videoUrl: '', images: [], desc: 'Fútbol y deporte de alta emoción.', featured: true },
     { id: 8,  order: 8,  name: 'Tamango Brebajes',     client: 'Tamango',              cat: 'film',    year: 2024, img: '', url: 'https://matiasbriebaf.myportfolio.com/tamango-brebajes', videoUrl: '', images: [], desc: 'Producción audiovisual y branding visual.', featured: false },
     { id: 9,  order: 9,  name: 'Santiago 2023',        client: 'Personal',             cat: 'foto',    year: 2024, img: '', url: 'https://matiasbriebaf.myportfolio.com/santiago-2023', videoUrl: '', images: [], desc: 'Reportaje fotográfico de Santiago.', featured: false },
-    { id: 10, order: 10, name: 'Bruno Fritsch',        client: 'Bruno Fritsch',        cat: 'foto',    year: 2024, img: '', url: 'https://matiasbriebaf.myportfolio.com/bruno-fristch', videoUrl: '', images: [], desc: 'Retrato y fotografía artística.', featured: false },
+    { id: 10, order: 10, name: 'Bruno Fritsch',        client: 'Bruno Fritsch',        cat: 'foto',    year: 2024, img: '', url: 'https://matiasbriebaf.myportfolio.com/bruno-fristch', videoUrl: 'https://drive.google.com/file/d/1APph2KaLNXxoYQbsQaKQVuUJjfGKWoeq/view?usp=drive_link', videos: ['https://drive.google.com/file/d/1APph2KaLNXxoYQbsQaKQVuUJjfGKWoeq/view?usp=drive_link','https://drive.google.com/file/d/1lQbZVQCDNoR-mdRZc5XjcfMn3xIBZUMt/view?usp=drive_link','https://drive.google.com/file/d/1hbiR2Iam8jmVvj443iAMMewieEj658Wv/view?usp=drive_link'], images: [], desc: 'Retrato y fotografía artística.', featured: false },
   ],
   clients: [
     {id:101, name:'Monster Energy',     url:'',  visible:true},
@@ -188,15 +188,30 @@ async function saveMBDataRemote(data){
   return writeLocalData(await res.json(), 'remote-save');
 }
 
-// Init default if empty
-(function(){
-  if(!localStorage.getItem(MB_KEY)){
-    writeLocalData(MB_DEFAULT, 'default-init');
+// Single remote load promise shared across the module
+let _remoteLoadPromise = null;
+function getRemoteLoadPromise(){
+  if(!_remoteLoadPromise){
+    _remoteLoadPromise = typeof fetch === 'function'
+      ? loadMBDataRemote().catch(() => {
+          // If remote fails, fallback to localStorage or defaults
+          if(!localStorage.getItem(MB_KEY)){
+            writeLocalData(MB_DEFAULT, 'default-init');
+          }
+          return getMBData();
+        })
+      : Promise.resolve(getMBData());
   }
+  return _remoteLoadPromise;
+}
+
+// Init default if empty, but always try remote first
+(function(){
+  getRemoteLoadPromise();
 })();
 
 window.MBDataStore = {
-  ready: typeof fetch === 'function' ? loadMBDataRemote() : Promise.resolve(getMBData()),
+  ready: getRemoteLoadPromise(),
   eventName: MB_DATA_EVENT,
   get: getMBData,
   loadRemote: loadMBDataRemote,

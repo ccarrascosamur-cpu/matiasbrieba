@@ -61,16 +61,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ── RENDER BENTO + CLIENTS + STATS ──
-  const bento = document.getElementById('bento');
-  if (bento) renderBento('all');
-  const clientsRow = document.getElementById('clientsRow');
-  if (clientsRow) renderClients();
-  const sp = document.getElementById('statProjects');
-  const sc = document.getElementById('statClients');
-  if (sp || sc) {
-    const d = getMBData();
-    if (sp) sp.innerHTML = `${d.projects.length}<sub>+</sub>`;
-    if (sc) sc.innerHTML  = `${d.clients.length}<sub>+</sub>`;
+  function doRenderMain(){
+    const bento = document.getElementById('bento');
+    if (bento) renderBento('all');
+    const clientsRow = document.getElementById('clientsRow');
+    if (clientsRow) renderClients();
+    const sp = document.getElementById('statProjects');
+    const sc = document.getElementById('statClients');
+    if (sp || sc) {
+      const d = getMBData();
+      if (sp) sp.innerHTML = `${d.projects.length}<sub>+</sub>`;
+      if (sc) sc.innerHTML  = `${d.clients.length}<sub>+</sub>`;
+    }
+  }
+  // Wait for remote data if available
+  if(window.MBDataStore && typeof window.MBDataStore.ready==='object' && typeof window.MBDataStore.ready.then==='function'){
+    window.MBDataStore.ready.then(doRenderMain).catch(doRenderMain);
+  } else {
+    doRenderMain();
   }
 
   // ── FILTER BUTTONS ──

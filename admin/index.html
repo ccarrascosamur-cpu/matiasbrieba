@@ -88,8 +88,6 @@
     .s-out:hover{color:var(--white);}
 
     .main{margin-left:220px;padding:48px;min-height:100vh;}
-    .page{display:none;}
-    .page.active{display:block;}
 
     .page-title{
       font-family:'JetBrains Mono',monospace;
@@ -99,20 +97,49 @@
     }
     .page-title::before{content:'';width:20px;height:1px;background:var(--gray);}
 
-    /* DASHBOARD */
-    .dash-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:48px;}
-    .dash-card{
-      padding:28px;border:1px solid var(--border);
+    /* COLLAPSIBLE CONFIG */
+    .cfg-section{
+      border:1px solid var(--border);margin-bottom:32px;
     }
-    .dc-num{
+    .cfg-head{
+      padding:16px 24px;
       font-family:'JetBrains Mono',monospace;
-      font-size:42px;font-weight:700;color:var(--white);line-height:1;
-      margin-bottom:8px;
+      font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+      color:var(--gray);cursor:pointer;
+      display:flex;align-items:center;justify-content:space-between;
+      transition:color .2s;
+      user-select:none;
     }
-    .dc-label{
+    .cfg-head:hover{color:var(--white);}
+    .cfg-head::after{content:'▼';font-size:8px;transition:transform .2s;}
+    .cfg-head.open::after{transform:rotate(180deg);}
+    .cfg-body{
+      display:none;padding:0 24px 24px;
+      border-top:1px solid var(--border);
+    }
+    .cfg-body.open{display:block;}
+    .cfg-row{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:14px 0;border-bottom:1px solid rgba(250,250,250,.04);
+      gap:16px;
+    }
+    .cfg-row:last-child{border-bottom:none;}
+    .cfg-key{font-size:13px;color:var(--white);white-space:nowrap;}
+    .cfg-input{
+      flex:1;max-width:400px;
+      padding:8px 12px;
+      background:var(--dark);border:1px solid var(--border);
+      color:var(--white);font-family:'Familjen Grotesk',sans-serif;
+      font-size:13px;outline:none;transition:border-color .2s;
+    }
+    .cfg-input:focus{border-color:rgba(250,250,250,.3);}
+    .cfg-input::placeholder{color:#444;}
+    .cfg-hint{
       font-family:'JetBrains Mono',monospace;
-      font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--gray);
+      font-size:9px;color:#555;line-height:1.6;
+      margin-top:8px;
     }
+    .cfg-save-wrap{padding-top:16px;}
 
     /* TABLES */
     .tbl-wrap{border:1px solid var(--border);}
@@ -136,11 +163,11 @@
     th{
       font-family:'JetBrains Mono',monospace;
       font-size:8px;letter-spacing:.25em;text-transform:uppercase;
-      color:var(--gray);padding:14px 24px;text-align:left;
+      color:var(--gray);padding:14px 16px;text-align:left;
       border-bottom:1px solid var(--border);
     }
     td{
-      padding:16px 24px;border-bottom:1px solid rgba(250,250,250,.04);
+      padding:14px 16px;border-bottom:1px solid rgba(250,250,250,.04);
       font-size:13px;vertical-align:middle;
     }
     tr:last-child td{border-bottom:none;}
@@ -159,13 +186,12 @@
       color:var(--gray);padding:5px 12px;
       font-family:'JetBrains Mono',monospace;
       font-size:8px;letter-spacing:.15em;text-transform:uppercase;
-      cursor:pointer;transition:all .2s;margin-left:6px;
+      cursor:pointer;transition:all .2s;margin-left:4px;
     }
     .act-btn:hover{color:var(--white);border-color:rgba(250,250,250,.3);}
     .act-btn.del:hover{color:#e55;border-color:#e55;}
-    .act-btn.ord{padding:5px 8px;margin-left:3px;}
+    .act-btn.ord{padding:5px 8px;margin-left:2px;}
     .act-btn.ord:disabled{opacity:.25;cursor:not-allowed;}
-    .act-btn.ord:hover{color:var(--white);border-color:rgba(250,250,250,.3);}
 
     /* THUMBNAIL */
     .thumb{
@@ -186,7 +212,7 @@
     }
     .modal-overlay.open{display:flex;}
     .modal{
-      width:600px;max-width:95vw;max-height:90vh;overflow-y:auto;
+      width:640px;max-width:95vw;max-height:90vh;overflow-y:auto;
       background:var(--off-black);border:1px solid var(--border);
       padding:40px;
     }
@@ -211,6 +237,7 @@
     .form-row select option{background:var(--dark);}
     .form-row textarea{resize:vertical;min-height:80px;}
     .form-row.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .form-row.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
     .form-actions{display:flex;gap:12px;margin-top:24px;justify-content:flex-end;}
     .btn-cancel{
       padding:10px 24px;background:none;
@@ -245,28 +272,6 @@
     .toggle.on::after{transform:translateX(16px);background:var(--black);}
     .toggle-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--gray);}
 
-    /* SETTINGS */
-    .settings-section{
-      border:1px solid var(--border);margin-bottom:24px;
-    }
-    .ss-head{
-      padding:20px 24px;border-bottom:1px solid var(--border);
-      font-family:'JetBrains Mono',monospace;
-      font-size:10px;letter-spacing:.22em;text-transform:uppercase;
-      color:var(--white);
-    }
-    .ss-body{padding:24px;}
-    .ss-row{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:14px 0;border-bottom:1px solid rgba(250,250,250,.04);
-    }
-    .ss-row:last-child{border-bottom:none;}
-    .ss-key{font-size:13px;color:var(--white);}
-    .ss-val{
-      font-family:'JetBrains Mono',monospace;
-      font-size:11px;color:var(--gray);
-    }
-
     /* TOAST */
     .toast{
       position:fixed;bottom:32px;right:32px;
@@ -282,7 +287,6 @@
     @media(max-width:900px){
       .sidebar{display:none;}
       .main{margin-left:0;padding:24px;}
-      .dash-cards{grid-template-columns:1fr 1fr;}
     }
   </style>
 </head>
@@ -304,10 +308,7 @@
     <div class="sidebar">
       <div class="sidebar-logo">Panel Admin</div>
       <nav class="sidebar-nav">
-        <button class="s-item active" onclick="showPage('dashboard',this)">Dashboard</button>
-        <button class="s-item" onclick="showPage('projects',this)">Proyectos</button>
-        <button class="s-item" onclick="showPage('clients',this)">Clientes</button>
-        <button class="s-item" onclick="showPage('settings',this)">Configuración</button>
+        <button class="s-item active">Proyectos</button>
         <a href="/" target="_blank" class="s-item">Ver sitio ↗</a>
       </nav>
       <div class="sidebar-footer">
@@ -316,98 +317,61 @@
     </div>
 
     <div class="main">
-      <!-- DASHBOARD -->
-      <div class="page active" id="page-dashboard">
-        <div class="page-title">Dashboard</div>
-        <div class="dash-cards">
-          <div class="dash-card"><div class="dc-num" id="dc-proj">0</div><div class="dc-label">Proyectos</div></div>
-          <div class="dash-card"><div class="dc-num" id="dc-cli">0</div><div class="dc-label">Clientes</div></div>
-          <div class="dash-card"><div class="dc-num" id="dc-feat">0</div><div class="dc-label">Destacados</div></div>
-          <div class="dash-card"><div class="dc-num">15+</div><div class="dc-label">Años exp.</div></div>
+      <div class="page-title">Proyectos</div>
+
+      <!-- Config colapsable -->
+      <div class="cfg-section">
+        <div class="cfg-head" id="cfgHead" onclick="toggleCfg()">
+          Configuración del sitio
         </div>
-        <div class="tbl-wrap">
-          <div class="tbl-head">
-            <h3>Proyectos recientes</h3>
-            <button class="btn-add" onclick="showPage('projects',document.querySelectorAll('.s-item')[1]);openModal('project')">+ Agregar</button>
+        <div class="cfg-body" id="cfgBody">
+          <div class="cfg-row">
+            <span class="cfg-key">Email</span>
+            <input class="cfg-input" id="cfgEmail" placeholder="email@gmail.com"/>
           </div>
-          <table>
-            <thead><tr><th>Imagen</th><th>Nombre</th><th>Cliente</th><th>Categoría</th><th>Año</th><th>Destacado</th><th>Acciones</th></tr></thead>
-            <tbody id="dashTbl"></tbody>
-          </table>
+          <div class="cfg-row">
+            <span class="cfg-key">Instagram</span>
+            <input class="cfg-input" id="cfgIG" placeholder="@usuario"/>
+          </div>
+          <div class="cfg-row">
+            <span class="cfg-key">Ciudad</span>
+            <input class="cfg-input" id="cfgCity" placeholder="Chile"/>
+          </div>
+          <div class="cfg-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
+            <span class="cfg-key">Video de fondo (hero)</span>
+            <input class="cfg-input" id="cfgHeroVideo" placeholder="URL de YouTube, Vimeo, Google Drive o .mp4 directo" style="max-width:none;width:100%;"/>
+            <p class="cfg-hint">
+              Acepta: YouTube · Vimeo · enlace directo .mp4 · Google Drive<br>
+              El video se reproduce en loop, sin sonido, a pantalla completa.
+            </p>
+          </div>
+          <div class="cfg-save-wrap">
+            <button class="btn-save" onclick="saveSettings()">Guardar configuración</button>
+          </div>
         </div>
       </div>
 
-      <!-- PROJECTS -->
-      <div class="page" id="page-projects">
-        <div class="page-title">Proyectos</div>
-        <div class="tbl-wrap">
-          <div class="tbl-head">
-            <h3>Todos los proyectos</h3>
-            <button class="btn-add" onclick="openModal('project')">+ Nuevo proyecto</button>
-          </div>
-          <table>
-            <thead><tr><th>Imagen</th><th>Nombre</th><th>Cliente</th><th>Categoría</th><th>Año</th><th>Destacado</th><th>Acciones</th></tr></thead>
-            <tbody id="projTbl"></tbody>
-          </table>
+      <!-- Projects table -->
+      <div class="tbl-wrap">
+        <div class="tbl-head">
+          <h3>Todos los proyectos</h3>
+          <button class="btn-add" onclick="openModal('project')">+ Nuevo proyecto</button>
         </div>
-      </div>
-
-      <!-- CLIENTS -->
-      <div class="page" id="page-clients">
-        <div class="page-title">Clientes</div>
-        <div class="tbl-wrap">
-          <div class="tbl-head">
-            <h3>Marcas y clientes</h3>
-            <button class="btn-add" onclick="openModal('client')">+ Nuevo cliente</button>
-          </div>
-          <table>
-            <thead><tr><th>Nombre</th><th>URL</th><th>Visible</th><th>Acciones</th></tr></thead>
-            <tbody id="cliTbl"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- SETTINGS -->
-      <div class="page" id="page-settings">
-        <div class="page-title">Configuración</div>
-        <div class="settings-section">
-          <div class="ss-head">Contacto</div>
-          <div class="ss-body">
-            <div class="ss-row"><span class="ss-key">Email</span><input style="width:260px;padding:6px 10px;background:#1a1a1a;border:1px solid rgba(250,250,250,.08);color:#fafafa;font-size:12px;outline:none;" id="cfgEmail" placeholder="email@gmail.com"/></div>
-            <div class="ss-row"><span class="ss-key">Instagram</span><input style="width:260px;padding:6px 10px;background:#1a1a1a;border:1px solid rgba(250,250,250,.08);color:#fafafa;font-size:12px;outline:none;" id="cfgIG" placeholder="@usuario"/></div>
-            <div class="ss-row"><span class="ss-key">Ciudad</span><input style="width:260px;padding:6px 10px;background:#1a1a1a;border:1px solid rgba(250,250,250,.08);color:#fafafa;font-size:12px;outline:none;" id="cfgCity" placeholder="Chile"/></div>
-          </div>
-        </div>
-        <div class="settings-section">
-          <div class="ss-head">Hero del sitio</div>
-          <div class="ss-body">
-            <div class="ss-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
-              <span class="ss-key">Video de fondo (hero)</span>
-              <input style="width:100%;padding:6px 10px;background:#1a1a1a;border:1px solid rgba(250,250,250,.08);color:#fafafa;font-size:12px;outline:none;" id="cfgHeroVideo" placeholder="URL de YouTube, Vimeo, Google Drive o .mp4 directo"/>
-              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;line-height:1.6;">
-                Acepta: YouTube · Vimeo · enlace directo .mp4<br/>
-                El video se reproduce en loop, sin sonido, a pantalla completa.<br/>
-                <strong style="color:#e8a020;">Recomendado: YouTube</strong> (sube el video en privado/no listado → copia el link).<br/>
-                Google Drive puede mostrar controles y reproducir con audio — no recomendado para el hero.
-              </span>
-            </div>
-            <div class="ss-row" style="flex-direction:column;align-items:flex-start;gap:10px;padding-top:20px;">
-              <span class="ss-key" style="margin-bottom:4px;">Imágenes desde Google Drive</span>
-              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;line-height:1.6;">
-                1. Sube tu imagen a Google Drive<br/>
-                2. Clic derecho → "Obtener enlace" → acceso "Cualquier persona con el enlace"<br/>
-                3. Copia el enlace y pégalo en el campo de imagen — se convierte automáticamente.
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="settings-section">
-          <div class="ss-head">Seguridad</div>
-          <div class="ss-body">
-            <div class="ss-row"><span class="ss-key">Nueva contraseña</span><input type="password" style="width:260px;padding:6px 10px;background:#1a1a1a;border:1px solid rgba(250,250,250,.08);color:#fafafa;font-size:12px;outline:none;" id="cfgPwd" placeholder="Nueva contraseña"/></div>
-          </div>
-        </div>
-        <button class="btn-save" onclick="saveSettings()">Guardar cambios</button>
+        <table>
+          <thead>
+            <tr>
+              <th>Orden</th>
+              <th>Imagen</th>
+              <th>Nombre</th>
+              <th>Cliente</th>
+              <th>Cat</th>
+              <th>Año</th>
+              <th>Home</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="projTbl"></tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -417,15 +381,17 @@
     <div class="modal">
       <h3 id="modalProjectTitle">Nuevo Proyecto</h3>
       <input type="hidden" id="editId"/>
-      <div class="form-row">
-        <label>Nombre del proyecto</label>
-        <input type="text" id="fName" placeholder="Ej: Monster Energy Chile"/>
-      </div>
-      <div class="form-row">
-        <label>Cliente</label>
-        <input type="text" id="fClient" placeholder="Ej: Monster Energy"/>
-      </div>
       <div class="form-row two">
+        <div>
+          <label>Nombre del proyecto *</label>
+          <input type="text" id="fName" placeholder="Ej: Monster Energy Chile"/>
+        </div>
+        <div>
+          <label>Cliente</label>
+          <input type="text" id="fClient" placeholder="Ej: Monster Energy"/>
+        </div>
+      </div>
+      <div class="form-row three">
         <div>
           <label>Categoría</label>
           <select id="fCat">
@@ -439,35 +405,39 @@
           <label>Año</label>
           <input type="number" id="fYear" placeholder="2024" min="2000" max="2099"/>
         </div>
+        <div>
+          <label>Orden</label>
+          <input type="number" id="fOrder" placeholder="1" min="1"/>
+        </div>
       </div>
       <div class="form-row">
         <label>Imagen de portada (home + portfolio)</label>
         <input type="text" id="fCoverImg" placeholder="https://... o link de Google Drive"/>
-        <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Esta imagen se muestra en la grilla del home y del portfolio. Si no se carga, usa la imagen del header.</small>
+        <p class="cfg-hint">Esta imagen se muestra en la grilla del home y del portfolio. Google Drive se convierte automáticamente.</p>
       </div>
       <div class="form-row">
         <label>Video de header (fondo del proyecto)</label>
         <input type="text" id="fHeaderVideo" placeholder="https://youtube.com/...  https://vimeo.com/...  .mp4"/>
-        <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Video de fondo en la página del proyecto. Soporta YouTube, Vimeo, Google Drive y .mp4 directo.</small>
+        <p class="cfg-hint">Video de fondo en la página del proyecto. Soporta YouTube, Vimeo, Google Drive y .mp4 directo.</p>
       </div>
       <div class="form-row">
         <label>Imagen de header (fallback si no hay video)</label>
         <input type="text" id="fImg" placeholder="https://... o link de Google Drive"/>
-        <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Fondo de la página del proyecto cuando no hay video. Google Drive se convierte automáticamente.</small>
+        <p class="cfg-hint">Fondo de la página del proyecto cuando no hay video.</p>
       </div>
       <div class="form-row">
         <label>URL del proyecto (opcional)</label>
         <input type="url" id="fUrl" placeholder="https://..."/>
       </div>
       <div class="form-row">
-        <label>Videos — una URL por línea</label>
-        <textarea id="fVideos" placeholder="https://youtube.com/watch?v=...&#10;https://vimeo.com/...&#10;https://cdn.tusitio.com/video.mp4" style="min-height:100px;"></textarea>
-        <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Pega una URL por línea. Puedes quitar un video borrando su URL.</small>
+        <label>Videos del proyecto — una URL por línea</label>
+        <textarea id="fVideos" placeholder="https://youtube.com/watch?v=...&#10;https://vimeo.com/...&#10;https://drive.google.com/file/d/..." style="min-height:100px;"></textarea>
+        <p class="cfg-hint">Pega una URL por línea. Soporta YouTube, Vimeo, Google Drive y .mp4 directo.</p>
       </div>
       <div class="form-row">
         <label>Imágenes de galería — una URL por línea</label>
-        <textarea id="fImages" placeholder="https://imagen1.jpg&#10;https://imagen2.jpg&#10;https://imagen3.jpg" style="min-height:100px;"></textarea>
-        <small style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#555;margin-top:6px;display:block;">Pega las URLs de tus imágenes, una por línea. Puedes quitar una foto borrando su URL.</small>
+        <textarea id="fImages" placeholder="https://imagen1.jpg&#10;https://imagen2.jpg" style="min-height:80px;"></textarea>
+        <p class="cfg-hint">Pega las URLs de tus imágenes, una por línea. Google Drive se convierte automáticamente.</p>
       </div>
       <div class="form-row">
         <label>Descripción breve</label>
@@ -476,7 +446,7 @@
       <div class="form-row">
         <div class="toggle-wrap">
           <div class="toggle" id="toggleFeatured" onclick="this.classList.toggle('on')"></div>
-          <span class="toggle-label">Destacar en home</span>
+          <span class="toggle-label">Mostrar en home (destacado)</span>
         </div>
       </div>
       <div class="form-actions">
@@ -486,40 +456,12 @@
     </div>
   </div>
 
-  <!-- MODAL CLIENT -->
-  <div class="modal-overlay" id="modalClient">
-    <div class="modal">
-      <h3>Cliente / Marca</h3>
-      <input type="hidden" id="editCliId"/>
-      <div class="form-row">
-        <label>Nombre</label>
-        <input type="text" id="fCliName" placeholder="Ej: Monster Energy"/>
-      </div>
-      <div class="form-row">
-        <label>URL (opcional)</label>
-        <input type="url" id="fCliUrl" placeholder="https://..."/>
-      </div>
-      <div class="form-row">
-        <div class="toggle-wrap">
-          <div class="toggle on" id="toggleCliVisible" onclick="this.classList.toggle('on')"></div>
-          <span class="toggle-label">Visible en sitio</span>
-        </div>
-      </div>
-      <div class="form-actions">
-        <button class="btn-cancel" onclick="closeModal('client')">Cancelar</button>
-        <button class="btn-save" onclick="saveClient()">Guardar</button>
-      </div>
-    </div>
-  </div>
-
   <div class="toast" id="toast"></div>
 
   <script>
-    // Carga data.js con timestamp para evitar cache
     document.write('<script src="../js/data.js?v=' + Date.now() + '"><\/script>');
   </script>
   <script>
-    // fallback si data.js no cargó
     if(typeof getMBData==='undefined'){
       window.getMBData=function(){
         try{const r=localStorage.getItem('mb_portfolio_data');return r?JSON.parse(r):{projects:[],clients:[],config:{}};}
@@ -528,36 +470,18 @@
       window.saveMBData=function(d){localStorage.setItem('mb_portfolio_data',JSON.stringify(d));};
     }
 
-    // ── ANTI-CACHE: recarga si hay nueva versión ──
-    (function(){
-      const now = Date.now();
-      const last = parseInt(localStorage.getItem('mb_admin_loaded')||'0',10);
-      // Si pasaron más de 2 minutos desde la última carga, forzar recarga limpia
-      if(last && (now - last > 120000)){
-        localStorage.setItem('mb_admin_loaded', String(now));
-        // Solo recargar si no viene de una recarga reciente
-        if(!sessionStorage.getItem('mb_admin_refreshed')){
-          sessionStorage.setItem('mb_admin_refreshed','1');
-          location.reload(true);
-          return;
-        }
-      }
-      localStorage.setItem('mb_admin_loaded', String(now));
-      sessionStorage.removeItem('mb_admin_refreshed');
-    })();
-
     // ── AUTH ──
-    const CREDS = {user:'matias',pass:'brieba2024'};
+    const CREDS={user:'matias',pass:'brieba2024'};
     function doLogin(){
       const u=document.getElementById('loginUser').value.trim();
       const p=document.getElementById('loginPass').value;
       if(u===CREDS.user && p===CREDS.pass){
         localStorage.setItem('mb_auth','1');
-        localStorage.setItem('mb_admin_auth', btoa(`${u}:${p}`));
+        localStorage.setItem('mb_admin_auth',btoa(`${u}:${p}`));
         document.getElementById('loginScreen').style.display='none';
         document.getElementById('app').style.display='flex';
         renderAll();
-      } else {
+      }else{
         document.getElementById('loginErr').style.display='block';
       }
     }
@@ -569,53 +493,41 @@
     }
     if(localStorage.getItem('mb_auth')==='1'){
       if(!localStorage.getItem('mb_admin_auth')){
-        localStorage.setItem('mb_admin_auth', btoa(`${CREDS.user}:${CREDS.pass}`));
+        localStorage.setItem('mb_admin_auth',btoa(`${CREDS.user}:${CREDS.pass}`));
       }
       document.getElementById('loginScreen').style.display='none';
       document.getElementById('app').style.display='flex';
       setTimeout(renderAll,50);
     }
 
-    // ── PAGES ──
-    function showPage(id, btn){
-      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-      document.querySelectorAll('.s-item').forEach(b=>b.classList.remove('active'));
-      document.getElementById('page-'+id).classList.add('active');
-      if(btn) btn.classList.add('active');
+    // ── CONFIG COLLAPSE ──
+    function toggleCfg(){
+      const h=document.getElementById('cfgHead');
+      const b=document.getElementById('cfgBody');
+      h.classList.toggle('open');
+      b.classList.toggle('open');
     }
 
     // ── RENDER ──
     function renderAll(){
-      let data = getMBData();
-      // Migrar proyectos sin order asignándoles uno basado en su posición actual
-      let needsSave = false;
-      let sorted = (data.projects || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
+      let data=getMBData();
+      // Migrate: assign order if missing
+      let needsSave=false;
+      let sorted=(data.projects||[]).slice().sort((a,b)=>(a.order||0)-(b.order||0));
       sorted.forEach((p,idx)=>{
-        if(typeof p.order !== 'number'){
-          p.order = idx + 1;
-          needsSave = true;
-        }
+        if(typeof p.order!=='number'){p.order=idx+1;needsSave=true;}
       });
-      if(needsSave){
-        data.projects = sorted;
-        saveMBData(data);
-      }
-      const projs = (data.projects || []).slice().sort((a,b)=>(a.order||0)-(b.order||0));
-      const clis  = data.clients  || [];
-      // Dashboard cards
-      document.getElementById('dc-proj').textContent = projs.length;
-      document.getElementById('dc-cli').textContent  = clis.length;
-      document.getElementById('dc-feat').textContent = projs.filter(p=>p.featured).length;
-      // Dashboard table
-      renderProjTable(projs, 'dashTbl', true);
-      renderProjTable(projs, 'projTbl', true);
-      renderCliTable(clis);
-      // Settings
-      const cfg = data.config || {};
-      document.getElementById('cfgEmail').value      = cfg.email || '';
-      document.getElementById('cfgIG').value         = cfg.instagram || '';
-      document.getElementById('cfgCity').value       = cfg.city || '';
-      document.getElementById('cfgHeroVideo').value  = cfg.heroVideo || '';
+      if(needsSave){data.projects=sorted;saveMBData(data);}
+
+      const projs=(data.projects||[]).slice().sort((a,b)=>(a.order||0)-(b.order||0));
+      renderProjTable(projs);
+
+      // Config
+      const cfg=data.config||{};
+      document.getElementById('cfgEmail').value=cfg.email||'';
+      document.getElementById('cfgIG').value=cfg.instagram||'';
+      document.getElementById('cfgCity').value=cfg.city||'';
+      document.getElementById('cfgHeroVideo').value=cfg.heroVideo||'';
     }
 
     function badgeHtml(cat){
@@ -624,246 +536,177 @@
     }
     function thumbHtml(img){
       const src=typeof fixImgUrl==='function'?fixImgUrl(img):img;
-      if(!src) return `<div class="thumb-placeholder"><span>—</span></div>`;
+      if(!src)return `<div class="thumb-placeholder"><span>—</span></div>`;
       return `<img class="thumb" src="${src}" onerror="this.parentNode.innerHTML='<div class=\\'thumb-placeholder\\'><span>—</span></div>'"/>`;
     }
 
-    function renderProjTable(projs, id, withActions){
-      const tb = document.getElementById(id);
-      if(!tb) return;
-      tb.innerHTML = projs.map((p,i)=>`
+    function renderProjTable(projs){
+      const tb=document.getElementById('projTbl');
+      if(!tb)return;
+      tb.innerHTML=projs.map((p,i)=>`
         <tr data-id="${p.id}">
-          <td>${thumbHtml(p.coverImg || p.img)}</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray)">${p.order||'—'}</td>
+          <td>${thumbHtml(p.coverImg||p.img)}</td>
           <td>${p.name}</td>
-          ${withActions ? `<td>${p.client||'—'}</td>` : ''}
+          <td>${p.client||'—'}</td>
           <td>${badgeHtml(p.cat)}</td>
           <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray)">${p.year}</td>
+          <td><div class="toggle ${p.featured?'on':''}" onclick="toggleFeat(${p.id},this)"></div></td>
           <td>
-            <div class="toggle ${p.featured?'on':''}" onclick="toggleFeat(${p.id},this)"></div>
-          </td>
-          ${withActions ? `<td>
             <button class="act-btn ord" onclick="moveProject(${p.id},-1)" title="Subir" ${i===0?'disabled':''}>▲</button>
             <button class="act-btn ord" onclick="moveProject(${p.id},1)" title="Bajar" ${i===projs.length-1?'disabled':''}>▼</button>
             <button class="act-btn" onclick="editProject(${p.id})">Editar</button>
             <button class="act-btn del" onclick="delProject(${p.id})">Eliminar</button>
-          </td>` : ''}
-        </tr>
-      `).join('');
-    }
-
-    function renderCliTable(clis){
-      const tb = document.getElementById('cliTbl');
-      if(!tb) return;
-      tb.innerHTML = clis.map(c=>`
-        <tr>
-          <td>${c.name}</td>
-          <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray)">${c.url||'—'}</td>
-          <td><div class="toggle ${c.visible?'on':''}" onclick="toggleCli(${c.id},this)"></div></td>
-          <td>
-            <button class="act-btn" onclick="editClient(${c.id})">Editar</button>
-            <button class="act-btn del" onclick="delClient(${c.id})">Eliminar</button>
           </td>
         </tr>
       `).join('');
     }
 
-    // ── MODAL PROJECT ──
+    // ── MODAL ──
     let editingId=null;
     function openModal(type,data=null){
-      if(type==='project'){
-        editingId = data ? data.id : null;
-        document.getElementById('modalProjectTitle').textContent = data ? 'Editar Proyecto' : 'Nuevo Proyecto';
-        document.getElementById('fName').value   = data?.name  || '';
-        document.getElementById('fClient').value = data?.client|| '';
-        document.getElementById('fCat').value    = data?.cat   || 'foto';
-        document.getElementById('fYear').value   = data?.year  || new Date().getFullYear();
-        document.getElementById('fCoverImg').value    = data?.coverImg || '';
-        document.getElementById('fHeaderVideo').value = data?.headerVideo || '';
-        document.getElementById('fImg').value    = data?.img   || '';
-        document.getElementById('fUrl').value    = data?.url   || '';
-        const videos = Array.isArray(data?.videos) ? data.videos : (data?.videoUrl ? [data.videoUrl] : []);
-        document.getElementById('fVideos').value   = videos.join('\n');
-        document.getElementById('fImages').value   = (data?.images||[]).join('\n');
-        document.getElementById('fDesc').value   = data?.desc  || '';
-        const tog = document.getElementById('toggleFeatured');
-        tog.classList.toggle('on', !!(data?.featured));
-        document.getElementById('modalProject').classList.add('open');
-      } else {
-        editingId = data ? data.id : null;
-        document.getElementById('fCliName').value = data?.name || '';
-        document.getElementById('fCliUrl').value  = data?.url  || '';
-        const tog = document.getElementById('toggleCliVisible');
-        tog.classList.toggle('on', data ? !!data.visible : true);
-        document.getElementById('modalClient').classList.add('open');
-      }
+      editingId=data?data.id:null;
+      document.getElementById('modalProjectTitle').textContent=data?'Editar Proyecto':'Nuevo Proyecto';
+      document.getElementById('fName').value=data?.name||'';
+      document.getElementById('fClient').value=data?.client||'';
+      document.getElementById('fCat').value=data?.cat||'foto';
+      document.getElementById('fYear').value=data?.year||new Date().getFullYear();
+      document.getElementById('fOrder').value=data?.order||'';
+      document.getElementById('fCoverImg').value=data?.coverImg||'';
+      document.getElementById('fHeaderVideo').value=data?.headerVideo||'';
+      document.getElementById('fImg').value=data?.img||'';
+      document.getElementById('fUrl').value=data?.url||'';
+      const videos=Array.isArray(data?.videos)?data.videos:(data?.videoUrl?[data.videoUrl]:[]);
+      document.getElementById('fVideos').value=videos.join('\n');
+      document.getElementById('fImages').value=(data?.images||[]).join('\n');
+      document.getElementById('fDesc').value=data?.desc||'';
+      const tog=document.getElementById('toggleFeatured');
+      tog.classList.toggle('on',!!(data?.featured));
+      document.getElementById('modalProject').classList.add('open');
     }
     function closeModal(type){
-      document.getElementById('modal'+capitalize(type)).classList.remove('open');
+      document.getElementById('modal'+type.charAt(0).toUpperCase()+type.slice(1)).classList.remove('open');
       editingId=null;
     }
-    function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 
     async function getServerData(){
-      try{
-        if(typeof loadMBDataRemote === 'function') return await loadMBDataRemote();
-      }catch(_){}
-      // Forzar recarga fresca de data.js agregando timestamp
-      try{
-        const ts = Date.now();
-        await import('../js/data.js?v=' + ts);
-      }catch(_){}
+      try{if(typeof loadMBDataRemote==='function')return await loadMBDataRemote();}catch(_){}
+      try{await import('../js/data.js?v='+Date.now());}catch(_){}
       return getMBData();
     }
 
-    async function persistData(data, successMessage){
+    async function persistData(data,successMessage){
       try{
-        if(typeof saveMBDataRemote === 'function'){
+        if(typeof saveMBDataRemote==='function'){
           await saveMBDataRemote(data);
         }else{
           saveMBData(data);
         }
         renderAll();
-        if(successMessage) toast(successMessage);
+        if(successMessage)toast(successMessage);
         return true;
       }catch(err){
-        alert(`No se pudo guardar en el backend.\n\n${err.message || err}`);
+        alert('No se pudo guardar en el backend.\n\n'+(err.message||err));
         return false;
       }
     }
 
     async function saveProject(){
-      const d = await getServerData();
+      const d=await getServerData();
+      const orderVal=parseInt(document.getElementById('fOrder').value);
       const proj={
-        id: editingId || Date.now(),
-        name:    document.getElementById('fName').value.trim(),
-        client:  document.getElementById('fClient').value.trim(),
-        cat:     document.getElementById('fCat').value,
-        year:    parseInt(document.getElementById('fYear').value)||2024,
-        coverImg:    document.getElementById('fCoverImg').value.trim(),
-        headerVideo: document.getElementById('fHeaderVideo').value.trim(),
-        img:     document.getElementById('fImg').value.trim(),
-        url:     document.getElementById('fUrl').value.trim(),
-        videos:   document.getElementById('fVideos').value.split('\n').map(s=>s.trim()).filter(Boolean),
-        images:  document.getElementById('fImages').value.split('\n').map(s=>s.trim()).filter(Boolean),
-        desc:    document.getElementById('fDesc').value.trim(),
+        id:editingId||Date.now(),
+        name:document.getElementById('fName').value.trim(),
+        client:document.getElementById('fClient').value.trim(),
+        cat:document.getElementById('fCat').value,
+        year:parseInt(document.getElementById('fYear').value)||2024,
+        order:Number.isFinite(orderVal)?orderVal:(()=>{const m=Math.max(0,...d.projects.map(p=>typeof p.order==='number'?p.order:0));return m+1;})(),
+        coverImg:document.getElementById('fCoverImg').value.trim(),
+        headerVideo:document.getElementById('fHeaderVideo').value.trim(),
+        img:document.getElementById('fImg').value.trim(),
+        url:document.getElementById('fUrl').value.trim(),
+        videos:document.getElementById('fVideos').value.split('\n').map(s=>s.trim()).filter(Boolean),
+        images:document.getElementById('fImages').value.split('\n').map(s=>s.trim()).filter(Boolean),
+        desc:document.getElementById('fDesc').value.trim(),
         featured:document.getElementById('toggleFeatured').classList.contains('on'),
       };
-      const mediaUrls = [proj.img, proj.headerVideo, ...proj.videos, ...proj.images].filter(Boolean);
-      if(typeof isLocalOnlyMediaUrl === 'function' && mediaUrls.some(isLocalOnlyMediaUrl)){
-        alert('Una o más URLs multimedia apuntan a tu computador o localhost. Usa una URL pública o una ruta del sitio como images/archivo.jpg.');
+      const mediaUrls=[proj.img,proj.headerVideo,...proj.videos,...proj.images].filter(Boolean);
+      if(typeof isLocalOnlyMediaUrl==='function'&&mediaUrls.some(isLocalOnlyMediaUrl)){
+        alert('Una o más URLs multimedia apuntan a tu computador o localhost. Usa una URL pública.');
         return;
       }
-      proj.videoUrl = proj.videos[0] || '';
+      proj.videoUrl=proj.videos[0]||'';
       if(!proj.name){alert('El nombre es requerido.');return;}
+
       if(editingId){
-        d.projects = d.projects.map(p=>p.id===editingId ? proj : p);
-      } else {
-        const maxOrder = Math.max(0, ...d.projects.map(p=>typeof p.order==='number'?p.order:0));
-        proj.order = maxOrder + 1;
+        d.projects=d.projects.map(p=>p.id===editingId?proj:p);
+      }else{
         d.projects.push(proj);
       }
-      if(await persistData(d, 'Proyecto guardado')){
+      // Re-sort by order
+      d.projects.sort((a,b)=>(a.order||0)-(b.order||0));
+      if(await persistData(d,'Proyecto guardado')){
         closeModal('project');
       }
     }
 
-    async function saveClient(){
-      const d = await getServerData();
-      const cli={
-        id:      editingId || Date.now(),
-        name:    document.getElementById('fCliName').value.trim(),
-        url:     document.getElementById('fCliUrl').value.trim(),
-        visible: document.getElementById('toggleCliVisible').classList.contains('on'),
-      };
-      if(!cli.name){alert('El nombre es requerido.');return;}
-      if(editingId){
-        d.clients = d.clients.map(c=>c.id===editingId ? cli : c);
-      } else {
-        d.clients.push(cli);
-      }
-      if(await persistData(d, 'Cliente guardado')){
-        closeModal('client');
-      }
-    }
-
     function editProject(id){
-      const d = getMBData();
-      openModal('project', d.projects.find(p=>p.id===id));
-    }
-    function editClient(id){
-      const d = getMBData();
-      openModal('client', d.clients.find(c=>c.id===id));
+      const d=getMBData();
+      openModal('project',d.projects.find(p=>p.id===id));
     }
     async function delProject(id){
-      if(!confirm('¿Eliminar este proyecto?')) return;
-      const d = await getServerData();
-      d.projects = d.projects.filter(p=>p.id!==id);
-      await persistData(d, 'Proyecto eliminado');
+      if(!confirm('¿Eliminar este proyecto?'))return;
+      const d=await getServerData();
+      d.projects=d.projects.filter(p=>p.id!==id);
+      await persistData(d,'Proyecto eliminado');
     }
-    async function delClient(id){
-      if(!confirm('¿Eliminar este cliente?')) return;
-      const d = await getServerData();
-      d.clients = d.clients.filter(c=>c.id!==id);
-      await persistData(d, 'Cliente eliminado');
-    }
-    async function toggleFeat(id, el){
+    async function toggleFeat(id,el){
       el.classList.toggle('on');
-      const d = await getServerData();
-      d.projects = d.projects.map(p=>p.id===id ? {...p, featured:el.classList.contains('on')} : p);
-      await persistData(d, 'Actualizado');
+      const d=await getServerData();
+      d.projects=d.projects.map(p=>p.id===id?{...p,featured:el.classList.contains('on')}:p);
+      await persistData(d,'Actualizado');
     }
-    async function moveProject(id, dir){
-      const d = await getServerData();
-      let list = d.projects.slice().sort((a,b)=>(a.order||0)-(b.order||0));
-      const idx = list.findIndex(p=>p.id===id);
-      if(idx<0) return;
-      const swapIdx = idx+dir;
-      if(swapIdx<0 || swapIdx>=list.length) return;
-      // Mover el elemento en el array
-      const [moved] = list.splice(idx,1);
+    async function moveProject(id,dir){
+      const d=await getServerData();
+      let list=d.projects.slice().sort((a,b)=>(a.order||0)-(b.order||0));
+      const idx=list.findIndex(p=>p.id===id);
+      if(idx<0)return;
+      const swapIdx=idx+dir;
+      if(swapIdx<0||swapIdx>=list.length)return;
+      const [moved]=list.splice(idx,1);
       list.splice(swapIdx,0,moved);
-      // Reasignar order secuencial
-      list.forEach((p,i)=>{ p.order = i+1; });
-      d.projects = list;
-      await persistData(d, 'Orden actualizado');
-    }
-    async function toggleCli(id, el){
-      el.classList.toggle('on');
-      const d = await getServerData();
-      d.clients = d.clients.map(c=>c.id===id ? {...c, visible:el.classList.contains('on')} : c);
-      await persistData(d, 'Actualizado');
+      list.forEach((p,i)=>{p.order=i+1;});
+      d.projects=list;
+      await persistData(d,'Orden actualizado');
     }
 
     async function saveSettings(){
-      const d = await getServerData();
-      const heroVideo = document.getElementById('cfgHeroVideo').value.trim();
-      if(typeof isLocalOnlyMediaUrl === 'function' && isLocalOnlyMediaUrl(heroVideo)){
+      const d=await getServerData();
+      const heroVideo=document.getElementById('cfgHeroVideo').value.trim();
+      if(typeof isLocalOnlyMediaUrl==='function'&&isLocalOnlyMediaUrl(heroVideo)){
         alert('El video del hero apunta a una URL local. Usa YouTube, Vimeo, Google Drive público o un .mp4 accesible públicamente.');
         return;
       }
-      d.config = {
-        email:      document.getElementById('cfgEmail').value.trim(),
-        instagram:  document.getElementById('cfgIG').value.trim(),
-        city:       document.getElementById('cfgCity').value.trim(),
+      d.config={
+        email:document.getElementById('cfgEmail').value.trim(),
+        instagram:document.getElementById('cfgIG').value.trim(),
+        city:document.getElementById('cfgCity').value.trim(),
         heroVideo,
       };
-      const pwd = document.getElementById('cfgPwd').value;
-      if(await persistData(d, pwd ? 'Configuración guardada. La contraseña del admin sigue siendo la configurada en el backend.' : 'Configuración guardada')){
-        document.getElementById('cfgPwd').value = '';
+      if(await persistData(d,'Configuración guardada')){
+        toast('Configuración guardada');
       }
     }
 
-    window.addEventListener('mb:data-updated', ()=>renderAll());
+    window.addEventListener('mb:data-updated',()=>renderAll());
 
-    // Close modal on overlay click
     document.querySelectorAll('.modal-overlay').forEach(o=>{
-      o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); });
+      o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');});
     });
 
-    // TOAST
     function toast(msg){
       const t=document.getElementById('toast');
-      t.textContent=msg; t.classList.add('show');
+      t.textContent=msg;t.classList.add('show');
       setTimeout(()=>t.classList.remove('show'),2800);
     }
   </script>

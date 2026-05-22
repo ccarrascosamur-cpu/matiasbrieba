@@ -2,7 +2,10 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   let activeFilter = 'all';
-  renderPortfolio(activeFilter);
+
+  function doRender(){
+    renderPortfolio(activeFilter);
+  }
 
   document.querySelectorAll('.pf-btn').forEach(b=>{
     b.addEventListener('click',()=>{
@@ -16,6 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('mb:data-updated', () => {
     renderPortfolio(activeFilter);
   });
+
+  // Wait for remote data if available
+  if(window.MBDataStore && typeof window.MBDataStore.ready==='object' && typeof window.MBDataStore.ready.then==='function'){
+    window.MBDataStore.ready.then(doRender).catch(doRender);
+  } else {
+    doRender();
+  }
 });
 
 function renderPortfolio(filter){
@@ -31,7 +41,7 @@ function renderPortfolio(filter){
     const href = `project.html?id=${p.id}`;
     const imgSrc = typeof fixImgUrl === 'function' ? fixImgUrl(p.coverImg || p.img) : (p.coverImg || p.img);
     return `
-      <a class="pg-item rv" href="${href}" target="_blank"
+      <a class="pg-item rv" href="${href}"
          style="text-decoration:none;">
         ${imgSrc?`<img src="${imgSrc}" alt="${p.name}" loading="${i<6?'eager':'lazy'}" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%)'"/>`:''}
         <div class="pg-over" style="${!imgSrc?'opacity:1;background:linear-gradient(to top,rgba(8,8,8,.85) 0%,rgba(8,8,8,.2) 100%);':''}">

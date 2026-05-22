@@ -11,7 +11,7 @@ const DEFAULT_DATA = {
     { id: 7, order: 7, name: 'Cruzados', client: 'Cruzados', cat: 'deporte', year: 2024, img: '', url: 'https://matiasbriebaf.myportfolio.com/cruzados', videoUrl: '', videos: [], images: [], desc: 'Fútbol y deporte de alta emoción.', featured: true },
     { id: 8, order: 8, name: 'Tamango Brebajes', client: 'Tamango', cat: 'film', year: 2024, img: '', url: 'https://matiasbriebaf.myportfolio.com/tamango-brebajes', videoUrl: '', videos: [], images: [], desc: 'Producción audiovisual y branding visual.', featured: false },
     { id: 9, order: 9, name: 'Santiago 2023', client: 'Personal', cat: 'foto', year: 2024, img: '', url: 'https://matiasbriebaf.myportfolio.com/santiago-2023', videoUrl: '', videos: [], images: [], desc: 'Reportaje fotográfico de Santiago.', featured: false },
-    { id: 10, order: 10, name: 'Bruno Fritsch', client: 'Bruno Fritsch', cat: 'foto', year: 2024, img: '', url: 'https://matiasbriebaf.myportfolio.com/bruno-fristch', videoUrl: '', videos: [], images: [], desc: 'Retrato y fotografía artística.', featured: false },
+    { id: 10, order: 10, name: 'Bruno Fritsch', client: 'Bruno Fritsch', cat: 'foto', year: 2024, img: '', url: 'https://matiasbriebaf.myportfolio.com/bruno-fristch', videoUrl: 'https://drive.google.com/file/d/1APph2KaLNXxoYQbsQaKQVuUJjfGKWoeq/view?usp=drive_link', videos: ['https://drive.google.com/file/d/1APph2KaLNXxoYQbsQaKQVuUJjfGKWoeq/view?usp=drive_link','https://drive.google.com/file/d/1lQbZVQCDNoR-mdRZc5XjcfMn3xIBZUMt/view?usp=drive_link','https://drive.google.com/file/d/1hbiR2Iam8jmVvj443iAMMewieEj658Wv/view?usp=drive_link'], images: [], desc: 'Retrato y fotografía artística.', featured: false },
   ],
   clients: [
     { id: 101, name: 'Monster Energy', url: '', visible: true },
@@ -35,6 +35,9 @@ function json(data, init = {}) {
   const headers = new Headers(init.headers || {});
   headers.set('Content-Type', 'application/json; charset=utf-8');
   headers.set('Cache-Control', 'no-store');
+  headers.set('Access-Control-Allow-Origin', '*');
+  headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   return new Response(JSON.stringify(data), { ...init, headers });
 }
 
@@ -115,6 +118,15 @@ async function readStoredData(env) {
 }
 
 async function handleApi(request, env) {
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Cache-Control': 'no-store',
+    }});
+  }
+
   if (request.method === 'GET') {
     return json(await readStoredData(env));
   }

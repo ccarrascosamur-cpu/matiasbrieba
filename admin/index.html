@@ -429,6 +429,11 @@
         <p class="ss-hint">Esta imagen se muestra en la grilla del home y del portfolio. Google Drive se convierte automáticamente.</p>
       </div>
       <div class="form-row">
+        <label>Logo del cliente (overlay hover)</label>
+        <input type="text" id="fLogo" placeholder="https://... o link de Google Drive"/>
+        <p class="ss-hint">Logo blanco que aparece al hacer hover sobre el proyecto en la grilla del home. Se recomienda PNG con fondo transparente. Google Drive se convierte automáticamente.</p>
+      </div>
+      <div class="form-row">
         <label>Video de header (fondo del proyecto)</label>
         <input type="text" id="fHeaderVideo" placeholder="https://youtube.com/...  https://vimeo.com/...  .mp4"/>
         <p class="ss-hint">Video de fondo en la página del proyecto. Soporta YouTube, Vimeo, Google Drive y .mp4 directo.</p>
@@ -588,6 +593,7 @@
         <tr data-id="${p.id}">
           <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray)">${p.order||'—'}</td>
           <td>${thumbHtml(p.coverImg||p.img)}</td>
+          <td>${thumbHtml(p.logo)}</td>
           <td>${p.name}</td>
           <td>${p.client||'—'}</td>
           <td>${badgeHtml(p.cat)}</td>
@@ -631,6 +637,7 @@
         document.getElementById('fYear').value=data?.year||new Date().getFullYear();
         document.getElementById('fOrder').value=data?.order||'';
         document.getElementById('fCoverImg').value=data?.coverImg||'';
+        document.getElementById('fLogo').value=data?.logo||'';
         document.getElementById('fHeaderVideo').value=data?.headerVideo||'';
         document.getElementById('fImg').value=data?.img||'';
         document.getElementById('fUrl').value=data?.url||'';
@@ -689,6 +696,7 @@
         year:parseInt(document.getElementById('fYear').value)||2024,
         order:Number.isFinite(orderVal)?orderVal:(()=>{const m=Math.max(0,...d.projects.map(p=>typeof p.order==='number'?p.order:0));return m+1;})(),
         coverImg:document.getElementById('fCoverImg').value.trim(),
+        logo:document.getElementById('fLogo').value.trim(),
         headerVideo:document.getElementById('fHeaderVideo').value.trim(),
         img:document.getElementById('fImg').value.trim(),
         url:document.getElementById('fUrl').value.trim(),
